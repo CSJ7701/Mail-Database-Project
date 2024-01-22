@@ -39,3 +39,4 @@ Brainstormed ideas for project, created general outline.
 #+BEGIN_EXPORT latex
 \end{document}
 #+END_EXPORT
+
