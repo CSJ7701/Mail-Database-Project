@@ -26,14 +26,16 @@ tabControl.pack(expand=1, fill='both')
 
 
 
-## Function Definitions
-
 def get_cadet_info():
     box=package_box.get()
     name=cursor.execute("select name from cadets where box_number = %s" % box)
     email=cursor.execute("select email from cadets where box_number = %s" % box)
     print("Name: %s, Email: %s, Box: %s" % name, email, box)
 
+
+# Example content for each tab
+#ttk.Label(tab1, text="This is a test").grid(column=0, row=0, padx=30, pady=30)
+#ttk.Label(tab2, text="This is a TEST").grid(column=0, row=0, padx=30, pady=30)
 
 # Setting up labels and buttons
 package_number = ttk.Entry(tab1).grid(column=1, row=0, padx=30, pady=30)
