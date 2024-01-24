@@ -19,7 +19,8 @@ package_number_label=ttk.Label(tab1, text='Tracking Number').grid(row=0, column=
 package_box = tk.Entry(tab1)
 package_box.grid(column=1, row=1, padx=30, pady=10)
 package_box_label=ttk.Label(tab1, text='Box Number').grid(row=1, column=0, padx=10, pady=10)
-package_button = ttk.Button(tab1, text="Get Info", command=get_cadet_info).grid(row=2, column=1, pady=5)
+package_button = ttk.Button(tab1, text="Get Info", command=lambda: get_cadet_info(package_box.get())).grid(row=2, column=1, pady=5)
 
+get_cadet_info(101)
 
 window.mainloop()
