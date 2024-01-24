@@ -1,5 +1,5 @@
 #+TITLE: Mailroom Package Tracker
-#+AUTHOR: Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Inventive Team Neam
+#+AUTHOR: Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Mailroom 2.0
 #+OPTIONS: toc:nil numbers:nil
 
 #+BEGIN_EXPORT latex
@@ -8,27 +8,26 @@
 #+END_EXPORT
 
 * Team Agreement
-We will meet _THIS OFTEN_ in _THIS PLACE_.
+We will meet weekly in Macallister Hall.
 In the event that we are unable to meet, we will reschedule as needed.
 If there is a disagreement on implementation, we will attempt to reach a compromise. If one is not possible, the offending parties will each branch the project and attempt to implement their idea, comparing progress and choosing the more effective solution at the time of the next meeting.
 
 * Background
 The cadet mailroom receives hundreds of packages a week.
 Currently, this involves manually scanning, sorting, and distributing notices for each of these packages.
-This workflow could easily be reduced using software to track the addresee, mailbox, and filing location of the package
+This workflow could easily be reduced using software to track the addresee and mailbox of the package
 
 * Vision Statement
 - Store information in 2 databases.
   1. to hold cadet info - Name, Box #, Email Address, Graduation Year. This information can be pulled from regis.
-  2. to hold package info - type (package or letter) ,tracking number, addressee, received date, picked up date
-- Easy entry. Scan barcode (find a way to pull tracking number from barcode to database), enter addressee.
+  2. to hold package info - tracking number, addressee, received date, picked up date
+- Easy entry. Enter addressee and tracking number.
   Program will record #, name, date - send email to addressee.
-  Program will indicate where package should be stored in shelving system (mailbox if it is a letter)
 - Search. Enter cadet name or mailbox number, see if there are any packages.
-- Retrieval. Search cadet name, find package and location in filing system. Retrieve package, scan/sign/etc to mark as picked up (Again figure out scanner).
+- Retrieval. Search cadet name, find package by tracking number, mark as picked up.
 
-  Other functionality?
-
+Mailroom staff already uses a system that involves scanners to read a packages tracking number. We would not need to integrate with that existing system.
+They could simply read the tracking number with their scanners, then enter manually. 
 
 * Meetings
 ** Meeting One
@@ -36,6 +35,8 @@ Identified group members - Dan, Christian, Dylan
 Identified prospective project - Mailroom tracking system
 ** Meeting two
 Brainstormed ideas for project, created general outline.
+** Meeting three
+Adjusted plan and removed some anticipated functionality. 
 #+BEGIN_EXPORT latex
 \end{document}
 #+END_EXPORT

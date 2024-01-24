@@ -1,4 +1,4 @@
-% Created 2024-01-21 Sun 15:01
+% Created 2024-01-24 Wed 09:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -12,11 +12,11 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\author{Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Inventive Team Neam}
+\author{Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Mailroom 2.0}
 \date{\today}
 \title{Mailroom Package Tracker}
 \hypersetup{
- pdfauthor={Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Inventive Team Neam},
+ pdfauthor={Christian Johnson \and Daniel Nusraty \and Dylan McGill \and \newline Mailroom 2.0},
  pdftitle={Mailroom Package Tracker},
  pdfkeywords={},
  pdfsubject={},
@@ -28,39 +28,42 @@
 \begin{document}
 \newpage
 \section{Team Agreement}
-\label{sec:org40a4480}
-We will meet \uline{THIS OFTEN} in \uline{THIS PLACE}.
+\label{sec:org0bd1bab}
+We will meet weekly in Macallister Hall.
 In the event that we are unable to meet, we will reschedule as needed.
 If there is a disagreement on implementation, we will attempt to reach a compromise. If one is not possible, the offending parties will each branch the project and attempt to implement their idea, comparing progress and choosing the more effective solution at the time of the next meeting.
 \section{Background}
-\label{sec:orga233fd7}
+\label{sec:orga54a047}
 The cadet mailroom receives hundreds of packages a week.
 Currently, this involves manually scanning, sorting, and distributing notices for each of these packages.
-This workflow could easily be reduced using software to track the addresee, mailbox, and filing location of the package
+This workflow could easily be reduced using software to track the addresee and mailbox of the package
 \section{Vision Statement}
-\label{sec:org4a012c1}
+\label{sec:orgaac9556}
 \begin{itemize}
 \item Store information in 2 databases.
 \begin{enumerate}
 \item to hold cadet info - Name, Box \#, Email Address, Graduation Year. This information can be pulled from regis.
-\item to hold package info - type (package or letter) ,tracking number, addressee, received date, picked up date
+\item to hold package info - tracking number, addressee, received date, picked up date
 \end{enumerate}
-\item Easy entry. Scan barcode (find a way to pull tracking number from barcode to database), enter addressee.
+\item Easy entry. Enter addressee and tracking number.
 Program will record \#, name, date - send email to addressee.
-Program will indicate where package should be stored in shelving system (mailbox if it is a letter)
 \item Search. Enter cadet name or mailbox number, see if there are any packages.
-\item Retrieval. Search cadet name, find package and location in filing system. Retrieve package, scan/sign/etc to mark as picked up (Again figure out scanner).
-
-Other functionality?
+\item Retrieval. Search cadet name, find package by tracking number, mark as picked up.
 \end{itemize}
+
+Mailroom staff already uses a system that involves scanners to read a packages tracking number. We would not need to integrate with that existing system.
+They could simply read the tracking number with their scanners, then enter manually. 
 \section{Meetings}
-\label{sec:org65a2e17}
+\label{sec:orgac5c4a9}
 \subsection{Meeting One}
-\label{sec:org2548fb8}
+\label{sec:org67e134b}
 Identified group members - Dan, Christian, Dylan
 Identified prospective project - Mailroom tracking system
 \subsection{Meeting two}
-\label{sec:org34199b3}
+\label{sec:org3e52e55}
 Brainstormed ideas for project, created general outline.
+\subsection{Meeting three}
+\label{sec:orgc76fad0}
+Adjusted plan and removed some anticipated functionality. 
 \end{document}
 \end{document}
