@@ -24,7 +24,10 @@ def add_package(box, track):
     date=datetime.today().strftime('%Y%b%d')
     cursor.execute("insert into packages(tracking_number,adressee,received) values ({track},'{name}','{date}')".format(track=track, name=name, date=date))
     connection.commit()
-    
+
+
+def find_in_db(var):
+    cursor.execute("SELECT * FROM packages WHERE adressee LIKE (?)", ('%'+var+'%',))
 
 def send_mail(subject, body, sender, to, password):
     msg=MIMEText(body)
