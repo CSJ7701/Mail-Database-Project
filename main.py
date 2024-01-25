@@ -14,12 +14,16 @@ tabControl.add(tab2, text='  Search Packages and Retrieve  ')
 tabControl.pack(expand=1, fill='both')
 
 # Setting up labels and buttons
-package_number = ttk.Entry(tab1).grid(column=1, row=0, padx=30, pady=30)
-package_number_label=ttk.Label(tab1, text='Tracking Number').grid(row=0, column=0, padx=10, pady=10)
-package_box = tk.Entry(tab1)
+
+package_number = ttk.Entry(tab1)
+package_number.grid(column=1, row=0, padx=30, pady=30)
+package_number_label=tk.Label(tab1, text='Tracking Number').grid(row=0, column=0, padx=10, pady=10)
+
+package_box = ttk.Entry(tab1)
 package_box.grid(column=1, row=1, padx=30, pady=10)
 package_box_label=ttk.Label(tab1, text='Box Number').grid(row=1, column=0, padx=10, pady=10)
-package_button = ttk.Button(tab1, text="Get Info", command=lambda: get_cadet_info(package_box.get())).grid(row=2, column=1, pady=5)
+
+package_button = ttk.Button(tab1, text="Get Info", command=lambda: add_package(package_box.get(), package_number.get())).grid(row=2, column=1, pady=5)
 
 
 root.mainloop()
