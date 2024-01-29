@@ -1,0 +1,26 @@
+#+TITLE: Mail Database Project
+#+AUTHOR: Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0
+#+LATEX_CLASS: article
+#+EXPORT_FILE_NAME: Project02
+#+BEGIN_EXPORT latex
+\clearpage
+#+END_EXPORT
+
+* Functional Requirements
+
+* Non Functional Requirements
+
+* Use Case Diagram
+
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/Requirements_UseCaseDiagram.png]]
+
+* Individual Use Cases
+
+** Dan
+
+** Christian
+
+** Dylan
+
+* Meeting Summaries
