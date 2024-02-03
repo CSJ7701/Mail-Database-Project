@@ -1,12 +1,27 @@
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
 #+TITLE: Mail Database Project
 #+AUTHOR: Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0
-#+LATEX_CLASS: article
+
 #+EXPORT_FILE_NAME: Project02
 #+OPTIONS: toc:nil
+
+* Contents
+:PROPERTIES:
+:UNNUMBERED: nil
+:END:
+** Functional Requirements
+** Non Functional Requirements
+** Use Case Diagram
+** Individual Use Cases
+*** Dan
+*** Christian
+*** Dylan
+** Meeting Summaries
 #+BEGIN_EXPORT latex
 \clearpage
 #+END_EXPORT
-
 * Functional Requirements
 - Accept data entry
 - Record tracking number and addressed box number for incoming packages
@@ -17,6 +32,7 @@
 - Search database for packages
 - Display all packages matching search terms
 - Easily update package status
+- Developers will write code in an organized fashion, such that the system is easy to expand later.
 * Non Functional Requirements
 - Will not misassociate packages
 - Will allow package entry, given necessary data, within 5 seconds
@@ -27,15 +43,30 @@
 
 * Use Case Diagram
 
-#+ATTR_LATEX: :caption \bicaption{---}
+#+ATTR_LATEX: :caption \bicaption{.                        Actor 2: Employee, Actor 3: Cadet }
 [[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/Requirements_UseCaseDiagram.png]]
-
+#+BEGIN_EXPORT latex
+\newpage
+#+END_EXPORT
 * Individual Use Cases
-
+test
 ** Dan
-
+Receive Package
 ** Christian
-
+test
 ** Dylan
-
+test
 * Meeting Summaries
+** Meeting 1 - 30JAN2024
+- Decided on division of labor
+- Agreed on general project scope
+- Began formulating Functional Requirements
+** Meeting 2 - 01FEB2024
+- Created Use-Case Diagram
+- Finished Functional Requirements
+- Started Non Functional
+- Started individual Use Cases
+** Meeting 3 - 02FEB2024
+- Polished Use-Case Diagram
+- Completed Requirements
+- Finished Individual Components
