@@ -1,4 +1,4 @@
-% Created 2024-01-29 Mon 14:10
+% Created 2024-02-03 Sat 10:00
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -27,29 +27,49 @@
 \begin{document}
 
 \maketitle
-\tableofcontents
-
 \clearpage
 \section{Functional Requirements}
-\label{sec:org6b473a9}
-
+\label{sec:orgb9f452d}
+\begin{itemize}
+\item Accept data entry
+\item Record tracking number and addressed box number for incoming packages
+\item Add entered information into sql database
+\item Associate incoming packages with Cadet information based on addressed box number
+\item Notify Cadet upon package arrival
+\item Record package status (Picked up or not)
+\item Search database for packages
+\item Display all packages matching search terms
+\item Easily update package status
+\end{itemize}
 \section{Non Functional Requirements}
-\label{sec:org823189a}
-
+\label{sec:org7b0b54f}
+\begin{itemize}
+\item Will not misassociate packages
+\item Will allow package entry, given necessary data, within 5 seconds
+\item Will be easily navigable, with all system functions available within 5 clicks
+\item Will allow package retrieval, given sufficient search information, within 10 seconds
+\item Will never fail to retrieve Cadet information, given sufficient correct search information
+\item Will never allow a package entry without associated Cadet information and association
+\end{itemize}
 \section{Use Case Diagram}
-\label{sec:orga14e9d8}
+\label{sec:orge4cbbdf}
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=.9\linewidth]{/home/csj7701/Projects/Mail-Database-Project/Class-Documents/Requirements_UseCaseDiagram.png}
+\bicaption{---}
+\end{figure}
 \section{Individual Use Cases}
-\label{sec:org16cab64}
+\label{sec:org864acaf}
 
 \subsection{Dan}
-\label{sec:org7fa8ae9}
+\label{sec:org469b0a4}
 
 \subsection{Christian}
-\label{sec:org70929e7}
+\label{sec:orga806134}
 
 \subsection{Dylan}
-\label{sec:org8e21265}
+\label{sec:org513a4c7}
 \section{Meeting Summaries}
-\label{sec:orgb92f047}
+\label{sec:orgbf1c6ee}
 \end{document}

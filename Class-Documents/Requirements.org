@@ -2,13 +2,28 @@
 #+AUTHOR: Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0
 #+LATEX_CLASS: article
 #+EXPORT_FILE_NAME: Project02
+#+OPTIONS: toc:nil
 #+BEGIN_EXPORT latex
 \clearpage
 #+END_EXPORT
 
 * Functional Requirements
-
+- Accept data entry
+- Record tracking number and addressed box number for incoming packages
+- Add entered information into sql database
+- Associate incoming packages with Cadet information based on addressed box number
+- Notify Cadet upon package arrival
+- Record package status (Picked up or not)
+- Search database for packages
+- Display all packages matching search terms
+- Easily update package status
 * Non Functional Requirements
+- Will not misassociate packages
+- Will allow package entry, given necessary data, within 5 seconds
+- Will be easily navigable, with all system functions available within 5 clicks
+- Will allow package retrieval, given sufficient search information, within 10 seconds
+- Will never fail to retrieve Cadet information, given sufficient correct search information
+- Will never allow a package entry without associated Cadet information and association
 
 * Use Case Diagram
 
