@@ -3,7 +3,7 @@
 :END:
 #+TITLE: Mail Database Project
 #+AUTHOR: Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0
-
+#+LATEX_HEADER: \usepackage{tabularx}
 #+EXPORT_FILE_NAME: Project02
 #+OPTIONS: toc:nil
 
@@ -14,11 +14,11 @@
 ** Functional Requirements
 ** Non Functional Requirements
 ** Use Case Diagram
+** Meeting Summaries
 ** Individual Use Cases
 *** Dan
 *** Christian
 *** Dylan
-** Meeting Summaries
 #+BEGIN_EXPORT latex
 \clearpage
 #+END_EXPORT
@@ -48,14 +48,6 @@
 #+BEGIN_EXPORT latex
 \newpage
 #+END_EXPORT
-* Individual Use Cases
-test
-** Dan
-Receive Package
-** Christian
-test
-** Dylan
-test
 * Meeting Summaries
 ** Meeting 1 - 30JAN2024
 - Decided on division of labor
@@ -70,3 +62,94 @@ test
 - Polished Use-Case Diagram
 - Completed Requirements
 - Finished Individual Components
+
+* Individual Use Cases
+
+#+BEGIN_EXPORT latex
+% DAN
+
+% CHRISTIAN
+
+\begin{table}[tbp]
+\hskip-3.0cm\begin{tabularx}{1.5\textwidth}{|X|X|}
+\hline
+\multicolumn{2}{|c|}{UC02 - Find Package (Christian)} \\
+\hline
+Scope & SQL Mail Database \\
+\hline
+Level & User Goal \\
+\hline
+\Primary Actor & Mailroom Staff \\
+\hline
+\stakeholders and Interests & Mailroom Staff: Want effificient and simple query methods \\ & Cadets: Want staff to find their package quickly \\
+\hline
+Precondition & Mailroom has package \\ & Package properly stored in database \\ & Mailroom has correct Cadet info for search \\
+\hline
+Postconditions & Package information updated in database \\
+\hline
+Main Success Scenario & 1. Cadet arrives at mailroom \\ &
+2. Mailroom staff enters Cadet info \\ & 3. all relevant results are displayed \\
+& 4. Mailroom staff retrieves package \\ & 5. Cadet receives package and leaves \\
+& 6. Database updated \\
+\hline
+Extensions & 3a. No results, mailroom staff checks the email sent to the cadet (should contain information to find the package manually) \\
+\hline
+Special Requirements & None \\
+\hline Technology and Data & None \\
+\hline Frequency & Nearly Continuous \\
+\hline Open Issues & None \\
+\hline \end{tabularx} \end{table}
+
+% DYLAN
+
+\begin{table}[tbp]
+\vskip-2.0cm\hskip-3.0cm\begin{tabularx}{1.5\textwidth}{|X|X|}
+\hline
+\multicolumn{2}{|c|}{UC03 - Add Package (Dylan)} \\
+\hline
+Scope & SQL Mail Database \\
+\hline
+Level & System goal \\
+\hline
+Primary Actor & Mailroom Staff \\
+\hline
+Stakeholders and Interests & Mailroom Staff: Want efficient and streamlined storage of packages \\
+ & Cadet: Wants timely and accurate notification of package receipt \\
+\hline
+Precondition & Package has been physically received by the mailroom staff \\
+\hline
+Postconditions & Package information has been added to SQL Database \\
+ & Email notification has been sent to Cadet \\
+ & Package has been stored appropriately \\
+\hline
+Main Success Scenario & 1. Mailroom staff scans the package \\
+ & 2. Automated system scans the package and reads tracking number/box number \\
+ & 3: Package status is updated in database along with timestamp and date \\
+ & 4. System generates and sends an email to Cadet \\
+ & 5. Staff stores the package in appropriate area/box number \\
+\hline
+Extensions & 1a. Invalid/incomplete information \\
+ & 1. Mailroom staff notified, providing option to manually input information \\
+ & 3a. Database upload failure \\
+ & 3. Mailroom staff notified, given guidance on resolving the issue \\
+ & 4a. Email notification failure \\
+ & 4. Mailroom staff notified, given guidance on resolving the issue \\
+ & Cancel Operation: Mailroom staff may cancel the operation at anytime \\
+\hline
+Special Requirements & Secure database is used to protect cadet security \\
+\hline
+Technology and Data & {empty} \\
+\hline
+Variations List & 1a. Automated scanning system \\
+ & 3a. SQL Database \\
+ & 4a. Email notification system \\
+\hline
+Frequency of Occurrence & Regularly: Anytime the mailroom receives a package \\
+\hline
+Open Issues & Ensure seamless integration with current scanners \\
+ & User training \\
+ & Systems ability to handle high volume of packages during highly busy times \\
+\hline
+\end{tabularx}
+\end{table}
+#+END_EXPORT
