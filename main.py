@@ -3,6 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 import tkinter as tk
 from tkinter import ttk, Toplevel
+from idlelib.tooltip import Hovertip
 from datetime import datetime
 
 
@@ -39,40 +40,6 @@ def populate_table(name=None, box=None, track=None):
     results=cursor.fetchall()
     for data in results:
         table.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
-
-class ToolTip(object):
-    def __init__(self,widget):
-        self.widget=widget
-        self.tipwindow=None
-        self.id=None
-        self.x=self.y=0
-    def showtip(self,text):
-        "Display text in tooltip window"
-        self.text=text
-        if self.tipwindow or not self.text:
-            return
-        x,y,cx,cy=self.widget.bbox("insert")
-        x=x+self.widget.winfo_rootx()+57
-        y=y+cy+self.widget.winfo_rooty()+27
-        self.tipwindow=tw=Toplevel(self.widget)
-        tw.wm_overrideredirect(1)
-        tw.wm_geometry("+%d+%d" % (x,y))
-        label=ttk.Label(tw,text=self.text,justify='left',relief='solid',borderwidth=1)
-        label.pack(ipadx=1)
-    def hidetip(self):
-        tw=self.tipwindow
-        self.tipwindow=None
-        if tw:
-            tw.destroy()
-
-def CreateToolTip(widget, text):
-    tooltip=ToolTip(widget)
-    def enter(event):
-        tooltip.showtip(text)
-    def leave(event):
-        tooltip.hidetip()
-    widget.bind('<Enter>', enter)
-    widget.bind('<Leave>', leave)
 
 def send_mail(subject, body, sender, to, password):
     msg=MIMEText(body)
@@ -127,9 +94,7 @@ search_track_label=ttk.Label(tab2, text='Tracking Number').grid(column=0, row=3,
 
 search_button=ttk.Button(tab2, text="Search", command=lambda: populate_table(name=search_name.get(), box=search_box.get(), track=search_track.get()))
 search_button.grid(row=4, column=0, columnspan=2)
-CreateToolTip(search_button, text='Fill out fields to search for a package.\n'
-                                  'The system will narrow results to match all fields;\n'
-                                  'leave fields blank to exclude them from the search') # Creates help text that will show up on hover. 'CreateToolTip' is defined above. 
+tooltip=Hovertip(search_button, 'Fill out fields to search.\nResults will narrow to match all fields.\nLeave fields blank to exclude them from search.')
 
 table=ttk.Treeview(tab2, columns=('track', 'name', 'received', 'picked'), show = 'headings') # Creates a table in tab2
 table.heading('track', text='Tracking Number')

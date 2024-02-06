@@ -1,4 +1,4 @@
-% Created 2024-02-03 Sat 13:50
+% Created 2024-02-06 Tue 07:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -15,11 +15,11 @@
 \usepackage{placeins}
 \usepackage{gensymb}
 \usepackage{tabularx}
-\author{Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0}
+\author{Christian Johnson\and\&\and Dan Nusraty\and\&\and Dylan Mcgill\and \newline \uline{Optimail}}
 \date{\today}
 \title{Mail Database Project}
 \hypersetup{
- pdfauthor={Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0},
+ pdfauthor={Christian Johnson\and\&\and Dan Nusraty\and\&\and Dylan Mcgill\and \newline \uline{Optimail}},
  pdftitle={Mail Database Project},
  pdfkeywords={},
  pdfsubject={},
@@ -29,26 +29,26 @@
 
 \maketitle
 \section{Contents}
-\label{sec:orgec19e59}
+\label{sec:org8133741}
 \subsection{Functional Requirements}
-\label{sec:org3a002d0}
+\label{sec:org869b707}
 \subsection{Non Functional Requirements}
-\label{sec:orgaca0829}
+\label{sec:org86a4da2}
 \subsection{Use Case Diagram}
-\label{sec:org59bcac8}
+\label{sec:org6814ada}
 \subsection{Meeting Summaries}
-\label{sec:org3159ffc}
+\label{sec:org9619fd4}
 \subsection{Individual Use Cases}
-\label{sec:org683ef4c}
+\label{sec:org72e3f60}
 \subsubsection{Dan}
-\label{sec:org0db10bf}
+\label{sec:org7b9a607}
 \subsubsection{Christian}
-\label{sec:org7781afb}
+\label{sec:org0446cec}
 \subsubsection{Dylan}
-\label{sec:org080ec2a}
+\label{sec:org0ce7861}
 \clearpage
 \section*{Functional Requirements}
-\label{sec:orgb8b3089}
+\label{sec:org87a4164}
 \begin{itemize}
 \item Accept data entry
 \item Record tracking number and addressed box number for incoming packages
@@ -62,7 +62,7 @@
 \item Developers will write code in an organized fashion, such that the system is easy to expand later.
 \end{itemize}
 \section*{Non Functional Requirements}
-\label{sec:orgfabef02}
+\label{sec:org5186efd}
 \begin{itemize}
 \item Will not misassociate packages
 \item Will allow package entry, given necessary data, within 5 seconds
@@ -72,7 +72,7 @@
 \item Will never allow a package entry without associated Cadet information and association
 \end{itemize}
 \section*{Use Case Diagram}
-\label{sec:org29848ab}
+\label{sec:orgb6d163b}
 
 \begin{figure}[htbp]
 \centering
@@ -81,16 +81,16 @@
 \end{figure}
 \newpage
 \section*{Meeting Summaries}
-\label{sec:org9639d6a}
+\label{sec:org8d2f8e5}
 \subsection*{Meeting 1 - 30JAN2024}
-\label{sec:org8b4dc90}
+\label{sec:org91e49e1}
 \begin{itemize}
 \item Decided on division of labor
 \item Agreed on general project scope
 \item Began formulating Functional Requirements
 \end{itemize}
 \subsection*{Meeting 2 - 01FEB2024}
-\label{sec:org1b1fbf1}
+\label{sec:org1002cc3}
 \begin{itemize}
 \item Created Use-Case Diagram
 \item Finished Functional Requirements
@@ -98,17 +98,41 @@
 \item Started individual Use Cases
 \end{itemize}
 \subsection*{Meeting 3 - 02FEB2024}
-\label{sec:org0148022}
+\label{sec:org19917b8}
 \begin{itemize}
 \item Polished Use-Case Diagram
 \item Completed Requirements
 \item Finished Individual Components
 \end{itemize}
 \section*{Individual Use Cases}
-\label{sec:org8335333}
+\label{sec:org0851872}
 
 % DAN
-
+\newpage
+\begin{table}[tbp]
+\vskip-1.0cm\hskip-3.0cm\begin{tabularx}{1.5\textwidth}{|X|X|}
+\hline\multicolumn{2}{|c|}{UC01 - Retrieve Package (Dan)} \\
+\hline Scope & Package Notification System \\
+\hline Level & User Goal \\
+\hline Primary Actor & Cadet \\
+\hline Stakeholders and Interests & Cadet: The cadet wants a simple and effective way to get their package \\ & Employee: wants a simple and effective way to find and deliver necessary packages. \\
+\hline Preconditions & Cadet receives an email indicating a package is ready \\
+\hline Postconditions & Cadet leaves the mailroom with their package. Mailroom staff updates the database, package is marked as delivered. \\
+\hline Main Success Scenario & 1. Cadet receives an email notifying them of a package \\
+& 2. Cadet arrives at mailroom and requests package \\
+& 3. Mailroom conducts "Find Package/ Pickup Package" to retrieve the package. \\
+& 4. Cadet takes custoody of their package from mailroom staff. \\
+\hline Extensions & 1A. Cadet does not see notification email (did not receive, or simply didn't notice) \\
+& 1Ai. In case of a database issue, mailroom staff should be notified.  \\
+& 1Aii. Cadets should resolve issues with their own email themselves \\
+& 1Aiii. In either case, the mailroom will still have the package; the cadet must then manually check whether a package is there. \\
+& 2A. If the cadet does not arrive at the mailroom, the package will be retained indefinitely either until it is retrieved or the addressee graduates. \\
+& 3A. If the mailroom fails to locate the package, they must check logs and records that are seperate from this system in order to locate it. \\
+\hline Special Requirements & The cadet must receive a package, and be willing to go to the mailroom to pick it up. \\
+\hline Technology and Data Variations & Touchpad to sign for package \\
+\hline Frequency of Occurence & Nearly Continuous \\
+\hline
+\end{tabularx}\end{table}
 % CHRISTIAN
 
 \begin{table}[tbp]

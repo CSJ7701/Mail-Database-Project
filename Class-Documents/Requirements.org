@@ -2,7 +2,7 @@
 :UNNUMBERED: t
 :END:
 #+TITLE: Mail Database Project
-#+AUTHOR: Christian Johnson\and Dan Nusraty\and Dylan Mcgill\and\newline Mailroom 2.0
+#+AUTHOR: Christian Johnson\and&\and Dan Nusraty\and&\and Dylan Mcgill\and \newline _Optimail_
 #+LATEX_HEADER: \usepackage{tabularx}
 #+EXPORT_FILE_NAME: Project02
 #+OPTIONS: toc:nil
@@ -67,7 +67,31 @@
 
 #+BEGIN_EXPORT latex
 % DAN
-
+\newpage
+\begin{table}[tbp]
+\vskip-1.0cm\hskip-3.0cm\begin{tabularx}{1.5\textwidth}{|X|X|}
+\hline\multicolumn{2}{|c|}{UC01 - Retrieve Package (Dan)} \\
+\hline Scope & Package Notification System \\
+\hline Level & User Goal \\
+\hline Primary Actor & Cadet \\
+\hline Stakeholders and Interests & Cadet: The cadet wants a simple and effective way to get their package \\ & Employee: wants a simple and effective way to find and deliver necessary packages. \\
+\hline Preconditions & Cadet receives an email indicating a package is ready \\
+\hline Postconditions & Cadet leaves the mailroom with their package. Mailroom staff updates the database, package is marked as delivered. \\
+\hline Main Success Scenario & 1. Cadet receives an email notifying them of a package \\
+& 2. Cadet arrives at mailroom and requests package \\
+& 3. Mailroom conducts "Find Package/ Pickup Package" to retrieve the package. \\
+& 4. Cadet takes custoody of their package from mailroom staff. \\
+\hline Extensions & 1A. Cadet does not see notification email (did not receive, or simply didn't notice) \\
+& 1Ai. In case of a database issue, mailroom staff should be notified.  \\
+& 1Aii. Cadets should resolve issues with their own email themselves \\
+& 1Aiii. In either case, the mailroom will still have the package; the cadet must then manually check whether a package is there. \\
+& 2A. If the cadet does not arrive at the mailroom, the package will be retained indefinitely either until it is retrieved or the addressee graduates. \\
+& 3A. If the mailroom fails to locate the package, they must check logs and records that are seperate from this system in order to locate it. \\
+\hline Special Requirements & The cadet must receive a package, and be willing to go to the mailroom to pick it up. \\
+\hline Technology and Data Variations & Touchpad to sign for package \\
+\hline Frequency of Occurence & Nearly Continuous \\
+\hline
+\end{tabularx}\end{table}
 % CHRISTIAN
 
 \begin{table}[tbp]
