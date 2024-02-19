@@ -1,14 +1,17 @@
+import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
-from gui import GUI
+from gui import NavGUI
+from gui import LoginScreen
 from database import Database
 
 if __name__ == "__main__":
     connection=Database("MailDB.db")
     connection.get_cadet_info("101")
-    root=tk.Tk()
-    root.geometry=("500x450")
+    root=ctk.CTk()
+    root.geometry=("200x400")
     root.title=("Mail Database")
-    gui=GUI(root, connection)
+    login=LoginScreen(root, connection)
+    # gui=NavGUI(root, connection)
     root.mainloop()
     connection.close_connection()

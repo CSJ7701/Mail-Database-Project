@@ -1,61 +1,17 @@
 import tkinter as tk
+import customtkinter as ctk
 from tkinter import ttk, Toplevel
 from idlelib.tooltip import Hovertip
 from database import Database
+from login import User
 
 class GUI:
-    def __init__(self, root, database):
+    def __init__(self, root, database, user):
         self.root=root
         self.database=database
-
-        # Tabs
-        self.tabControl = ttk.Notebook(self.root)
-        self.tab1 = ttk.Frame(self.tabControl)
-        self.tab2 = ttk.Frame(self.tabControl)
-        self.tabControl.add(self.tab1, text='  Add Package  ')
-        self.tabControl.add(self.tab2, text='  Search Packages and Retrieve  ')
-        self.tabControl.pack(expand=1, fill='both')
-
-        # Tab 1 - Package Entry
-        self.package_number = ttk.Entry(self.tab1)
-        self.package_number.grid(column=1, row=0, padx=30, pady=30)
-        self.package_number_label = ttk.Label(self.tab1, text='Tracking Number').grid(row=0, column=0, padx=10, pady=10)
-
-        self.package_box = ttk.Entry(self.tab1)
-        self.package_box.grid(column=1, row=1, padx=30, pady=10)
-        self.package_box_label = ttk.Label(self.tab1, text='Box Number').grid(row=1, column=0, padx=10, pady=10)
-
-        self.package_button = ttk.Button(self.tab1, text="Enter Package", command=self.add_package).grid(row=2, column=1, pady=5)
-
-        # Tab 2 - Package Retrieval
-        self.search_name = ttk.Entry(self.tab2)
-        self.search_name.grid(column=1, row=1, padx=10, pady=10)
-        self.search_name_label = ttk.Label(self.tab2, text='Cadet Name').grid(row=1, column=0, padx=10, pady=10)
-
-        self.search_box = ttk.Entry(self.tab2)
-        self.search_box.grid(column=1, row=2, padx=10, pady=10)
-        self.search_box_label = ttk.Label(self.tab2, text='Box Number').grid(column=0, row=2, padx=10, pady=10)
-
-        self.search_track = ttk.Entry(self.tab2)
-        self.search_track.grid(column=1, row=3, padx=10, pady=10)
-        self.search_track_label = ttk.Label(self.tab2, text='Tracking Number').grid(column=0, row=3, padx=10, pady=10)
-
-        self.search_button = ttk.Button(self.tab2, text="Search", command=self.populate_table)
-        self.search_button.grid(row=4, column=0, columnspan=2)
-        self.tooltip = Hovertip(self.search_button, 'Fill out fields to search.\nResults will narrow to match all fields.\nLeave fields blank to exclude them from search.')
-
-        self.table = ttk.Treeview(self.tab2, columns=('track', 'name', 'received', 'picked'), show='headings')
-        self.table.heading('track', text='Tracking Number')
-        self.table.heading('name', text='Cadet Name')
-        self.table.heading('received', text='Received')
-        self.table.heading('picked', text='Picked Up')
-        self.table.column('track', width=100)
-        self.table.column('name', width=150)
-        self.table.column('received', width=80)
-        self.table.column('picked', width=80)
-        self.table.grid(column=3, row=1, padx=20, pady=10, columnspan=1, rowspan=4)
-
-        self.table.bind('<<TreeviewSelect>>', self.item_select)
+        self.user=user
+        ctk.set_default_color_theme("../themes/CGA.json")
+        ctk.set_appearance_mode("dark")
 
     def add_package(self):
         box=self.package_box.get()
@@ -69,10 +25,77 @@ class GUI:
         results=self.database.populate_table(name=name, box=box, track=track)
         self.table.delete(*self.table.get_children())
         for data in results:
-            self.table.insert('', 'end', values(data[1], data[2], data[3], data[4]))
+            self.table.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
 
     def item_select(self, _):
         for i in self.table.selection():
             print(self.table.item(i)['values'])
 
-    
+    def show_error(self, message):
+        tk.messagebox.showerror("Error", message)
+
+class LoginScreen(GUI):
+    def __init__(self, root, database):
+        super().__init__(root, database, None)
+        self.root=root
+        self.database=database
+
+        ctk.CTkLabel(self.root, text="USCGA Mailroom", font=("Helvetica",20)).pack(pady=20)
+
+        self.frame=ctk.CTkFrame(master=self.root, width=30, height=30)
+        self.frame.pack(pady=20, padx=40, fill='both', expand=True)
+
+        ctk.CTkLabel(master=self.frame, text="Enter Login").pack(pady=12, padx=10)
+
+        self.usern=ctk.CTkEntry(master=self.frame, placeholder_text="Username")
+        self.usern.pack(pady=12, padx=10)
+        self.passw=ctk.CTkEntry(master=self.frame, placeholder_text="Password", show="*")
+        self.passw.pack(pady=12, padx=10)
+        self.button=ctk.CTkButton(master=self.frame, text='Login', command=self.login)
+        self.button.pack(pady=12, padx=10)
+
+    def login(self):
+        uname=self.usern.get()
+        passw=self.passw.get()
+        self.user=User(uname, passw, self.database)
+        if not uname:
+            self.show_error("Please enter a username")
+            return
+        if not passw:
+            self.show_error("Please enter a password")
+            return
+        validate=self.user.check_pass(passw)
+        print(validate)
+        if validate==-1:
+            self.show_error("Password Incorrect")
+        elif validate==-2:
+            self.show_error("Username not recognized")
+        elif validate==1:
+            self.root.destroy()
+            root=ctk.CTk()
+            NavGUI(root, self.database, self.user)
+             
+
+class NavGUI(GUI):
+    def __init__(self, root, database, user):
+        super().__init__(root, database, user)
+
+        self.nav_bar=ctk.CTkFrame(self.root)
+        self.nav_bar.pack(side="left", fill="y")
+
+        self.home_button=ctk.CTkButton(self.nav_bar, text="Home", command=self.show_home)
+        self.home_button.pack(side="top", padx=(30,20), pady=20)
+
+        self.main_frame=ctk.CTkFrame(self.root, width=400, height=300, fg_color=("#d3d3d3","#191919"))
+        self.main_frame.pack(expand=True, fill="both", padx=20, pady=20)
+
+        self.show_home()
+
+    def show_home(self):
+        self.clear_main_frame()
+        home_label=ctk.CTkLabel(self.main_frame, text=f"Welcome {self.user.username}", font=("Helvetica", 18))
+        home_label.pack(pady=50)
+
+    def clear_main_frame(self):
+        for widget in self.main_frame.winfo_children():
+            widget.destroy()

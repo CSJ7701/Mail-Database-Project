@@ -1,12 +1,31 @@
 import sqlite3
 import os
+from datetime import datetime
 
 class Database:
     def __init__(self, db_name):
         self.db_name=db_name
-        print(self.db_name)
+        print(f"Initialized connection to {self.db_name}")
         self.conn=sqlite3.connect(db_name)
-        self.cursor=self.conn.cursor
+        self.cursor=self.conn.cursor()
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS cadets (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT,
+                       email TEXT,
+                       graduation_date DATE,
+                       box_number INTEGER);""")
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS packages (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       tracking_number INTEGER,
+                       adressee TEXT,
+                       received DATE,
+                       picked_up DATE);""")
+        self.cursor.execute("""CREATE TABLE IF NOT EXISTS accounts (
+                            id INT PRIMARY KEY,
+                            username STRING(100) UNIQUE,
+                            hashed_password STRING(100),
+                            admin INT);""")
+                            
 
     def add_package(self, box, track):
         name, email=self.get_cadet_info(box)
@@ -20,17 +39,20 @@ class Database:
     def populate_table(self, name=None, box=None, track=None):
         query="SELECT * FROM packages WHERE 1=1"
         if name:
-            query += " AND adressee LIKE ?"
+            query += f" AND adressee LIKE '%{name}%'"
         if track:
-            query += " AND tracking_number LIKE ?"
+            query += f" AND tracking_number LIKE '%{track}%'"
         if box:
-            query += " AND box_number LIKE ?"
-        results = self.cursor.execute(query, ('%' + name + '%',))
-        return results.fetchall()
+            query += f" AND box_number LIKE '%{box}%'"
+        results = self.cursor.execute(query)
+        results=results.fetchall()
+        return results
 
     def get_cadet_info(self, box):
         name = self.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
-        names=''.join(item for item in name.fetchone() if item.isalnum())
+        names=self.cursor.fetchone()
+        if names:
+            names=''.join(item for item in names if item.isalnum())
         email=self.cursor.execute("SELECT email FROM cadets WHERE box_number = ?", (box,))
         emails=email.fetchall()
         return names, emails
