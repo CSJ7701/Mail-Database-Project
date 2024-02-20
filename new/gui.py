@@ -233,36 +233,57 @@ class DataScreen(NavGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame
 
-        input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
-        input_frame.pack(side="left", fill="y")
+        self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.input_frame.pack(side="left", fill="y")
 
-        input_add_frame=ctk.CTkFrame(input_frame, height=200)
-        input_add_frame.pack(fill="y", expand=True, padx=10, pady=10)
-        input_search_frame=ctk.CTkFrame(input_frame, height=200)
-        input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
+        self.input_add_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_add_frame.pack(fill="y", expand=True, padx=10, pady=10)
+        self.input_search_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
 
-        tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
-        tree_frame.pack(side="right")
+        self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.tree_frame.pack(side="right")
+        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.tree.pack(padx=(0,10), pady=10)
+        
 
-        name_search_input=ctk.CTkEntry(input_search_frame, placeholder_text="Cadet Name")
-        name_search_input.pack(side="top", padx=10, pady=10)
-        box_search_input=ctk.CTkEntry(input_search_frame, placeholder_text="Box Number")
-        box_search_input.pack(side="top", padx=10, pady=10)
-        track_search_input=ctk.CTkEntry(input_search_frame, placeholder_text="Tracking Number")
-        track_search_input.pack(side="top", padx=10, pady=10)
-        search_button=ctk.CTkButton(input_search_frame, text="Search", command=self.search)
-        search_button.pack(padx=10, pady=(10,0))
+        self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
+        self.name_search_input.pack(side="top", padx=10, pady=10)
+        self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
+        self.box_search_input.pack(side="top", padx=10, pady=10)
+        self.track_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Tracking Number")
+        self.track_search_input.pack(side="top", padx=10, pady=10)
+        self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
+        self.search_button.pack(padx=10, pady=(10,10))
 
-        box_add_input=ctk.CTkEntry(input_add_frame, placeholder_text="Box Number")
-        box_add_input.pack(side="top", padx=10, pady=10)
-        track_add_input=ctk.CTkEntry(input_add_frame, placeholder_text="Tracking Number")
-        track_add_input.pack(side="top", padx=10, pady=10)
-        add_button=ctk.CTkButton(input_add_frame, text="Add", command=self.add)
-        add_button.pack(padx=10, pady=(10,0))
+        self.box_add_input=ctk.CTkEntry(self.input_add_frame, placeholder_text="Box Number")
+        self.box_add_input.pack(side="top", padx=10, pady=10)
+        self.track_add_input=ctk.CTkEntry(self.input_add_frame, placeholder_text="Tracking Number")
+        self.track_add_input.pack(side="top", padx=10, pady=10)
+        self.add_button=ctk.CTkButton(self.input_add_frame, text="Add", command=self.add)
+        self.add_button.pack(padx=10, pady=(10,10))
 
+        self.track_search_input.get()
+
+        
     def search(self):
         print("Search for something")
-
+        self.tree.delete(*self.tree.get_children())
+        name=self.name_search_input.get()
+        box=self.box_search_input.get()
+        track=self.track_search_input.get()
+        query="SELECT * FROM packages WHERE 1=1"
+        if name:
+            query+=f" AND adressee LIKE '%{name}%'"
+        if track:
+            query+=f" AND tracking_number LIKE '%{track}%'"
+        if box:
+            query+=f" AND box_number LIKE '%{box}%'"
+        results=self.parent.database.cursor.execute(query)
+        results=self.parent.database.cursor.fetchall()
+        for data in results:
+            self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+# Fix the search func
     def add(self):
         print("Add Something")
 
