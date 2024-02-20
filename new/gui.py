@@ -156,12 +156,12 @@ class HomeScreen(NavGUI):
 
         unretrieved_tree=ttk.Treeview(data_bottom_left_frame, columns=("addressee", "received"))
         unretrieved_tree.heading("#1", text="Name")
-        unretrieved_tree.heading("#2", text="Received")
+        unretrieved_tree.heading("#2", text="Date Received")
         unretrieved_tree['show']='headings'
         unretrieved_tree.pack(side="left")
         retrieved_tree=ttk.Treeview(data_bottom_right_frame, columns=("addressee", "picked_up"))
         retrieved_tree.heading("#1", text="Name")
-        retrieved_tree.heading("#2", text="Retrieved")
+        retrieved_tree.heading("#2", text="Date Retrieved")
         retrieved_tree['show']='headings'
         retrieved_tree.pack(side="right")
 
@@ -170,7 +170,7 @@ class HomeScreen(NavGUI):
         self.Treeview_style()
 
     def unretrieved_packages(self):
-        self.parent.database.cursor.execute("SELECT * FROM packages WHERE picked_up IS NULL")
+        self.parent.database.cursor.execute("SELECT adressee,received FROM packages WHERE picked_up IS NULL")
         results=self.parent.database.cursor.fetchall()
         return results
     def unretrieved_package_count(self):
@@ -244,6 +244,10 @@ class DataScreen(NavGUI):
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
         self.tree_frame.pack(side="right")
         self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.tree.heading("#1", text="Tracking Number")
+        self.tree.heading("#2", text="Name")
+        self.tree.heading("#3", text="Date Received")
+        self.tree.heading("#4", text="Date Picked Up")
         self.tree.pack(padx=(0,10), pady=10)
         
 
@@ -278,14 +282,37 @@ class DataScreen(NavGUI):
         if track:
             query+=f" AND tracking_number LIKE '%{track}%'"
         if box:
-            query+=f" AND box_number LIKE '%{box}%'"
+            name=self.parent.database.cursor.execute(f"SELECT name FROM cadets WHERE box_number IS '%{box}%'")
+            query+=f" AND adressee LIKE '%{name}%'"
         results=self.parent.database.cursor.execute(query)
         results=self.parent.database.cursor.fetchall()
         for data in results:
             self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
 # Fix the search func
     def add(self):
-        print("Add Something")
+        box=self.box_add_input.get()
+        track=self.track_add_input.get()
+        name, email=self.get_cadet_info(box)
+        print(f"Name:{name}")
+        print(f"Email:{email}")
+        date=datetime.today().strftime('%Y%b%d')
+        self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) values ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
+        self.parent.database.conn.commit()
+
+    def get_cadet_info(self, box):
+        name = self.parent.database.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
+        names=self.parent.database.cursor.fetchone()
+        if names:
+            names=names[0]
+        #     names=''.join(item for item in names if item.isalnum())
+        #     print(f"Name results from database:{names}")
+        else:
+            print("No Names")
+        email=self.parent.database.cursor.execute("SELECT email FROM cadets WHERE box_number = ?", (box,))
+        emails=email.fetchone()
+        emails=emails[0]
+        return names, emails
+
 
         
         

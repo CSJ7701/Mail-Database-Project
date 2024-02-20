@@ -48,14 +48,5 @@ class Database:
         results=results.fetchall()
         return results
 
-    def get_cadet_info(self, box):
-        name = self.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
-        names=self.cursor.fetchone()
-        if names:
-            names=''.join(item for item in names if item.isalnum())
-        email=self.cursor.execute("SELECT email FROM cadets WHERE box_number = ?", (box,))
-        emails=email.fetchall()
-        return names, emails
-
     def close_connection(self):
         self.conn.close()
