@@ -1,0 +1,178 @@
+% Created 2024-02-20 Tue 14:20
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{gensymb}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usepackage{tikz-uml}
+\author{Christian Johnson\and\&\and Dan Nusraty\and\&\and Dylan Mcgill\and\newline Optimail}
+\date{\today}
+\title{Mail Database Project}
+\hypersetup{
+ pdfauthor={Christian Johnson\and\&\and Dan Nusraty\and\&\and Dylan Mcgill\and\newline Optimail},
+ pdftitle={Mail Database Project},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2.50 (Org mode 9.7-pre)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\section*{Main Entities}
+\label{sec:org488e9c5}
+\begin{itemize}
+\item User (Mailroom Employee)
+\item Package
+\item Database
+\item Database Tables
+\item Application/System
+\item Email
+\item Cadet
+\end{itemize}
+\section*{Attributes}
+\label{sec:orgf977227}
+\subsection*{User}
+\label{sec:orgc0e556a}
+\begin{itemize}
+\item Username
+\item Password
+\item Access Priviledge
+\end{itemize}
+\subsection*{Package}
+\label{sec:org02e8db0}
+\begin{itemize}
+\item Tracking Number
+\item Addressee
+\item Address
+\end{itemize}
+\subsection*{Database}
+\label{sec:orgfea8380}
+\begin{itemize}
+\item Name
+\item Filepath
+\item Sqlite3 Connection
+\item Sqlite3 Cursor
+\item Tables
+\end{itemize}
+\subsection*{Table}
+\label{sec:orgf77cee0}
+\begin{itemize}
+\item Properties
+\item Name
+\end{itemize}
+\subsection*{Email}
+\label{sec:orga1072e2}
+\begin{itemize}
+\item Addressee
+\item Subject
+\item Content
+\end{itemize}
+\subsection*{System}
+\label{sec:orgc046103}
+\begin{itemize}
+\item GUI state
+\end{itemize}
+\subsection*{Cadet}
+\label{sec:org9306f4c}
+\begin{itemize}
+\item Name
+\item Email
+\item Box Number
+\item Graduation Date
+\end{itemize}
+\section*{Relationships}
+\label{sec:org399f906}
+A single database will contain several tables.
+A single table will contain several Cadets.
+A single table will contain several packages.
+A single table will contain several users.
+A single cadet can be associated with several packages.
+A single cadet can receive several emails.
+A single package can be associated with several emails.
+A single application can be associated with several users.
+A single application is associated with at least 3 database tables.
+\section*{Constraints}
+\label{sec:org4fc1174}
+???
+\section*{Domain Model}
+\label{sec:org3f1ac46}
+
+
+\section*{Class Diagram}
+\label{sec:org6e8af8b}
+
+\begin{tikzpicture}
+  \umlclass[x=0,y=0]{User}{
+    - Username : string \\
+    - Password : string \\
+    - AccessPrivilege : string
+  }{}
+
+  \umlclass[x=0,y=-3]{Package}{
+    - TrackingNumber : string \\
+    - Addressee : string \\
+    - Address : string
+  }{}
+
+  \umlclass[x=0,y=-6]{Database}{
+    - Name : string \\
+    - Filepath : string \\
+    - SQLite3Connection \\
+    - SQLite3Cursor \\
+    - Tables : Table[]
+  }{}
+
+  \umlclass[x=0,y=-9]{Table}{
+    - Properties : string \\
+    - Name : string \\
+    - Cadets : Cadet[]
+    - Packages : Package[]
+    - Users : User[]
+  }{}
+
+  \umlclass[x=0,y=-12]{Email}{
+    - Addressee : string \\
+    - Subject : string \\
+    - Content : string
+  }{}
+
+  \umlclass[x=0,y=-15]{System}{
+    - GUIState : string \\
+    - Users : User[]
+    - Databases : Database[]
+    - Tables : Table[]
+  }{}
+
+  \umlclass[x=0,y=-18]{Cadet}{
+    - Name : string \\
+    - Email : string \\
+    - BoxNumber : string \\
+    - GraduationDate : date \\
+    - Packages : Package[]
+    - Emails : Email[]
+  }{}
+
+  %\umlassoc[mult1=*, pos1=0.1, mult2=1, pos2=0.9]{Database}{Table}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Package}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Package}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Package}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Database}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Table}
+\end{tikzpicture}
+\end{document}

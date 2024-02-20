@@ -1,0 +1,135 @@
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+title: Mail Database Project
+#+AUTHOR: Christian Johnson\and&\and Dan Nusraty\and&\and Dylan Mcgill\and\newline Optimail
+#+LATEX_HEADER: \usepackage{tabularx}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{tikz-uml}
+#+EXPORT_FILE_NAME: Project03
+#+OPTIONS: toc:nil
+
+* Main Entities
+- User (Mailroom Employee)
+- Package
+- Database
+- Database Tables
+- Application/System
+- Email
+- Cadet
+
+
+* Attributes
+** User
+- Username
+- Password
+- Access Priviledge
+** Package
+- Tracking Number
+- Addressee
+- Address
+** Database
+- Name
+- Filepath
+- Sqlite3 Connection
+- Sqlite3 Cursor
+- Tables
+** Table
+- Properties
+- Name
+** Email
+- Addressee
+- Subject
+- Content
+** System
+- GUI state
+** Cadet
+- Name
+- Email
+- Box Number
+- Graduation Date
+
+* Relationships
+A single database will contain several tables.
+A single table will contain several Cadets.
+A single table will contain several packages.
+A single table will contain several users.
+A single cadet can be associated with several packages.
+A single cadet can receive several emails.
+A single package can be associated with several emails.
+A single application can be associated with several users.
+A single application is associated with at least 3 database tables.
+
+* Constraints
+???
+
+
+* Domain Model
+
+
+* Class Diagram
+
+#+begin_export latex
+\begin{tikzpicture}
+  \umlclass[x=0,y=0]{User}{
+    - Username : string \\
+    - Password : string \\
+    - AccessPrivilege : string
+  }{}
+
+  \umlclass[x=0,y=-3]{Package}{
+    - TrackingNumber : string \\
+    - Addressee : string \\
+    - Address : string
+  }{}
+
+  \umlclass[x=0,y=-6]{Database}{
+    - Name : string \\
+    - Filepath : string \\
+    - SQLite3Connection \\
+    - SQLite3Cursor \\
+    - Tables : Table[]
+  }{}
+
+  \umlclass[x=0,y=-9]{Table}{
+    - Properties : string \\
+    - Name : string \\
+    - Cadets : Cadet[]
+    - Packages : Package[]
+    - Users : User[]
+  }{}
+
+  \umlclass[x=0,y=-12]{Email}{
+    - Addressee : string \\
+    - Subject : string \\
+    - Content : string
+  }{}
+
+  \umlclass[x=0,y=-15]{System}{
+    - GUIState : string \\
+    - Users : User[]
+    - Databases : Database[]
+    - Tables : Table[]
+  }{}
+
+  \umlclass[x=0,y=-18]{Cadet}{
+    - Name : string \\
+    - Email : string \\
+    - BoxNumber : string \\
+    - GraduationDate : date \\
+    - Packages : Package[]
+    - Emails : Email[]
+  }{}
+
+  %\umlassoc[mult1=*, pos1=0.1, mult2=1, pos2=0.9]{Database}{Table}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Package}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Package}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Package}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Database}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Table}
+\end{tikzpicture}
+#+end_export
