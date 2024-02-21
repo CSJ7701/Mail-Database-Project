@@ -20,6 +20,7 @@ Install [Pip](https://pip.pypa.io/en/stable/installation/)
 
 Using pip, install:
 - tkinter
+- customtkinter
 
 You will also need:
 - datetime
