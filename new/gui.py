@@ -97,6 +97,8 @@ class NavGUI(GUI):
         self.data_button=ctk.CTkButton(self.nav_bar, text="Data", command=self.show_data)
         self.data_button.pack(side="top", padx=(30), pady=(20,0))
         self.reports_button=ctk.CTkButton(self.nav_bar, text="Reports", command=self.show_reports)
+        self.manage_button=ctk.CTkButton(self.nav_bar, text="Manage DB", command=self.show_manage)
+        self.manage_button.pack(side="top", padx=(30), pady=(20,0))
         self.reports_button.pack(side="top", padx=(30), pady=(20,0))
         self.settings_button=ctk.CTkButton(self.nav_bar, text="Settings", command=self.show_settings)
         self.settings_button.pack(side="top",  padx=(30), pady=(20,0))
@@ -113,13 +115,18 @@ class NavGUI(GUI):
     def show_data(self):
         self.clear_main_frame()
         DataScreen(self.main_frame, self)
+
+    def show_manage(self):
+        self.clear_main_frame()
+        print("MANAGE DB HERE")
         
     def show_reports(self):
         self.clear_main_frame()
+        print("SHOW REPORTS HERE")
 
     def show_settings(self):
         self.clear_main_frame()
-        print("SETTINGS TAB HERE")
+        print("SHOW SETTINGS HERE")
 
     def clear_main_frame(self):
         for widget in self.main_frame.winfo_children():
@@ -314,5 +321,8 @@ class DataScreen(NavGUI):
         return names, emails
 
 
+class Manage(self):
+    def __init__():
+        print("init")
         
         
