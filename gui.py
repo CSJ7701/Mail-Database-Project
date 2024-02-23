@@ -9,12 +9,11 @@ from config import Config
 
 class GUI:
     def __init__(self, root, database, user):
-        config=Config("./config.ini")
+
         self.root=root
         self.database=database
         self.user=user
-        ctk.set_default_color_theme("themes/CGA.json")
-        ctk.set_appearance_mode(config.appearance('color_mode'))
+
         self.root.resizable(width=0, height=0)
 
     def add_package(self):
@@ -90,6 +89,10 @@ class NavGUI(GUI):
     def __init__(self, root, database, user):
         super().__init__(root, database, user)
         self.database=database
+        self.config=Config("./config.ini")
+        ctk.set_default_color_theme("themes/CGA.json")
+        ctk.set_appearance_mode(self.config.appearance('color_mode'))
+
 
         self.nav_bar=ctk.CTkFrame(self.root, fg_color=("#d3d3d3", "#191919"))
         self.nav_bar.pack(side="left", fill="y", pady=10, padx=(10,0))
@@ -327,6 +330,7 @@ class Manage(NavGUI):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame
+        self.config=self.parent.parent.config
 
         self.left_frame=ctk.CTkFrame(self.main_frame, width=200, height=400, fg_color=("#d3d3d3", "#000000"))
         self.left_frame.pack(side="left", fill="y", padx=10, pady=10)
@@ -337,5 +341,7 @@ class Manage(NavGUI):
 
         self.right_frame=ctk.CTkFrame(self.main_frame, width=300, height=200, fg_color=("#d3d3d3", "#000000"))
         self.right_frame.pack(side="left", fill="y", padx=10, pady=10)
-        
+
+    def ChangeColorMode(self, choice):
+        ...
         
