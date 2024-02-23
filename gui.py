@@ -120,7 +120,7 @@ class NavGUI(GUI):
 
     def show_manage(self):
         self.clear_main_frame()
-        print("MANAGE DB HERE")
+        Manage(self.main_frame, self)
         
     def show_reports(self):
         self.clear_main_frame()
@@ -324,7 +324,18 @@ class DataScreen(NavGUI):
 
 
 class Manage(NavGUI):
-    def __init__():
-        print("init")
+    def __init__(self, main_frame, ParentGUI):
+        self.parent=ParentGUI
+        self.main_frame=main_frame
+
+        self.left_frame=ctk.CTkFrame(self.main_frame, width=200, height=400, fg_color=("#d3d3d3", "#000000"))
+        self.left_frame.pack(side="left", fill="y", padx=10, pady=10)
+        
+
+        self.middle_frame=ctk.CTkFrame(self.main_frame, width=300, height=200, fg_color=("#d3d3d3", "#000000"))
+        self.middle_frame.pack(side="left", fill="y", padx=10, pady=10)
+
+        self.right_frame=ctk.CTkFrame(self.main_frame, width=300, height=200, fg_color=("#d3d3d3", "#000000"))
+        self.right_frame.pack(side="left", fill="y", padx=10, pady=10)
         
         
