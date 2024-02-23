@@ -5,14 +5,16 @@ from idlelib.tooltip import Hovertip
 from database import Database
 from login import User
 from datetime import datetime
+from config import Config
 
 class GUI:
     def __init__(self, root, database, user):
+        config=Config("./config.ini")
         self.root=root
         self.database=database
         self.user=user
-        ctk.set_default_color_theme("../themes/CGA.json")
-        ctk.set_appearance_mode("dark")
+        ctk.set_default_color_theme("themes/CGA.json")
+        ctk.set_appearance_mode(config.appearance('color_mode'))
         self.root.resizable(width=0, height=0)
 
     def add_package(self):
@@ -321,7 +323,7 @@ class DataScreen(NavGUI):
         return names, emails
 
 
-class Manage(self):
+class Manage(NavGUI):
     def __init__():
         print("init")
         
