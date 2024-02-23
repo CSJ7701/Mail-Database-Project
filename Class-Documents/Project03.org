@@ -8,7 +8,9 @@
 #+LATEX_HEADER: \usepackage{tikz-uml}
 #+EXPORT_FILE_NAME: Project03
 #+OPTIONS: toc:nil
-
+#+begin_export latex
+\newpage
+#+end_export
 * Main Entities
 - User (Mailroom Employee)
 - Package
@@ -43,6 +45,7 @@
 - Content
 ** System
 - GUI state
+- User
 ** Cadet
 - Name
 - Email
@@ -66,60 +69,148 @@ A single application is associated with at least 3 database tables.
 
 * Domain Model
 
-
-* Class Diagram
-
 #+begin_export latex
 \begin{tikzpicture}
-  \umlclass[x=0,y=0]{User}{
+  \umlclass[x=-3,y=-4]{User}{
     - Username : string \\
     - Password : string \\
     - AccessPrivilege : string
   }{}
 
-  \umlclass[x=0,y=-3]{Package}{
+  \umlclass[x=1,y=-8]{Package}{
     - TrackingNumber : string \\
     - Addressee : string \\
     - Address : string
   }{}
 
-  \umlclass[x=0,y=-6]{Database}{
+  \umlclass[x=6,y=0]{Database}{
     - Name : string \\
     - Filepath : string \\
     - SQLite3Connection \\
     - SQLite3Cursor \\
-    - Tables : Table[]
+    - Tables
   }{}
 
-  \umlclass[x=0,y=-9]{Table}{
+  \umlclass[x=6,y=-4]{Table}{
     - Properties : string \\
     - Name : string \\
-    - Cadets : Cadet[]
-    - Packages : Package[]
-    - Users : User[]
   }{}
 
-  \umlclass[x=0,y=-12]{Email}{
+  \umlclass[x=-3,y=-13]{Email}{
     - Addressee : string \\
     - Subject : string \\
     - Content : string
   }{}
 
-  \umlclass[x=0,y=-15]{System}{
+  \umlclass[x=-3,y=0]{Application}{
     - GUIState : string \\
-    - Users : User[]
-    - Databases : Database[]
-    - Tables : Table[]
+    - User
   }{}
 
-  \umlclass[x=0,y=-18]{Cadet}{
+  \umlclass[x=6,y=-13]{Cadet}{
     - Name : string \\
     - Email : string \\
     - BoxNumber : string \\
     - GraduationDate : date \\
-    - Packages : Package[]
-    - Emails : Email[]
   }{}
+
+
+ \umlassoc[mult1=1, pos1=0.2, mult2=*, pos2=0.9]{Database}{Table}
+ \umlassoc[mult1=1, pos1=0.1, mult2=1, pos2=0.9]{Application}{Database}
+ \umlassoc[mult1=1, pos1=0.3, mult2=*, pos2=0.9]{Application}{User}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Table}{User}
+ \umlassoc[mult1=1, pos1=0.3, mult2=*, pos2=0.9]{Table}{Package}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Package}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Email}
+ \umlassoc[mult1=1, pos1=0.3, mult2=1..*, pos2=0.9]{Package}{Email}
+
+  %\umlassoc[mult1=*, pos1=0.1, mult2=1, pos2=0.9]{Database}{Table}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Package}
+  %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Package}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Package}{Email}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{User}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Database}
+  %\umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{System}{Table}
+\end{tikzpicture}
+#+end_export
+
+
+* Class Diagram
+
+#+begin_export latex
+\begin{tikzpicture}
+  \umlclass[x=-5,y=-6]{User}{
+    - Username : string \\
+    - Password : string \\
+    - AccessPrivilege : string
+  }{
+    + Login(Username, Password) \\
+    + Logout()
+  }
+
+  \umlclass[x=1,y=-10.5]{Package}{
+    - TrackingNumber : string \\
+    - Addressee : string \\
+    - Address : string
+  }{}
+
+  \umlclass[x=3,y=0]{Database}{
+    - Name : string \\
+    - Filepath : string \\
+    - SQLite3Connection \\
+    - SQLite3Cursor \\
+    - Tables
+  }{
+    + AddUser(Username, Password, AccessPriviledge) \\
+    + AddPackage(BoxNumber, TrackingNumber) \\
+    + SearchPackages(CadetName, BoxNumber, TrackingNumber)
+  }
+
+  \umlclass[x=4,y=-6]{Table}{
+    - Properties : string \\
+    - Name : string \\
+  }{
+    + AddEntry(key, value) \\
+    + RemoveEntry(key, value) \\
+    + SearchEntries(fields, query, return)
+  }
+
+  \umlclass[x=-6,y=-13]{Email}{
+    - Addressee : string \\
+    - Subject : string \\
+    - Content : string
+  }{
+    + Send()
+  }
+
+  \umlclass[x=-5,y=0]{Application}{
+    - GUIState : string \\
+    - User
+  }{
+    + Open()
+  }
+
+  \umlclass[x=4,y=-15]{Cadet}{
+    - Name : string \\
+    - Email : string \\
+    - BoxNumber : string \\
+    - GraduationDate : date \\
+  }{}
+
+
+ \umlaggreg[mult1=1, pos1=0.2, mult2=*, pos2=0.7]{Database}{Table}
+ \umlassoc[mult1=1, pos1=0.1, mult2=1, pos2=0.9]{Application}{Database}
+ \umlassoc[mult1=1, pos1=0.3, mult2=*, pos2=0.9]{Application}{User}
+ \umlaggreg[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Table}{User}
+ \umlaggreg[mult1=1, pos1=0.3, mult2=*, pos2=0.9]{Table}{Package}
+ \umlaggreg[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.7]{Cadet}{Package}
+ \umlassoc[mult1=1, pos1=0.1, mult2=*, pos2=0.9]{Cadet}{Email}
+ \umlassoc[mult1=1, pos1=0.3, mult2=1..*, pos2=0.6]{Package}{Email}
 
   %\umlassoc[mult1=*, pos1=0.1, mult2=1, pos2=0.9]{Database}{Table}
   %\umlassoc[mult1=*, pos1=0.1, mult2=*, pos2=0.9]{Table}{Cadet}
