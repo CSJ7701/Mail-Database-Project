@@ -64,7 +64,12 @@ A single application can be associated with several users.
 A single application is associated with at least 3 database tables.
 
 * Constraints
-???
+- Package entry should not take longer than 5 seconds.
+- Navigation to a different function should not take more than 5 clicks
+- Package retrieval, with correct information, should not take more than 10 seconds
+- The system must not miss-associate packages
+- The system must not provide unrelated search results
+- The system must not allow insecure access to cadet information
 
 
 * Domain Model

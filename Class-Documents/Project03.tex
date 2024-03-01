@@ -1,4 +1,4 @@
-% Created 2024-02-22 Thu 18:55
+% Created 2024-02-29 Thu 17:07
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -25,14 +25,14 @@
  pdftitle={Mail Database Project},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2.50 (Org mode 9.5.5)}, 
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 \newpage
-\section{Main Entities}
-\label{sec:orgca48fa1}
+\section*{Main Entities}
+\label{sec:orgc2dc348}
 \begin{itemize}
 \item User (Mailroom Employee)
 \item Package
@@ -44,24 +44,24 @@
 \end{itemize}
 
 
-\section{Attributes}
-\label{sec:orgcd0b494}
-\subsection{User}
-\label{sec:orgf9eb3c8}
+\section*{Attributes}
+\label{sec:orgdc53b45}
+\subsection*{User}
+\label{sec:orgd8fcdaf}
 \begin{itemize}
 \item Username
 \item Password
 \item Access Priviledge
 \end{itemize}
-\subsection{Package}
-\label{sec:orgee9829c}
+\subsection*{Package}
+\label{sec:orgfffb11d}
 \begin{itemize}
 \item Tracking Number
 \item Addressee
 \item Address
 \end{itemize}
-\subsection{Database}
-\label{sec:orgb371d98}
+\subsection*{Database}
+\label{sec:org013de57}
 \begin{itemize}
 \item Name
 \item Filepath
@@ -69,27 +69,27 @@
 \item Sqlite3 Cursor
 \item Tables
 \end{itemize}
-\subsection{Table}
-\label{sec:orgeb1f7fb}
+\subsection*{Table}
+\label{sec:orgbdf2be0}
 \begin{itemize}
 \item Properties
 \item Name
 \end{itemize}
-\subsection{Email}
-\label{sec:org1801844}
+\subsection*{Email}
+\label{sec:org097604f}
 \begin{itemize}
 \item Addressee
 \item Subject
 \item Content
 \end{itemize}
-\subsection{System}
-\label{sec:org1792646}
+\subsection*{System}
+\label{sec:org437a5be}
 \begin{itemize}
 \item GUI state
 \item User
 \end{itemize}
-\subsection{Cadet}
-\label{sec:orgd72d0fa}
+\subsection*{Cadet}
+\label{sec:orgbfe04b1}
 \begin{itemize}
 \item Name
 \item Email
@@ -97,8 +97,8 @@
 \item Graduation Date
 \end{itemize}
 
-\section{Relationships}
-\label{sec:org84bc54c}
+\section*{Relationships}
+\label{sec:orgbd8f544}
 A single database will contain several tables.
 A single table will contain several Cadets.
 A single table will contain several packages.
@@ -109,13 +109,20 @@ A single package can be associated with several emails.
 A single application can be associated with several users.
 A single application is associated with at least 3 database tables.
 
-\section{Constraints}
-\label{sec:org2f24c21}
-???
+\section*{Constraints}
+\label{sec:org7fb79d7}
+\begin{itemize}
+\item Package entry should not take longer than 5 seconds.
+\item Navigation to a different function should not take more than 5 clicks
+\item Package retrieval, with correct information, should not take more than 10 seconds
+\item The system must not miss-associate packages
+\item The system must not provide unrelated search results
+\item The system must not allow insecure access to cadet information
+\end{itemize}
 
 
-\section{Domain Model}
-\label{sec:org281e5fc}
+\section*{Domain Model}
+\label{sec:org05a658d}
 
 \begin{tikzpicture}
   \umlclass[x=-3,y=-4]{User}{
@@ -185,8 +192,8 @@ A single application is associated with at least 3 database tables.
 \end{tikzpicture}
 
 
-\section{Class Diagram}
-\label{sec:org9c4eb00}
+\section*{Class Diagram}
+\label{sec:orgd265276}
 
 \begin{tikzpicture}
   \umlclass[x=-5,y=-6]{User}{
