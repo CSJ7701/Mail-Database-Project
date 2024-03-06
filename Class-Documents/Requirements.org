@@ -23,16 +23,21 @@
 \clearpage
 #+END_EXPORT
 * Functional Requirements
-- Accept data entry
-- Record tracking number and addressed box number for incoming packages
-- Add entered information into sql database
-- Associate incoming packages with Cadet information based on addressed box number
-- Notify Cadet upon package arrival
-- Record package status (Picked up or not)
-- Search database for packages
-- Display all packages matching search terms
-- Easily update package status
+- System will accept data entry
+- System will record tracking number and addressed box number for incoming packages
+- System will add entered information into sql database
+- System will associate incoming packages with Cadet information based on addressed box number
+- System will notify Cadet upon package arrival
+- System will record package status (Picked up or not)
+- Users can search database for packages
+- System will display all packages matching search terms
+- Users can easily update package status
 - Developers will write code in an organized fashion, such that the system is easy to expand later.
+- System will allow user to categorize packages (e.g. perishable, priority, regular)
+- System will authenticate users with a login screen. Certain functionality wil only be available to users with authentication
+- System will record a history of package movement and status change
+- System will provide reporting tools to the user
+- System will feature a status dashboard to show totals and informational breakdowns. 
 * Non Functional Requirements
 - Will not misassociate packages
 - Will allow package entry, given necessary data, within 5 seconds

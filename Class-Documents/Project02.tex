@@ -1,4 +1,4 @@
-% Created 2024-02-06 Tue 07:26
+% Created 2024-03-06 Wed 11:48
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -23,46 +23,52 @@
  pdftitle={Mail Database Project},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 28.2.50 (Org mode 9.7-pre)}, 
+ pdfcreator={Emacs 29.2 (Org mode 9.6.15)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
+
 \section{Contents}
-\label{sec:org8133741}
+\label{sec:org5b9eeda}
 \subsection{Functional Requirements}
-\label{sec:org869b707}
+\label{sec:org4d06cec}
 \subsection{Non Functional Requirements}
-\label{sec:org86a4da2}
+\label{sec:orgefc45a3}
 \subsection{Use Case Diagram}
-\label{sec:org6814ada}
+\label{sec:orgc6c622c}
 \subsection{Meeting Summaries}
-\label{sec:org9619fd4}
+\label{sec:org0018a43}
 \subsection{Individual Use Cases}
-\label{sec:org72e3f60}
+\label{sec:org27816d4}
 \subsubsection{Dan}
-\label{sec:org7b9a607}
+\label{sec:org87cd082}
 \subsubsection{Christian}
-\label{sec:org0446cec}
+\label{sec:org8380ec5}
 \subsubsection{Dylan}
-\label{sec:org0ce7861}
+\label{sec:orgb3cce39}
 \clearpage
 \section*{Functional Requirements}
-\label{sec:org87a4164}
+\label{sec:orgbbb587b}
 \begin{itemize}
-\item Accept data entry
-\item Record tracking number and addressed box number for incoming packages
-\item Add entered information into sql database
-\item Associate incoming packages with Cadet information based on addressed box number
-\item Notify Cadet upon package arrival
-\item Record package status (Picked up or not)
-\item Search database for packages
-\item Display all packages matching search terms
-\item Easily update package status
+\item System will accept data entry
+\item System will record tracking number and addressed box number for incoming packages
+\item System will add entered information into sql database
+\item System will associate incoming packages with Cadet information based on addressed box number
+\item System will notify Cadet upon package arrival
+\item System will record package status (Picked up or not)
+\item Users can search database for packages
+\item System will display all packages matching search terms
+\item Users can easily update package status
 \item Developers will write code in an organized fashion, such that the system is easy to expand later.
+\item System will allow user to categorize packages (e.g. perishable, priority, regular)
+\item System will authenticate users with a login screen. Certain functionality wil only be available to users with authentication
+\item System will record a history of package movement and status change
+\item System will provide reporting tools to the user
+\item System will feature a status dashboard to show totals and informational breakdowns.
 \end{itemize}
 \section*{Non Functional Requirements}
-\label{sec:org5186efd}
+\label{sec:orga1c63aa}
 \begin{itemize}
 \item Will not misassociate packages
 \item Will allow package entry, given necessary data, within 5 seconds
@@ -71,8 +77,9 @@
 \item Will never fail to retrieve Cadet information, given sufficient correct search information
 \item Will never allow a package entry without associated Cadet information and association
 \end{itemize}
+
 \section*{Use Case Diagram}
-\label{sec:orgb6d163b}
+\label{sec:org8e29a86}
 
 \begin{figure}[htbp]
 \centering
@@ -81,16 +88,16 @@
 \end{figure}
 \newpage
 \section*{Meeting Summaries}
-\label{sec:org8d2f8e5}
+\label{sec:orge84832f}
 \subsection*{Meeting 1 - 30JAN2024}
-\label{sec:org91e49e1}
+\label{sec:orge9e4e30}
 \begin{itemize}
 \item Decided on division of labor
 \item Agreed on general project scope
 \item Began formulating Functional Requirements
 \end{itemize}
 \subsection*{Meeting 2 - 01FEB2024}
-\label{sec:org1002cc3}
+\label{sec:orgccd4ad5}
 \begin{itemize}
 \item Created Use-Case Diagram
 \item Finished Functional Requirements
@@ -98,14 +105,15 @@
 \item Started individual Use Cases
 \end{itemize}
 \subsection*{Meeting 3 - 02FEB2024}
-\label{sec:org19917b8}
+\label{sec:org39d4412}
 \begin{itemize}
 \item Polished Use-Case Diagram
 \item Completed Requirements
 \item Finished Individual Components
 \end{itemize}
+
 \section*{Individual Use Cases}
-\label{sec:org0851872}
+\label{sec:orgf4218ee}
 
 % DAN
 \newpage
