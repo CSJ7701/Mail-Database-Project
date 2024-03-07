@@ -13,6 +13,10 @@ class GUI:
         self.root=root
         self.database=database
         self.user=user
+        self.config=Config("./config.ini")
+        ctk.set_default_color_theme("themes/CGA.json")
+        ctk.set_appearance_mode(self.config.appearance('color_mode'))
+
 
         self.root.resizable(width=0, height=0)
 
