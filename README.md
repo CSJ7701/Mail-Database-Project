@@ -1,7 +1,7 @@
 
 # Mail Database Project
 
-Consists of 1 main file, main.py
+
 
 # TODO
 
