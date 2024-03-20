@@ -1,0 +1,83 @@
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+#+title: Mail Database Project
+#+OPTIONS: toc:nil
+#+AUTHOR: Christian Johnson\and&\and Dan Nusraty\and&\and Dylan McGill\and\newline Optimail
+#+LATEX_HEADER: \usepackage{hyperref}
+
+#+begin_export latex
+\newpage
+#+end_export
+* Preface
+Tasks to complete assignment:
+- Refine application for use
+- Analytics Tracking
+- Reports and Settings Completion
+- Specific classifications/tags for individual packages
+- Secure authorization system for users
+- Logout feature
+
+
+Lessons learned and changes from feedback:
+- Team should focus more on step-by-step procedures, in order to stay organized.
+- Recquire "Admin" or some higher authority credentials to manually add/edit packages within a "database interface"
+- Scanning capability
+- If package is not picked up within 30 days, archive
+- If archived for 6 months, delete from database
+
+
+* Sequence Diagrams
+** Dylan
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramDylan.png]]
+
+** Dan
+
+** Christian
+
+* State Diagrams
+
+** Dylan
+
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/StateDiagramDylan.png]]
+** Dan
+
+** Christian
+
+
+
+* Github Repository
+
+A \href{https://github.com/CSJ7701/Mail-Database-Project}{Github Repository} has been created. Groupmembers and Instructor were added as collaborators.
+
+* Group Meeting Summaries
+
+3/6/2024:
+- Reviewed current functionality
+- Reviewed Github functionality
+- Familiarized with Github and Git interfaces
+- Planned for presentation
+
+
+3/8/2024:
+- Planned work assignments
+- Divided work over break
+
+3/19/2024:
+- Discussed work done over break
+- Put together Project Part 4 report
+
+
+Activities Reviewed:
+- Reports tab
+- Settings tab
+- Scanner functionality
+- Cadet info/provacy considerations
+- Need to implement logout feature
+
+Major decisions:
+- Require admin approval for manage DB option
+- Track company, class, date/time of package pickup (already implemented, need to include in reports)
+- Settings: light/dark mode, ui preferences
