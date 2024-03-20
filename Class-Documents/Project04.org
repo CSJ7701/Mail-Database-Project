@@ -28,14 +28,15 @@ Lessons learned and changes from feedback:
 
 
 * Sequence Diagrams
-** Dylan
+** Dylan - Whole System Overview
 #+ATTR_LATEX: :caption \bicaption{---}
 [[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramDylan.png]]
 
 ** Dan
 
-** Christian
-
+** Christian - "Search Packages" 
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramChristian.jpg]]
 * State Diagrams
 
 ** Dylan
