@@ -11,8 +11,8 @@ if __name__ == "__main__":
     root=ctk.CTk()
     root.geometry=("200x400")
     root.title=("Mail Database")
-    login=LoginScreen(root, connection)
-    # user=User("admin", "password", connection) # Delete this before final. Just for testing
-    # gui=NavGUI(root, connection, user) # Delete this before final. Just for testing. 
+    # login=LoginScreen(root, connection)
+    user=User("admin", "password", connection) # Delete this before final. Just for testing
+    gui=NavGUI(root, connection, user) # Delete this before final. Just for testing. 
     root.mainloop()
     connection.close_connection()

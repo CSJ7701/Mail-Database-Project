@@ -93,7 +93,6 @@ class NavGUI(GUI):
     def __init__(self, root, database, user):
         super().__init__(root, database, user)
         self.database=database
-        self.config=Config("./config.ini")
         ctk.set_default_color_theme("themes/CGA.json")
         ctk.set_appearance_mode(self.config.appearance('color_mode'))
 
@@ -135,7 +134,8 @@ class NavGUI(GUI):
 
     def show_settings(self):
         self.clear_main_frame()
-        print("SHOW SETTINGS HERE")
+        Settings(self.main_frame, self)
+
 
     def clear_main_frame(self):
         for widget in self.main_frame.winfo_children():
@@ -334,7 +334,39 @@ class Manage(NavGUI):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame
-        self.config=self.parent.parent.config
+
+        self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.input_frame.pack(side="left", fill="y")
+
+        self.input_search_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
+        self.input_action_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_action_frame.pack(fill="y", expand=True, padx=10, pady=10)
+
+        self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.tree_frame.pack(side="right")
+        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.tree.heading("#1", text="Tracking Number")
+        self.tree.heading("#2", text="Name")
+        self.tree.heading("#3", text="Date Received")
+        self.tree.heading("#4", text="Date Picked Up")
+        self.tree.pack(padx=(0,10), pady=10)
+
+        self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
+        self.name_search_input.pack(side="top", padx=10, pady=10)
+        self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
+        self.box_search_input.pack(side="top", padx=10, pady=10)
+        self.track_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Tracking Number")
+        self.track_search_input.pack(side="top", padx=10, pady=10)
+        self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
+        self.search_button.pack(padx=10, pady=(10,10))
+
+
+class Settings(NavGUI):
+    def __init__(self, main_frame, ParentGUI):
+        self.parent=ParentGUI
+        self.main_frame=main_frame
+        self.config=self.parent.config
 
         self.left_frame=ctk.CTkFrame(self.main_frame, width=200, height=400, fg_color=("#d3d3d3", "#000000"))
         self.left_frame.pack(side="left", fill="y", padx=10, pady=10)
