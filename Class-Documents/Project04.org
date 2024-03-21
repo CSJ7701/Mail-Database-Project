@@ -28,26 +28,39 @@ Lessons learned and changes from feedback:
 
 
 * Sequence Diagrams
-** Dylan - Whole System Overview
+** Dylan - "Adding and Retrieving a Package"
 #+ATTR_LATEX: :caption \bicaption{---}
 [[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramDylan.png]]
-
-** Dan
-
+#+begin_export latex
+\newpage
+#+end_export
+** Dan - "Add Package"
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramDan.png]]
 ** Christian - "Search Packages" 
 #+ATTR_LATEX: :caption \bicaption{---}
 [[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/SequenceDiagramChristian.jpg]]
+#+begin_export latex
+\newpage
+#+end_export
 * State Diagrams
 
-** Dylan
+** Dylan - "GUI Navigation"
 
 #+ATTR_LATEX: :caption \bicaption{---}
 [[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/StateDiagramDylan.png]]
-** Dan
-
-** Christian
-
-
+** Dan - "Retrieve Package"
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/StateDiagramDan.png]]
+#+begin_export latex
+\newpage
+#+end_export
+** Christian - "Add Package"
+#+ATTR_LATEX: :caption \bicaption{---}
+[[file:/home/csj7701/Projects/Mail-Database-Project/Class-Documents/StateMachineChristian.jpg]]
+#+begin_export latex
+\newpage
+#+end_export
 
 * Github Repository
 
