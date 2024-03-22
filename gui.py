@@ -1,11 +1,14 @@
+from os.path import expanduser
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk, Toplevel
+from customtkinter.windows.widgets import image
 from idlelib.tooltip import Hovertip
 from database import Database
 from login import User
 from datetime import datetime
 from config import Config
+from PIL import Image
 
 class GUI:
     def __init__(self, root, database, user):
@@ -18,7 +21,7 @@ class GUI:
         ctk.set_appearance_mode(self.config.appearance('color_mode'))
 
 
-        self.root.resizable(width=0, height=0)
+        # self.root.resizable(width=0, height=0)
 
     def add_package(self):
         box=self.package_box.get()
@@ -100,6 +103,10 @@ class NavGUI(GUI):
         self.nav_bar=ctk.CTkFrame(self.root, fg_color=("#d3d3d3", "#191919"))
         self.nav_bar.pack(side="left", fill="y", pady=10, padx=(10,0))
 
+        self.logo_ref=ctk.CTkImage(light_image=Image.open("Assets/USCGA.png"), size=(130,130))
+        self.logo=ctk.CTkLabel(self.nav_bar, image=self.logo_ref, text="")
+        self.logo.pack(pady=(0,0))
+
         self.home_button=ctk.CTkButton(self.nav_bar, text="Home", command=self.show_home)
         self.home_button.pack(side="top", padx=(30), pady=(50,0))
         self.data_button=ctk.CTkButton(self.nav_bar, text="Data", command=self.show_data)
@@ -110,6 +117,8 @@ class NavGUI(GUI):
         self.reports_button.pack(side="top", padx=(30), pady=(20,0))
         self.settings_button=ctk.CTkButton(self.nav_bar, text="Settings", command=self.show_settings)
         self.settings_button.pack(side="top",  padx=(30), pady=(20,0))
+        self.logout_button=ctk.CTkButton(self.nav_bar, text="Logout", command=self.logout)
+        self.logout_button.pack(side="bottom", pady=(60,20))
 
         self.main_frame=ctk.CTkFrame(self.root, width=400, height=300, fg_color=("#d3d3d3","#191919"))
         self.main_frame.pack(expand=True, fill="both", padx=20, pady=(20))
@@ -136,6 +145,11 @@ class NavGUI(GUI):
         self.clear_main_frame()
         Settings(self.main_frame, self)
 
+    def logout(self):
+        print("Logout")
+        # DAN implement function here.
+        # To give you someplace to start, what this should do is destroy the current open window (saved under variable "self.root")
+        # Then you will need to open a new instance of the "loginscreen" class.
 
     def clear_main_frame(self):
         for widget in self.main_frame.winfo_children():
@@ -164,22 +178,22 @@ class HomeScreen(NavGUI):
         retrieved_package_count_label.pack(side="right", padx=(0,20))
 
         data_bottom_frame=ctk.CTkFrame(data_frame, width=380, height=10, fg_color=("#d3d3d3", "#191919"))
-        data_bottom_frame.pack(side="bottom", fill="x", padx=5, pady=5)
+        data_bottom_frame.pack(side="bottom", fill="both", padx=5, pady=5, expand=True)
         data_bottom_left_frame=ctk.CTkFrame(data_bottom_frame, width=190, height=10)#, fg_color=("#d3d3d3", "#191919"))
-        data_bottom_left_frame.pack(side="left", fill="both", padx=5, pady=5)
+        data_bottom_left_frame.pack(side="left", fill="both", padx=5, pady=5, expand=True)
         data_bottom_right_frame=ctk.CTkFrame(data_bottom_frame, width=190, height=10)#, fg_color=("#d3d3d3","#191919"))
-        data_bottom_right_frame.pack(side="right", fill="both", padx=5, pady=5)
+        data_bottom_right_frame.pack(side="right", fill="both", padx=5, pady=5, expand=True)
 
         unretrieved_tree=ttk.Treeview(data_bottom_left_frame, columns=("addressee", "received"))
         unretrieved_tree.heading("#1", text="Name")
         unretrieved_tree.heading("#2", text="Date Received")
         unretrieved_tree['show']='headings'
-        unretrieved_tree.pack(side="left")
+        unretrieved_tree.pack(side="left", fill="both", expand=True)
         retrieved_tree=ttk.Treeview(data_bottom_right_frame, columns=("addressee", "picked_up"))
         retrieved_tree.heading("#1", text="Name")
         retrieved_tree.heading("#2", text="Date Retrieved")
         retrieved_tree['show']='headings'
-        retrieved_tree.pack(side="right")
+        retrieved_tree.pack(side="right", fill="both", expand=True)
 
         self.populate_treeview(unretrieved_tree, self.unretrieved_packages())
         self.populate_treeview(retrieved_tree, self.retrieved_packages())
@@ -258,13 +272,13 @@ class DataScreen(NavGUI):
         self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
 
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
-        self.tree_frame.pack(side="right")
+        self.tree_frame.pack(side="right", fill="both", expand=True)
         self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
         self.tree.heading("#1", text="Tracking Number")
         self.tree.heading("#2", text="Name")
         self.tree.heading("#3", text="Date Received")
         self.tree.heading("#4", text="Date Picked Up")
-        self.tree.pack(padx=(0,10), pady=10)
+        self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
 
         self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
@@ -275,6 +289,8 @@ class DataScreen(NavGUI):
         self.track_search_input.pack(side="top", padx=10, pady=10)
         self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
         self.search_button.pack(padx=10, pady=(10,10))
+        self.pickup_button=ctk.CTkButton(self.input_search_frame, text="Pickup", command=self.pickup)
+        self.pickup_button.pack(padx=10, pady=10, side="bottom")
 
         self.box_add_input=ctk.CTkEntry(self.input_add_frame, placeholder_text="Box Number")
         self.box_add_input.pack(side="top", padx=10, pady=10)
@@ -284,8 +300,112 @@ class DataScreen(NavGUI):
         self.add_button.pack(padx=10, pady=(10,10))
 
         self.track_search_input.get()
+        self.search()
 
         
+    def search(self):
+        print("Search for something")
+        self.tree.delete(*self.tree.get_children())
+        name=self.name_search_input.get()
+        box=self.box_search_input.get()
+        track=self.track_search_input.get()
+        query="SELECT * FROM packages WHERE 1=1"
+        if name:
+            query+=f" AND adressee LIKE '%{name}%'"
+        if track:
+            query+=f" AND tracking_number LIKE '%{track}%'"
+        if box:
+            name=self.parent.database.cursor.execute(f"SELECT name FROM cadets WHERE box_number IS '%{box}%'")
+            query+=f" AND adressee LIKE '%{name}%'"
+        query+=" AND picked_up IS NULL"
+        results=self.parent.database.cursor.execute(query)
+        results=self.parent.database.cursor.fetchall()
+        for data in results:
+            self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+# Fix the search func
+    def add(self):
+        box=self.box_add_input.get()
+        track=self.track_add_input.get()
+        name, email=self.get_cadet_info(box)
+        print(f"Name:{name}")
+        print(f"Email:{email}")
+        date=datetime.today().strftime('%Y%b%d')
+        query="INSERT INTO packages(tracking_number, adressee, received) VALUES (?,?,?)"
+        self.parent.database.cursor.execute(query, (track, name, date))
+        # self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) VALUES ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
+        self.parent.database.conn.commit()
+        self.search()
+
+    def get_cadet_info(self, box):
+        name = self.parent.database.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
+        names=self.parent.database.cursor.fetchone()
+        if names:
+            names=names[0]
+        #     names=''.join(item for item in names if item.isalnum())
+        #     print(f"Name results from database:{names}")
+        else:
+            print("No Names")
+        email=self.parent.database.cursor.execute("SELECT email FROM cadets WHERE box_number = ?", (box,))
+        emails=email.fetchone()
+        emails=emails[0]
+        return names, emails
+
+    def pickup(self):
+        selection=self.tree.selection()
+        for item in selection:
+            details=self.tree.item(item).get("values")
+            track_num=details[0]
+            date=datetime.now().strftime('%Y%b%d').upper()
+            query='''
+                  UPDATE packages
+                  SET picked_up = ?
+                  WHERE tracking_number = ?
+                  '''
+            self.parent.database.cursor.execute(query, (date, track_num))
+        self.parent.database.conn.commit()
+        self.search()
+
+
+class Manage(NavGUI):
+    def __init__(self, main_frame, ParentGUI):
+        self.parent=ParentGUI
+        self.main_frame=main_frame
+
+        self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.input_frame.pack(side="left", fill="y")
+
+        self.input_search_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
+        self.input_action_frame=ctk.CTkFrame(self.input_frame, height=200)
+        self.input_action_frame.pack(fill="y", expand=True, padx=10, pady=10)
+
+        self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.tree_frame.pack(side="right", fill="both", expand=True)
+        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.tree.heading("#1", text="Tracking Number")
+        self.tree.heading("#2", text="Name")
+        self.tree.heading("#3", text="Date Received")
+        self.tree.heading("#4", text="Date Picked Up")
+        self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+
+        self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
+        self.name_search_input.pack(side="top", padx=10, pady=10)
+        self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
+        self.box_search_input.pack(side="top", padx=10, pady=10)
+        self.track_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Tracking Number")
+        self.track_search_input.pack(side="top", padx=10, pady=10)
+        self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
+        self.search_button.pack(padx=10, pady=(10,10))
+
+        self.edit_button=ctk.CTkButton(self.input_action_frame, text="Edit Item", command=self.edit_item)
+        self.delete_button=ctk.CTkButton(self.input_action_frame, text="Delete Item", command=self.delete_item)
+        self.save_button=ctk.CTkButton(self.input_action_frame, text="Save Edits", command=self.save_edits)
+        self.close_edit_button=ctk.CTkButton(self.input_action_frame, text="Close Edits", command=self.close_edits)
+        self.delete_button.pack(padx=10, pady=10)
+        self.edit_button.pack(padx=10, pady=10)
+        self.search()
+
+
     def search(self):
         print("Search for something")
         self.tree.delete(*self.tree.get_children())
@@ -304,62 +424,128 @@ class DataScreen(NavGUI):
         results=self.parent.database.cursor.fetchall()
         for data in results:
             self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
-# Fix the search func
-    def add(self):
-        box=self.box_add_input.get()
-        track=self.track_add_input.get()
-        name, email=self.get_cadet_info(box)
-        print(f"Name:{name}")
-        print(f"Email:{email}")
-        date=datetime.today().strftime('%Y%b%d')
-        self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) values ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
+
+    def delete_item(self):
+        selection=self.tree.selection()
+        for item in selection:
+            details=self.tree.item(item).get("values")
+            track_num=details[0]
+            query='''
+                  DELETE FROM packages
+                  WHERE tracking_number = ?
+                  '''
+            self.parent.database.cursor.execute(query,(track_num,))
         self.parent.database.conn.commit()
 
-    def get_cadet_info(self, box):
-        name = self.parent.database.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
-        names=self.parent.database.cursor.fetchone()
-        if names:
-            names=names[0]
-        #     names=''.join(item for item in names if item.isalnum())
-        #     print(f"Name results from database:{names}")
+        if self.edit_frame.winfo_ismapped():
+            self.edit_frame.pack_forget()
+            self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+        
+        self.search()
+
+    def edit_item(self):
+        selected_items=self.tree.selection()
+        num_selected=len(selected_items)
+        if num_selected > 1:
+            self.show_error("Too many items selected.")
+            return
+        if num_selected < 1:
+            self.show_error("No items selected.")
+            return
+        self.edit_button.pack_forget()
+        self.save_button.pack(padx=10, pady=10)
+        self.close_edit_button.pack(padx=10, pady=10)
+        selected_item=selected_items[0]
+        values=self.tree.item(selected_item, "values")
+        query="SELECT * FROM cadets WHERE name IS ?"
+        name_search=self.parent.database.cursor.execute(query, (values[1],))
+        cvalues=name_search.fetchall()[0]
+        print(cvalues)
+        self.tree.pack_forget()
+        self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
+        self.edit_frame.pack(fill="both", expand=True)
+        self.edit_left=ctk.CTkFrame(self.edit_frame)
+        self.edit_left.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
+        self.edit_right=ctk.CTkFrame(self.edit_frame)
+        self.edit_right.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
+        # Package Info
+        package_label=ctk.CTkLabel(self.edit_left, text="Package Info")
+        package_label.pack(side="top", padx=10, pady=10)
+        
+        pack_track_label=ctk.CTkLabel(self.edit_left, text="Tracking Number")
+        self.pack_track=ctk.CTkEntry(self.edit_left)
+        pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
+        self.pack_track.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_track.insert(0,values[0])
+
+        pack_addr_label=ctk.CTkLabel(self.edit_left, text="Addressee")
+        self.pack_addr=ctk.CTkEntry(self.edit_left)
+        pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.pack_addr.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_addr.insert(0,values[1])
+
+        pack_rec_label=ctk.CTkLabel(self.edit_left, text="Received Date")
+        self.pack_rec=ctk.CTkEntry(self.edit_left)
+        pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.pack_rec.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_rec.insert(0,values[2])
+
+        pack_pick_label=ctk.CTkLabel(self.edit_left, text="Retrieved Date")
+        self.pack_pick=ctk.CTkEntry(self.edit_left)
+        pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.pack_pick.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_pick.insert(0,values[3])
+
+        # Cadet Info
+        cadet_label=ctk.CTkLabel(self.edit_right, text="Cadet Info")
+        cadet_label.pack(side="top", padx=10, pady=10)
+
+        cadet_name_label=ctk.CTkLabel(self.edit_right, text="Name")
+        self.cadet_name=ctk.CTkEntry(self.edit_right)
+        cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_name.insert(0, cvalues[1])
+        
+
+        cadet_box_label=ctk.CTkLabel(self.edit_right, text="Box Number")
+        self.cadet_box=ctk.CTkEntry(self.edit_right)
+        cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_box.insert(0,cvalues[2])
+
+        cadet_email_label=ctk.CTkLabel(self.edit_right, text="Email")
+        self.cadet_email=ctk.CTkEntry(self.edit_right)
+        cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_email.insert(0,cvalues[3])
+
+        cadet_grad_label=ctk.CTkLabel(self.edit_right, text="Graduation Date")
+        self.cadet_grad=ctk.CTkEntry(self.edit_right)
+        cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_grad.insert(0,cvalues[4])
+
+        cadet_company_label=ctk.CTkLabel(self.edit_right, text="Company")
+        self.cadet_company=ctk.CTkEntry(self.edit_right)
+        cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_company.insert(0,cvalues[5])
+        
+
+    def save_edits(self):
+        if self.edit_frame.winfo_ismapped():
+            print("save")
         else:
-            print("No Names")
-        email=self.parent.database.cursor.execute("SELECT email FROM cadets WHERE box_number = ?", (box,))
-        emails=email.fetchone()
-        emails=emails[0]
-        return names, emails
+            print("Not editing")
 
+    def close_edits(self):
+        if self.edit_frame.winfo_ismapped():
+            self.edit_frame.pack_forget()
+            self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.save_button.pack_forget()
+            self.close_edit_button.pack_forget()
+            self.edit_button.pack(padx=10, pady=10)
 
-class Manage(NavGUI):
-    def __init__(self, main_frame, ParentGUI):
-        self.parent=ParentGUI
-        self.main_frame=main_frame
-
-        self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
-        self.input_frame.pack(side="left", fill="y")
-
-        self.input_search_frame=ctk.CTkFrame(self.input_frame, height=200)
-        self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
-        self.input_action_frame=ctk.CTkFrame(self.input_frame, height=200)
-        self.input_action_frame.pack(fill="y", expand=True, padx=10, pady=10)
-
-        self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
-        self.tree_frame.pack(side="right")
-        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
-        self.tree.heading("#1", text="Tracking Number")
-        self.tree.heading("#2", text="Name")
-        self.tree.heading("#3", text="Date Received")
-        self.tree.heading("#4", text="Date Picked Up")
-        self.tree.pack(padx=(0,10), pady=10)
-
-        self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
-        self.name_search_input.pack(side="top", padx=10, pady=10)
-        self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
-        self.box_search_input.pack(side="top", padx=10, pady=10)
-        self.track_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Tracking Number")
-        self.track_search_input.pack(side="top", padx=10, pady=10)
-        self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
-        self.search_button.pack(padx=10, pady=(10,10))
 
 
 class Settings(NavGUI):
