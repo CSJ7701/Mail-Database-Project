@@ -381,12 +381,12 @@ class Manage(NavGUI):
 
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
         self.tree_frame.pack(side="right", fill="both", expand=True)
-        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
-        self.tree.heading("#1", text="Tracking Number")
-        self.tree.heading("#2", text="Name")
-        self.tree.heading("#3", text="Date Received")
-        self.tree.heading("#4", text="Date Picked Up")
-        self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+        self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.package_tree.heading("#1", text="Tracking Number")
+        self.package_tree.heading("#2", text="Name")
+        self.package_tree.heading("#3", text="Date Received")
+        self.package_tree.heading("#4", text="Date Picked Up")
+        self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
 
         self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
         self.name_search_input.pack(side="top", padx=10, pady=10)
@@ -432,7 +432,7 @@ class Manage(NavGUI):
 
     def search(self):
         print("Search for something")
-        self.tree.delete(*self.tree.get_children())
+        self.package_tree.delete(*self.package_tree.get_children())
         name=self.name_search_input.get()
         box=self.box_search_input.get()
         track=self.track_search_input.get()
@@ -447,12 +447,12 @@ class Manage(NavGUI):
         results=self.parent.database.cursor.execute(query)
         results=self.parent.database.cursor.fetchall()
         for data in results:
-            self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+            self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
 
     def delete_item(self):
-        selection=self.tree.selection()
+        selection=self.package_tree.selection()
         for item in selection:
-            details=self.tree.item(item).get("values")
+            details=self.package_tree.item(item).get("values")
             track_num=details[0]
             query='''
                   DELETE FROM packages
@@ -463,12 +463,12 @@ class Manage(NavGUI):
 
         if self.edit_frame.winfo_ismapped():
             self.edit_frame.pack_forget()
-            self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
         self.search()
 
     def edit_item(self):
-        selected_items=self.tree.selection()
+        selected_items=self.package_tree.selection()
         num_selected=len(selected_items)
         if num_selected > 1:
             self.show_error("Too many items selected.")
@@ -480,12 +480,12 @@ class Manage(NavGUI):
         self.save_button.pack(padx=10, pady=10)
         self.close_edit_button.pack(padx=10, pady=10)
         selected_item=selected_items[0]
-        values=self.tree.item(selected_item, "values")
+        values=self.package_tree.item(selected_item, "values")
         query="SELECT * FROM cadets WHERE name IS ?"
         name_search=self.parent.database.cursor.execute(query, (values[1],))
         cvalues=name_search.fetchall()[0]
         print(cvalues)
-        self.tree.pack_forget()
+        self.package_tree.pack_forget()
         self.edit_frame.pack(fill="both", expand=True)
         self.edit_left.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
         self.edit_right.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
@@ -494,19 +494,22 @@ class Manage(NavGUI):
         
         self.pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
         self.pack_track.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_track.delete(0,'end')
         self.pack_track.insert(0,values[0])
 
         self.pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_addr.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_addr.delete(0,'end')
         self.pack_addr.insert(0,values[1])
 
         self.pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_rec.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_rec.delete(0,'end')
         self.pack_rec.insert(0,values[2])
 
-        
         self.pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_pick.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.pack_pick.delete(0,'end')
         self.pack_pick.insert(0,values[3])
 
         # Cadet Info
@@ -515,25 +518,27 @@ class Manage(NavGUI):
 
         self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_name.delete(0,'end')
         self.cadet_name.insert(0, cvalues[1])
         
         self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_box.delete(0,'end')
         self.cadet_box.insert(0,cvalues[2])
-
 
         self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_email.delete(0,'end')
         self.cadet_email.insert(0,cvalues[3])
-
         
         self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_grad.delete(0,'end')
         self.cadet_grad.insert(0,cvalues[4])
-
        
         self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
+        self.cadet_company.delete(0,'end')
         self.cadet_company.insert(0,cvalues[5])
         
 
