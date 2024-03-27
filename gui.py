@@ -405,6 +405,30 @@ class Manage(NavGUI):
         self.edit_button.pack(padx=10, pady=10)
         self.search()
 
+        # Edit Frame
+        self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
+        self.edit_left=ctk.CTkFrame(self.edit_frame)
+        self.edit_right=ctk.CTkFrame(self.edit_frame)
+        self.package_label=ctk.CTkLabel(self.edit_left, text="Package Info")
+        self.pack_track_label=ctk.CTkLabel(self.edit_left, text="Tracking Number")
+        self.pack_track=ctk.CTkEntry(self.edit_left)
+        self.pack_pick_label=ctk.CTkLabel(self.edit_left, text="Retrieved Date")
+        self.pack_addr_label=ctk.CTkLabel(self.edit_left, text="Addressee")
+        self.pack_addr=ctk.CTkEntry(self.edit_left)
+        self.pack_rec_label=ctk.CTkLabel(self.edit_left, text="Received Date")
+        self.pack_rec=ctk.CTkEntry(self.edit_left)
+        self.pack_pick=ctk.CTkEntry(self.edit_left)
+        self.cadet_label=ctk.CTkLabel(self.edit_right, text="Cadet Info")
+        self.cadet_name_label=ctk.CTkLabel(self.edit_right, text="Name")
+        self.cadet_name=ctk.CTkEntry(self.edit_right)
+        self.cadet_box_label=ctk.CTkLabel(self.edit_right, text="Box Number")
+        self.cadet_box=ctk.CTkEntry(self.edit_right)
+        self.cadet_email_label=ctk.CTkLabel(self.edit_right, text="Email")
+        self.cadet_email=ctk.CTkEntry(self.edit_right)
+        self.cadet_grad_label=ctk.CTkLabel(self.edit_right, text="Graduation Date")
+        self.cadet_grad=ctk.CTkEntry(self.edit_right)
+        self.cadet_company_label=ctk.CTkLabel(self.edit_right, text="Company")
+        self.cadet_company=ctk.CTkEntry(self.edit_right)
 
     def search(self):
         print("Search for something")
@@ -462,72 +486,53 @@ class Manage(NavGUI):
         cvalues=name_search.fetchall()[0]
         print(cvalues)
         self.tree.pack_forget()
-        self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
         self.edit_frame.pack(fill="both", expand=True)
-        self.edit_left=ctk.CTkFrame(self.edit_frame)
         self.edit_left.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
-        self.edit_right=ctk.CTkFrame(self.edit_frame)
         self.edit_right.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
         # Package Info
-        package_label=ctk.CTkLabel(self.edit_left, text="Package Info")
-        package_label.pack(side="top", padx=10, pady=10)
+        self.package_label.pack(side="top", padx=10, pady=10)
         
-        pack_track_label=ctk.CTkLabel(self.edit_left, text="Tracking Number")
-        self.pack_track=ctk.CTkEntry(self.edit_left)
-        pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
+        self.pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
         self.pack_track.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.pack_track.insert(0,values[0])
 
-        pack_addr_label=ctk.CTkLabel(self.edit_left, text="Addressee")
-        self.pack_addr=ctk.CTkEntry(self.edit_left)
-        pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_addr.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.pack_addr.insert(0,values[1])
 
-        pack_rec_label=ctk.CTkLabel(self.edit_left, text="Received Date")
-        self.pack_rec=ctk.CTkEntry(self.edit_left)
-        pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_rec.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.pack_rec.insert(0,values[2])
 
-        pack_pick_label=ctk.CTkLabel(self.edit_left, text="Retrieved Date")
-        self.pack_pick=ctk.CTkEntry(self.edit_left)
-        pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        
+        self.pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.pack_pick.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.pack_pick.insert(0,values[3])
 
         # Cadet Info
-        cadet_label=ctk.CTkLabel(self.edit_right, text="Cadet Info")
-        cadet_label.pack(side="top", padx=10, pady=10)
+       
+        self.cadet_label.pack(side="top", padx=10, pady=10)
 
-        cadet_name_label=ctk.CTkLabel(self.edit_right, text="Name")
-        self.cadet_name=ctk.CTkEntry(self.edit_right)
-        cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.cadet_name.insert(0, cvalues[1])
         
-
-        cadet_box_label=ctk.CTkLabel(self.edit_right, text="Box Number")
-        self.cadet_box=ctk.CTkEntry(self.edit_right)
-        cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.cadet_box.insert(0,cvalues[2])
 
-        cadet_email_label=ctk.CTkLabel(self.edit_right, text="Email")
-        self.cadet_email=ctk.CTkEntry(self.edit_right)
-        cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+
+        self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.cadet_email.insert(0,cvalues[3])
 
-        cadet_grad_label=ctk.CTkLabel(self.edit_right, text="Graduation Date")
-        self.cadet_grad=ctk.CTkEntry(self.edit_right)
-        cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+        
+        self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.cadet_grad.insert(0,cvalues[4])
 
-        cadet_company_label=ctk.CTkLabel(self.edit_right, text="Company")
-        self.cadet_company=ctk.CTkEntry(self.edit_right)
-        cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+       
+        self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
         self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
         self.cadet_company.insert(0,cvalues[5])
         
