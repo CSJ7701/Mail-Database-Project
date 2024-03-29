@@ -432,28 +432,30 @@ class Manage(NavGUI):
 
         # Edit Frame
         self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
-        self.edit_left=ctk.CTkFrame(self.edit_frame)
-        self.edit_right=ctk.CTkFrame(self.edit_frame)
-        self.package_label=ctk.CTkLabel(self.edit_left, text="Package Info")
-        self.pack_track_label=ctk.CTkLabel(self.edit_left, text="Tracking Number")
-        self.pack_track=ctk.CTkEntry(self.edit_left)
-        self.pack_pick_label=ctk.CTkLabel(self.edit_left, text="Retrieved Date")
-        self.pack_addr_label=ctk.CTkLabel(self.edit_left, text="Addressee")
-        self.pack_addr=ctk.CTkEntry(self.edit_left)
-        self.pack_rec_label=ctk.CTkLabel(self.edit_left, text="Received Date")
-        self.pack_rec=ctk.CTkEntry(self.edit_left)
-        self.pack_pick=ctk.CTkEntry(self.edit_left)
-        self.cadet_label=ctk.CTkLabel(self.edit_right, text="Cadet Info")
-        self.cadet_name_label=ctk.CTkLabel(self.edit_right, text="Name")
-        self.cadet_name=ctk.CTkEntry(self.edit_right)
-        self.cadet_box_label=ctk.CTkLabel(self.edit_right, text="Box Number")
-        self.cadet_box=ctk.CTkEntry(self.edit_right)
-        self.cadet_email_label=ctk.CTkLabel(self.edit_right, text="Email")
-        self.cadet_email=ctk.CTkEntry(self.edit_right)
-        self.cadet_grad_label=ctk.CTkLabel(self.edit_right, text="Graduation Date")
-        self.cadet_grad=ctk.CTkEntry(self.edit_right)
-        self.cadet_company_label=ctk.CTkLabel(self.edit_right, text="Company")
-        self.cadet_company=ctk.CTkEntry(self.edit_right)
+
+        self.edit_package=ctk.CTkFrame(self.edit_frame)
+        self.package_label=ctk.CTkLabel(self.edit_package, text="Package Info")
+        self.pack_track_label=ctk.CTkLabel(self.edit_package, text="Tracking Number")
+        self.pack_track=ctk.CTkEntry(self.edit_package)
+        self.pack_pick_label=ctk.CTkLabel(self.edit_package, text="Retrieved Date")
+        self.pack_addr_label=ctk.CTkLabel(self.edit_package, text="Addressee")
+        self.pack_addr=ctk.CTkEntry(self.edit_package)
+        self.pack_rec_label=ctk.CTkLabel(self.edit_package, text="Received Date")
+        self.pack_rec=ctk.CTkEntry(self.edit_package)
+        self.pack_pick=ctk.CTkEntry(self.edit_package)
+
+        self.edit_cadet=ctk.CTkFrame(self.edit_frame)
+        self.cadet_label=ctk.CTkLabel(self.edit_cadet, text="Cadet Info")
+        self.cadet_name_label=ctk.CTkLabel(self.edit_cadet, text="Name")
+        self.cadet_name=ctk.CTkEntry(self.edit_cadet)
+        self.cadet_box_label=ctk.CTkLabel(self.edit_cadet, text="Box Number")
+        self.cadet_box=ctk.CTkEntry(self.edit_cadet)
+        self.cadet_email_label=ctk.CTkLabel(self.edit_cadet, text="Email")
+        self.cadet_email=ctk.CTkEntry(self.edit_cadet)
+        self.cadet_grad_label=ctk.CTkLabel(self.edit_cadet, text="Graduation Date")
+        self.cadet_grad=ctk.CTkEntry(self.edit_cadet)
+        self.cadet_company_label=ctk.CTkLabel(self.edit_cadet, text="Company")
+        self.cadet_company=ctk.CTkEntry(self.edit_cadet)
 
     def search_packages(self):
         print("Search for something")
@@ -476,7 +478,26 @@ class Manage(NavGUI):
 
     def search_cadets(self):
         self.cadet_tree.delete(*self.cadet_tree.get_children())
-        
+        name=self.c_name_search_input.get()
+        box=self.c_box_search_input.get()
+        email=self.c_email_search_input.get()
+        grad=self.c_grad_search_input.get()
+        company=self.c_company_search_input.get()
+        query="SELECT * FROM cadets WHERE 1=1"
+        if name:
+            query+=f" AND name LIKE '%{name}%'"
+        if box:
+            query+=f" AND box_number LIKE '%{box}%'"
+        if email:
+            query+=f" AND email LIKE '%{email}%'"
+        if grad:
+            query+=f" AND graduation_date LIKE '%{grad}%'"
+        if company:
+            query+=f" AND company LIKE '%{company}%'"
+        results=self.parent.database.cursor.execute(query)
+        results=self.parent.database.cursor.fetchall()
+        for data in results:
+            self.cadet_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
 
     def delete_item(self):
         selection=self.package_tree.selection()
@@ -497,78 +518,85 @@ class Manage(NavGUI):
         self.search_packages()
 
     def edit_item(self):
-        selected_items=self.package_tree.selection()
-        num_selected=len(selected_items)
-        if num_selected > 1:
-            self.show_error("Too many items selected.")
-            return
-        if num_selected < 1:
-            self.show_error("No items selected.")
-            return
-        self.edit_button.pack_forget()
-        self.save_button.pack(padx=10, pady=10)
-        self.close_edit_button.pack(padx=10, pady=10)
-        selected_item=selected_items[0]
-        values=self.package_tree.item(selected_item, "values")
-        query="SELECT * FROM cadets WHERE name IS ?"
-        name_search=self.parent.database.cursor.execute(query, (values[1],))
-        cvalues=name_search.fetchall()[0]
-        print(cvalues)
-        self.package_tree.pack_forget()
-        self.edit_frame.pack(fill="both", expand=True)
-        self.edit_left.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
-        self.edit_right.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
-        # Package Info
-        self.package_label.pack(side="top", padx=10, pady=10)
+
+        if self.package_tree.winfo_ismapped():
+            selected_items=self.package_tree.selection()
+            num_selected=len(selected_items)
+            if num_selected > 1:
+                self.show_error("Too many items selected.")
+                return
+            if num_selected < 1:
+                self.show_error("No items selected.")
+                return
+            self.edit_button.pack_forget()
+            self.save_button.pack(padx=10, pady=10)
+            self.close_edit_button.pack(padx=10, pady=10)
+            selected_item=selected_items[0]
+            values=self.package_tree.item(selected_item, "values")
+            query="SELECT * FROM cadets WHERE name IS ?"
+            name_search=self.parent.database.cursor.execute(query, (values[1],))
+            cvalues=name_search.fetchall()[0]
+            print(cvalues)
+            self.package_tree.pack_forget()
+            self.edit_frame.pack(fill="both", expand=True)
+            self.edit_package.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
+            # Package Info
+            self.package_label.pack(side="top", padx=10, pady=10)
+            
+            self.pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
+            self.pack_track.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.pack_track.delete(0,'end')
+            self.pack_track.insert(0,values[0])
+
+            self.pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.pack_addr.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.pack_addr.delete(0,'end')
+            self.pack_addr.insert(0,values[1])
+
+            self.pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.pack_rec.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.pack_rec.delete(0,'end')
+            self.pack_rec.insert(0,values[2])
+
+            self.pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.pack_pick.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.pack_pick.delete(0,'end')
+            self.pack_pick.insert(0,values[3])
+
+
+        if self.cadet_tree.winfo_ismapped():
+
+            
+            # Cadet Info
+            self.edit_frame.pack(fill="both", expand=True)
+            self.edit_cadet.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
+
+            # self.cadet_label.pack(side="top", padx=10, pady=10)
+            
+            # self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            # self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
+            # self.cadet_name.delete(0,'end')
+            # self.cadet_name.insert(0, cvalues[1])
+            
+            # self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            # self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
+            # self.cadet_box.delete(0,'end')
+            # self.cadet_box.insert(0,cvalues[2])
+            
+            # self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            # self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
+            # self.cadet_email.delete(0,'end')
+            # self.cadet_email.insert(0,cvalues[3])
+            
+            # self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            # self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
+            # self.cadet_grad.delete(0,'end')
+            # self.cadet_grad.insert(0,cvalues[4])
         
-        self.pack_track_label.pack(side="top", padx=10, pady=(20,0), fill="x")
-        self.pack_track.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.pack_track.delete(0,'end')
-        self.pack_track.insert(0,values[0])
-
-        self.pack_addr_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.pack_addr.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.pack_addr.delete(0,'end')
-        self.pack_addr.insert(0,values[1])
-
-        self.pack_rec_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.pack_rec.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.pack_rec.delete(0,'end')
-        self.pack_rec.insert(0,values[2])
-
-        self.pack_pick_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.pack_pick.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.pack_pick.delete(0,'end')
-        self.pack_pick.insert(0,values[3])
-
-        # Cadet Info
-       
-        self.cadet_label.pack(side="top", padx=10, pady=10)
-
-        self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.cadet_name.delete(0,'end')
-        self.cadet_name.insert(0, cvalues[1])
-        
-        self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.cadet_box.delete(0,'end')
-        self.cadet_box.insert(0,cvalues[2])
-
-        self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.cadet_email.delete(0,'end')
-        self.cadet_email.insert(0,cvalues[3])
-        
-        self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.cadet_grad.delete(0,'end')
-        self.cadet_grad.insert(0,cvalues[4])
-       
-        self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-        self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
-        self.cadet_company.delete(0,'end')
-        self.cadet_company.insert(0,cvalues[5])
+            # self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            # self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
+            # self.cadet_company.delete(0,'end')
+            # self.cadet_company.insert(0,cvalues[5])
         
 
     def save_edits(self):
@@ -603,6 +631,24 @@ class Manage(NavGUI):
             self.c_grad_search_input.pack(side="top", padx=10, pady=10)
             self.c_company_search_input.pack(side="top", padx=10, pady=10)
             self.search_cadets_button.pack(padx=10, pady=10)
+
+        if self.cadet_tree.winfo_ismapped():
+
+            # Clear old
+            self.cadet_tree.pack_forget()
+            self.c_name_search_input.pack_forget()
+            self.c_box_search_input.pack_forget()
+            self.c_email_search_input.pack_forget()
+            self.c_grad_search_input.pack_forget()
+            self.c_company_search_input.pack_forget()
+            self.search_cadets_button.pack_forget()
+
+            # Pack New
+            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.name_search_input.pack(side="top", padx=10, pady=10)
+            self.box_search_input.pack(side="top", padx=10, pady=10)
+            self.track_search_input.pack(side="top", padx=10, pady=10)
+            self.search_packages_button.pack(padx=10, pady=10)
 
 
 
