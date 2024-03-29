@@ -420,6 +420,7 @@ class Manage(NavGUI):
 
         self.edit_button=ctk.CTkButton(self.input_action_frame, text="Edit Item", command=self.edit_item)
         self.delete_button=ctk.CTkButton(self.input_action_frame, text="Delete Item", command=self.delete_item)
+        
         self.save_button=ctk.CTkButton(self.input_action_frame, text="Save Edits", command=self.save_edits)
         self.close_edit_button=ctk.CTkButton(self.input_action_frame, text="Close Edits", command=self.close_edits)
         self.delete_button.pack(padx=10, pady=10)
@@ -429,6 +430,7 @@ class Manage(NavGUI):
         self.switch_tree_button.pack(side="bottom", padx=10, pady=10)
         
         self.search_packages()
+        self.search_cadets()
 
         # Edit Frame
         self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
@@ -518,8 +520,14 @@ class Manage(NavGUI):
         self.search_packages()
 
     def edit_item(self):
-
         if self.package_tree.winfo_ismapped():
+            print("PACKAGE MAPPED")
+        elif self.cadet_tree.winfo_ismapped():
+            print("CADET MAPPED")
+        
+        if self.package_tree.winfo_ismapped():
+            self.edit_cadet.pack_forget()
+
             selected_items=self.package_tree.selection()
             num_selected=len(selected_items)
             if num_selected > 1:
@@ -533,10 +541,6 @@ class Manage(NavGUI):
             self.close_edit_button.pack(padx=10, pady=10)
             selected_item=selected_items[0]
             values=self.package_tree.item(selected_item, "values")
-            query="SELECT * FROM cadets WHERE name IS ?"
-            name_search=self.parent.database.cursor.execute(query, (values[1],))
-            cvalues=name_search.fetchall()[0]
-            print(cvalues)
             self.package_tree.pack_forget()
             self.edit_frame.pack(fill="both", expand=True)
             self.edit_package.pack(side="left", fill="both", expand=True, padx=(10,5), pady=10)
@@ -564,39 +568,56 @@ class Manage(NavGUI):
             self.pack_pick.insert(0,values[3])
 
 
-        if self.cadet_tree.winfo_ismapped():
+
+        elif self.cadet_tree.winfo_ismapped():
+            self.edit_package.pack_forget()
+
+            selected_items=self.cadet_tree.selection()
+            num_selected=len(selected_items)
+            if num_selected > 1:
+                self.show_error("Too many items selected.")
+                return
+            if num_selected < 1:
+                self.show_error("No items selected")
+                return
+            self.edit_button.pack_forget()
+            self.close_edit_button.pack(padx=10, pady=10)
+            selected_item=selected_items[0]
+            values=self.cadet_tree.item(selected_item, "values")
+            self.cadet_tree.pack_forget()
 
             
             # Cadet Info
             self.edit_frame.pack(fill="both", expand=True)
             self.edit_cadet.pack(side="right", fill="both", expand=True, padx=(5,10), pady=10)
-
-            # self.cadet_label.pack(side="top", padx=10, pady=10)
+            self.cadet_label.pack(side="top", padx=10, pady=10)
             
-            # self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-            # self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
-            # self.cadet_name.delete(0,'end')
-            # self.cadet_name.insert(0, cvalues[1])
+            self.cadet_name_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.cadet_name.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.cadet_name.delete(0,'end')
+            self.cadet_name.insert(0, values[0])
             
-            # self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-            # self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
-            # self.cadet_box.delete(0,'end')
-            # self.cadet_box.insert(0,cvalues[2])
+            self.cadet_box_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.cadet_box.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.cadet_box.delete(0,'end')
+            self.cadet_box.insert(0,values[1])
             
-            # self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-            # self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
-            # self.cadet_email.delete(0,'end')
-            # self.cadet_email.insert(0,cvalues[3])
+            self.cadet_email_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.cadet_email.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.cadet_email.delete(0,'end')
+            self.cadet_email.insert(0,values[2])
             
-            # self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-            # self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
-            # self.cadet_grad.delete(0,'end')
-            # self.cadet_grad.insert(0,cvalues[4])
+            self.cadet_grad_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.cadet_grad.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.cadet_grad.delete(0,'end')
+            self.cadet_grad.insert(0,values[3])
         
-            # self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
-            # self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
-            # self.cadet_company.delete(0,'end')
-            # self.cadet_company.insert(0,cvalues[5])
+            self.cadet_company_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.cadet_company.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.cadet_company.delete(0,'end')
+            self.cadet_company.insert(0,values[4])
+
+            # Keep at end
         
 
     def save_edits(self):
@@ -606,12 +627,16 @@ class Manage(NavGUI):
             print("Not editing")
 
     def close_edits(self):
+        if self.edit_package.winfo_ismapped():
+            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+        if self.edit_cadet.winfo_ismapped():
+            self.cadet_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         if self.edit_frame.winfo_ismapped():
             self.edit_frame.pack_forget()
-            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
             self.save_button.pack_forget()
             self.close_edit_button.pack_forget()
             self.edit_button.pack(padx=10, pady=10)
+ 
 
     def switch_tree(self):
         if self.package_tree.winfo_ismapped():
@@ -622,6 +647,8 @@ class Manage(NavGUI):
             self.box_search_input.pack_forget()
             self.track_search_input.pack_forget()
             self.search_packages_button.pack_forget()
+
+            
 
             # Pack new
             self.cadet_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
