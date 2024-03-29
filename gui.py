@@ -381,6 +381,8 @@ class Manage(NavGUI):
 
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
         self.tree_frame.pack(side="right", fill="both", expand=True)
+
+        # Package Tree 
         self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
         self.package_tree.heading("#1", text="Tracking Number")
         self.package_tree.heading("#2", text="Name")
@@ -388,14 +390,33 @@ class Manage(NavGUI):
         self.package_tree.heading("#4", text="Date Picked Up")
         self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
 
+        # Package View
         self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
         self.name_search_input.pack(side="top", padx=10, pady=10)
         self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
         self.box_search_input.pack(side="top", padx=10, pady=10)
         self.track_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Tracking Number")
         self.track_search_input.pack(side="top", padx=10, pady=10)
-        self.search_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search)
-        self.search_button.pack(padx=10, pady=(10,10))
+        self.search_packages_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search_packages)
+        self.search_packages_button.pack(padx=10, pady=(10,10))
+
+        # Cadet Tree
+        self.cadet_tree=ttk.Treeview(self.tree_frame, columns=('name', 'box', 'email', 'grad', 'company'), show='headings', height=15)
+        self.cadet_tree.heading("#1", text="Name")
+        self.cadet_tree.heading("#2", text="Box Num.")
+        self.cadet_tree.heading("#3", text="Email")
+        self.cadet_tree.heading("#4", text="Grad. Date")
+        self.cadet_tree.heading("#5", text="Company")
+
+        # Cadet View
+        self.c_name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
+        self.c_box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
+        self.c_email_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Email")
+        self.c_grad_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Grad. Date")
+        self.c_company_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Company")
+        self.search_cadets_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search_cadets)
+
+        
 
         self.edit_button=ctk.CTkButton(self.input_action_frame, text="Edit Item", command=self.edit_item)
         self.delete_button=ctk.CTkButton(self.input_action_frame, text="Delete Item", command=self.delete_item)
@@ -403,7 +424,11 @@ class Manage(NavGUI):
         self.close_edit_button=ctk.CTkButton(self.input_action_frame, text="Close Edits", command=self.close_edits)
         self.delete_button.pack(padx=10, pady=10)
         self.edit_button.pack(padx=10, pady=10)
-        self.search()
+
+        self.switch_tree_button=ctk.CTkButton(self.input_action_frame, text="Switch View", command=self.switch_tree)
+        self.switch_tree_button.pack(side="bottom", padx=10, pady=10)
+        
+        self.search_packages()
 
         # Edit Frame
         self.edit_frame=ctk.CTkFrame(self.tree_frame, fg_color=("#d3d3d3", "#191919"))
@@ -430,7 +455,7 @@ class Manage(NavGUI):
         self.cadet_company_label=ctk.CTkLabel(self.edit_right, text="Company")
         self.cadet_company=ctk.CTkEntry(self.edit_right)
 
-    def search(self):
+    def search_packages(self):
         print("Search for something")
         self.package_tree.delete(*self.package_tree.get_children())
         name=self.name_search_input.get()
@@ -449,6 +474,10 @@ class Manage(NavGUI):
         for data in results:
             self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
 
+    def search_cadets(self):
+        self.cadet_tree.delete(*self.cadet_tree.get_children())
+        
+
     def delete_item(self):
         selection=self.package_tree.selection()
         for item in selection:
@@ -465,7 +494,7 @@ class Manage(NavGUI):
             self.edit_frame.pack_forget()
             self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
-        self.search()
+        self.search_packages()
 
     def edit_item(self):
         selected_items=self.package_tree.selection()
@@ -551,10 +580,30 @@ class Manage(NavGUI):
     def close_edits(self):
         if self.edit_frame.winfo_ismapped():
             self.edit_frame.pack_forget()
-            self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
             self.save_button.pack_forget()
             self.close_edit_button.pack_forget()
             self.edit_button.pack(padx=10, pady=10)
+
+    def switch_tree(self):
+        if self.package_tree.winfo_ismapped():
+
+            # Clear old
+            self.package_tree.pack_forget()
+            self.name_search_input.pack_forget()
+            self.box_search_input.pack_forget()
+            self.track_search_input.pack_forget()
+            self.search_packages_button.pack_forget()
+
+            # Pack new
+            self.cadet_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.c_name_search_input.pack(side="top", padx=10, pady=10)
+            self.c_box_search_input.pack(side="top", padx=10, pady=10)
+            self.c_email_search_input.pack(side="top", padx=10, pady=10)
+            self.c_grad_search_input.pack(side="top", padx=10, pady=10)
+            self.c_company_search_input.pack(side="top", padx=10, pady=10)
+            self.search_cadets_button.pack(padx=10, pady=10)
+
 
 
 
