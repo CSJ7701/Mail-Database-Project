@@ -1,4 +1,5 @@
 from os.path import expanduser
+from sre_constants import AT_END
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk, Toplevel
@@ -514,17 +515,10 @@ class Manage(NavGUI):
         self.parent.database.conn.commit()
 
         if self.edit_frame.winfo_ismapped():
-            self.edit_frame.pack_forget()
-            self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
-        
+            self.close_edits()
         self.search_packages()
 
     def edit_item(self):
-        if self.package_tree.winfo_ismapped():
-            print("PACKAGE MAPPED")
-        elif self.cadet_tree.winfo_ismapped():
-            print("CADET MAPPED")
-        
         if self.package_tree.winfo_ismapped():
             self.edit_cadet.pack_forget()
 
@@ -581,6 +575,7 @@ class Manage(NavGUI):
                 self.show_error("No items selected")
                 return
             self.edit_button.pack_forget()
+            self.save_button.pack(padx=10, pady=10)
             self.close_edit_button.pack(padx=10, pady=10)
             selected_item=selected_items[0]
             values=self.cadet_tree.item(selected_item, "values")
@@ -622,15 +617,74 @@ class Manage(NavGUI):
 
     def save_edits(self):
         if self.edit_frame.winfo_ismapped():
-            print("save")
+            if self.edit_cadet.winfo_ismapped():
+                selected_items=self.cadet_tree.selection()
+                selected_item=selected_items[0]
+                values=self.cadet_tree.item(selected_item, "values")
+                name=values[0]
+                box=values[1]
+                email=values[2]
+                grad=values[3]
+                company=values[4]
+                new_name=self.cadet_name.get()
+                new_box=self.cadet_box.get()
+                new_email=self.cadet_email.get()
+                new_grad=self.cadet_grad.get()
+                new_company=self.cadet_company.get()
+                query=f'''
+                       UPDATE cadets
+                       SET
+                       name='{new_name}',
+                       box_number={new_box},
+                       email='{new_email}',
+                       graduation_date={new_grad},
+                       company='{new_company}'
+                       WHERE
+                       name='{name}' AND
+                       box_number={box} AND
+                       email='{email}' AND
+                       graduation_date={grad} AND
+                       company='{company}';
+                       '''
+                self.parent.database.cursor.execute(query)
+                self.close_edits()
+            if self.edit_package.winfo_ismapped():
+                selected_items=self.package_tree.selection()
+                selected_item=selected_items[0]
+                values=self.package_tree.item(selected_item, "values")
+                track=values[0]
+                addr=values[1]
+                received=values[2]
+                picked=values[3]
+                new_track=self.pack_track.get()
+                new_addr=self.pack_addr.get()
+                new_received=self.pack_rec.get()
+                new_picked=self.pack_pick.get()
+                query=f'''
+                       UPDATE packages
+                       SET
+                       tracking_number={new_track},
+                       adressee='{new_addr}',
+                       received='{new_received}',
+                       picked_up='{new_picked}'
+                       WHERE
+                       tracking_number={track} AND
+                       adressee='{addr}' AND
+                       received='{received}';
+                       '''
+                print(query)
+                self.parent.database.cursor.execute(query)
+                self.close_edits()
         else:
             print("Not editing")
 
     def close_edits(self):
         if self.edit_package.winfo_ismapped():
             self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.search_packages()
         if self.edit_cadet.winfo_ismapped():
             self.cadet_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
+            self.search_cadets()
         if self.edit_frame.winfo_ismapped():
             self.edit_frame.pack_forget()
             self.save_button.pack_forget()
