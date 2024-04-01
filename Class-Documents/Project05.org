@@ -1,6 +1,4 @@
-:PROPERTIES:
-:UNNUMBERED: t
-:END:
+
 #+title: Mail Database Project
 #+OPTIONS: toc:nil
 #+AUTHOR: Christian Johnson\and&\and Dan Nusraty\and&\and Dylan McGill\and\newline Optimail
@@ -27,15 +25,58 @@ Changelog:
 
 
 * Test Plan
-Testing will be primarily manual, since the majority of our code is focused on a GUI interface.
-This will consist of several stages of testing, focused on different sections of the application.
+** Unit Testing
+/Note:/ These tests will have to be performed manually, as our app is primarily GUI focused.
+$\\\\$
+*Login:*
+- This test verifies the behavior of the login screen.
+- It checks if the screen redirects the user to the Home screen upon successful login with valid credentials.
+- Since the app is GUI-focused, this test would involve manually entering valid credentials and observing the redirection to the Home screen.
+$\\$
+*Data Entry:*
+- This test ensures that the "Add Package" button correctly records data.
+- It specifically checks if the tracking number is recorded accurately and if the package is associated with the correct cadet.
+- Manual interaction with the GUI would be required to input data and verify the recorded information.
+$\\$
+*Search Function:*
+- This test validates the search functionality.
+- It verifies that a search returns all valid results or, alternatively, that it does not return any invalid results.
+- Again, manual interaction with the GUI is necessary to perform searches and confirm the correctness of the results.
 
-We will begin with test data. Using random name generators and random number generators, we will gather a fictitious data set comprised of no less than 50 entries, compile those entries into a CSV file, and upload the CSV file to our database using our application.
 
-In order to verify that this data uploaded correctly, we will spot-check 5 entries from the terminal, verifying the rest of the entries with the graphical tables in our application.
+** Integration Testing
 
-Next, we will begin examining the GUI components of our application - ensuring first that all navigational components function correctly, then focusing on individual tabs.
-For each graphical tab in the interface, each member of the development team will focus, seperately, on the same tab for a period of 1 day, manually checking each function within that tab and verifying the expected result.
+ *Database Integration*
+   - Verify that the data entered through the GUI is correctly stored in the database.
+   - Test if package information, including tracking numbers and associated cadet details, is accurately saved in the database after clicking the "Add Package" button.
+   - Ensure that the search functionality retrieves the correct data from the database.
+$\\$
+*Email Notification Integration*
+   - Test if the email notification feature functions as expected.
+   - Verify that when a package is added and associated with a cadet, an email notification is sent to the corresponding cadet's email address.
+   - Check if the content of the email notification contains accurate package information.
+$\\$
+*User Authentication Integration*
+   - Ensure that the login screen interacts correctly with the authentication system.
+   - Test if valid credentials provided on the login screen authenticate the user and grant access to the application's features.
+   - Verify that invalid credentials result in appropriate error messages or prevent access to sensitive functionalities.
+$\\$
+*GUI Navigation Integration*
+   - Test the navigation flow between different screens or tabs of the GUI.
+   - Verify that users can seamlessly switch between tabs/screens without encountering errors or unexpected behavior.
+   - Ensure that data entered in one tab/screen remains consistent and accessible when navigating to another tab/screen.
+$\\$
+*Report Generation Integration*
+   - Verify that the report generation feature utilizes the correct data from the database.
+   - Test if generated reports accurately reflect the package tracking data stored in the database.
+   - Check if generated reports can be exported/downloaded in the desired format (e.g., PDF, Excel).
+
+** Defect tracking
+We plan to use the "Issues" functionality built in to Github.
+When a team member or test user notices an issue with the application, they can submit an Issue on Github detailing the process for reproducing the issue, as well as potential expected outcomes.
+
+** Test Schedule
+Unit testing will be an ongoing process throughout the development lifecycle, ensuring the proper function of each application component as it is completed. Prior to integration testing, another round of unit testing will occur once all major functionalities are implemented. Integration testing will commence once the application reaches a usable state, which we anticipate to be approximately 1-2 weeks from now.
 
 * Working Prototype
 
@@ -43,10 +84,32 @@ For each graphical tab in the interface, each member of the development team wil
 
 * Demonstration Video
 
-[[https://github.com/CSJ7701/Mail-Database-Project/blob/main/Class-Documents/Recording.webm][Video Link]]
-
+[[https://github.com/CSJ7701/Mail-Database-Project/blob/main/Class-Documents/Recording.webm][Video Link]]$\\$
 Click "View Raw" on Github to download the video file.
 
+* Project Management
+
+** Schedule
+*Next Up:*
+- Finalize "Manage DB" tab and polish the user interface (Effort - 4)
+- Create "Settings" tab and allow for user specific configuration settings (Effort - 8)
+- Implement Logout Button (Effort - 3)
+- Create "Reports" tab and determine what types of reports to logically implement (Effort - 9)$\\$
+*Long Term:*
+- Implement physical scanner (Effort - 6)
+- Create larger example database to full scale test (Effort - 6)
+- Optimize code (Effort - 7)
+- Allow file operations, to export/import/backup actual database file. (Effort - 8)
 
 
-
+** Meeting Summaries
+*Meeting 1*
+- Reviewed Previous work and compiled upcoming plan
+- Worked on "Manage DB tab" in a group environment$\\$
+*Meeting 2*
+- Discussed test plans, and how to put one together.
+- Began work on Phase 05.
+- Added finishing touches to code in order to present the "Working prototype" for core functionality.$\\$
+*Meeting 3*
+- Worked on test plans.
+- Recorded demonstration video.
