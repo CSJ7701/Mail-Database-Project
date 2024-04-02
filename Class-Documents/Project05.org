@@ -1,6 +1,7 @@
-
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \hypersetup{colorlinks=true,urlcolor=cyan, linkcolor=blue}
 #+title: Mail Database Project
-#+OPTIONS: toc:nil
+# #+OPTIONS: toc:nil
 #+AUTHOR: Christian Johnson\and&\and Dan Nusraty\and&\and Dylan McGill\and\newline Optimail
 #+begin_export latex
 \newpage
@@ -18,7 +19,7 @@ Changelog:
 - Tables are more visually appealing
 - Added a logout button (currently non-functional)
 - Added USCGA logo
-- Tables now resize automatically (will shrink if empty, also allows app to fullscreen)z
+- Tables now resize automatically (will shrink if empty, also allows app to fullscreen)
 - Added search capability to Data tab
 - Added Delete capability to Data tab
 - Added edit button to Data tab, now raises submenu when clicked (main functionality still WIP)
@@ -80,7 +81,10 @@ Unit testing will be an ongoing process throughout the development lifecycle, en
 
 * Working Prototype
 
-[[https://github.com/CSJ7701/Mail-Database-Project/commit/762f2ca7f4a92c6ccd8447d39f276ba7ef0a6cc4][Github Repo]]
+#+ATTR_LATEX: :options colorlinks=true, urlcolor=red
+#+begin_export latex
+\href{https://github.com/CSJ7701/Mail-Database-Project/commit/762f2ca7f4a92c6ccd8447d39f276ba7ef0a6cc4}{Github Repo}
+#+end_export
 
 * Demonstration Video
 

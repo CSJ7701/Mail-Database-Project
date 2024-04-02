@@ -1,4 +1,4 @@
-% Created 2024-04-01 Mon 18:32
+% Created 2024-04-01 Mon 21:13
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -15,6 +15,8 @@
 \usepackage{minted}
 \usepackage{placeins}
 \usepackage{gensymb}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=cyan, linkcolor=blue}
 \author{Christian Johnson\and\&\and Dan Nusraty\and\&\and Dylan McGill\and\newline Optimail}
 \date{\today}
 \title{Mail Database Project}
@@ -28,10 +30,12 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
+
 \newpage
 
 \section{Preface}
-\label{sec:org3cb93de}
+\label{sec:org30fa5b5}
 Tasks taken to complete this assignment:
 \begin{itemize}
 \item Compiled all code files and class documents to Git repo
@@ -46,7 +50,7 @@ Changelog:
 \item Tables are more visually appealing
 \item Added a logout button (currently non-functional)
 \item Added USCGA logo
-\item Tables now resize automatically (will shrink if empty, also allows app to fullscreen)z
+\item Tables now resize automatically (will shrink if empty, also allows app to fullscreen)
 \item Added search capability to Data tab
 \item Added Delete capability to Data tab
 \item Added edit button to Data tab, now raises submenu when clicked (main functionality still WIP)
@@ -54,9 +58,9 @@ Changelog:
 
 
 \section{Test Plan}
-\label{sec:org406da25}
+\label{sec:org4e5c50e}
 \subsection{Unit Testing}
-\label{sec:orgdbf954c}
+\label{sec:orge20aa38}
 \emph{Note:} These tests will have to be performed manually, as our app is primarily GUI focused.
 \(\\\\\)
 \textbf{Login:}
@@ -82,7 +86,7 @@ Changelog:
 
 
 \subsection{Integration Testing}
-\label{sec:org5aced10}
+\label{sec:org526235c}
 
 \textbf{Database Integration}
 \begin{itemize}
@@ -120,30 +124,30 @@ Changelog:
 \end{itemize}
 
 \subsection{Defect tracking}
-\label{sec:org62f6b43}
+\label{sec:org9854a24}
 We plan to use the "Issues" functionality built in to Github.
 When a team member or test user notices an issue with the application, they can submit an Issue on Github detailing the process for reproducing the issue, as well as potential expected outcomes.
 
 \subsection{Test Schedule}
-\label{sec:org599a1a8}
+\label{sec:org0ed7094}
 Unit testing will be an ongoing process throughout the development lifecycle, ensuring the proper function of each application component as it is completed. Prior to integration testing, another round of unit testing will occur once all major functionalities are implemented. Integration testing will commence once the application reaches a usable state, which we anticipate to be approximately 1-2 weeks from now.
 
 \section{Working Prototype}
-\label{sec:org20d0481}
+\label{sec:org5231fdf}
 
 \href{https://github.com/CSJ7701/Mail-Database-Project/commit/762f2ca7f4a92c6ccd8447d39f276ba7ef0a6cc4}{Github Repo}
 
 \section{Demonstration Video}
-\label{sec:orged5060d}
+\label{sec:orgc5a6d29}
 
 \href{https://github.com/CSJ7701/Mail-Database-Project/blob/main/Class-Documents/Recording.webm}{Video Link}\(\\\)
 Click "View Raw" on Github to download the video file.
 
 \section{Project Management}
-\label{sec:org33ec73e}
+\label{sec:org8b8bc71}
 
 \subsection{Schedule}
-\label{sec:org48f69e3}
+\label{sec:org12b67fc}
 \textbf{Next Up:}
 \begin{itemize}
 \item Finalize "Manage DB" tab and polish the user interface (Effort - 4)
@@ -161,7 +165,7 @@ Click "View Raw" on Github to download the video file.
 
 
 \subsection{Meeting Summaries}
-\label{sec:org025bf8a}
+\label{sec:orga0e4900}
 \textbf{Meeting 1}
 \begin{itemize}
 \item Reviewed Previous work and compiled upcoming plan
