@@ -5,7 +5,7 @@ from gui import NavGUI
 from gui import LoginScreen
 from database import Database
 from login import User
-
+ 
 if __name__ == "__main__":
     connection=Database("MailDB.db")
     root=ctk.CTk()
