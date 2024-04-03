@@ -118,10 +118,11 @@ class NavGUI(GUI):
         self.reports_button.pack(side="top", padx=(30), pady=(20,0))
         self.settings_button=ctk.CTkButton(self.nav_bar, text="Settings", command=self.show_settings)
         self.settings_button.pack(side="top",  padx=(30), pady=(20,0))
-
+        self.logout_button=ctk.CTkButton(self.nav_bar, text="Logout", command=self.logout)
+        self.logout_button.pack(side="bottom", padx=(30), pady=(20,20))
 
         self.main_frame=ctk.CTkFrame(self.root, width=400, height=300, fg_color=("#d3d3d3","#191919"))
-        self.main_frame.pack(expand=True, fill="both", padx=20, pady=(20))
+        self.main_frame.pack(expand=True, fill="both", padx=20, pady=(60,20))
 
         self.show_home()
 
@@ -147,9 +148,11 @@ class NavGUI(GUI):
 
     def logout(self):
         print("Logout")
-        # DAN implement function here.
-        # To give you someplace to start, what this should do is destroy the current open window (saved under variable "self.root")
-        # Then you will need to open a new instance of the "loginscreen" class.
+        self.root.destroy()
+        root=ctk.CTk()
+        root.geometry("200x400")
+        root.title("Mail Database")
+        login=LoginScreen(root, self.database)
 
     def clear_main_frame(self):
         for widget in self.main_frame.winfo_children():
