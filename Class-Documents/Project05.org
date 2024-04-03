@@ -33,44 +33,63 @@ $\\\\$
 - This test verifies the behavior of the login screen.
 - It checks if the screen redirects the user to the Home screen upon successful login with valid credentials.
 - Since the app is GUI-focused, this test would involve manually entering valid credentials and observing the redirection to the Home screen.
+- Input: Correct Username and Password
+- Expected output: Homescreen Appears
 $\\$
 *Data Entry:*
 - This test ensures that the "Add Package" button correctly records data.
 - It specifically checks if the tracking number is recorded accurately and if the package is associated with the correct cadet.
 - Manual interaction with the GUI would be required to input data and verify the recorded information.
+- Input: Tracking number (TrackNum) and Box Number (BoxNum)
+- Expected output: Entry to database with TrackNum and Cadet Info for cadet associated with BoxNum
 $\\$
 *Search Function:*
 - This test validates the search functionality.
 - It verifies that a search returns all valid results or, alternatively, that it does not return any invalid results.
 - Again, manual interaction with the GUI is necessary to perform searches and confirm the correctness of the results.
+- Input: search query, example =Tracking Number: 123=
+- Expected Output: All packages with =123= in the tracking number
 
 
-** Integration Testing
+** System Testing
+/Note:/ Testing the integrations between various components of the system
 
  *Database Integration*
    - Verify that the data entered through the GUI is correctly stored in the database.
    - Test if package information, including tracking numbers and associated cadet details, is accurately saved in the database after clicking the "Add Package" button.
    - Ensure that the search functionality retrieves the correct data from the database.
+   - Input: text in GUI fields
+   - Expected output: Text is read from fields and stored in Database
 $\\$
 *Email Notification Integration*
    - Test if the email notification feature functions as expected.
    - Verify that when a package is added and associated with a cadet, an email notification is sent to the corresponding cadet's email address.
    - Check if the content of the email notification contains accurate package information.
+   - Input: User records new package
+   - Expected output: Email is sent to the same cadet to whom the package is addressed.
 $\\$
 *User Authentication Integration*
    - Ensure that the login screen interacts correctly with the authentication system.
    - Test if valid credentials provided on the login screen authenticate the user and grant access to the application's features.
    - Verify that invalid credentials result in appropriate error messages or prevent access to sensitive functionalities.
+   - Input: Correct Username and Password
+   - Expected output: Authenticates user and displays home screen
+   - Input: Incorrect Username and Password
+   - Expected output: Does not authenticate, displays error message
 $\\$
 *GUI Navigation Integration*
    - Test the navigation flow between different screens or tabs of the GUI.
    - Verify that users can seamlessly switch between tabs/screens without encountering errors or unexpected behavior.
    - Ensure that data entered in one tab/screen remains consistent and accessible when navigating to another tab/screen.
+   - Input: Clicking on navigation button
+   - Expected Output: Displaying a new screen
 $\\$
 *Report Generation Integration*
    - Verify that the report generation feature utilizes the correct data from the database.
    - Test if generated reports accurately reflect the package tracking data stored in the database.
    - Check if generated reports can be exported/downloaded in the desired format (e.g., PDF, Excel).
+   - Input: Data from database
+   - Expected output: Graph
 
 ** Defect tracking
 We plan to use the "Issues" functionality built in to Github.

@@ -1,4 +1,4 @@
-% Created 2024-04-01 Mon 21:13
+% Created 2024-04-03 Wed 13:59
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -35,7 +35,7 @@
 \newpage
 
 \section{Preface}
-\label{sec:org30fa5b5}
+\label{sec:org647b7b4}
 Tasks taken to complete this assignment:
 \begin{itemize}
 \item Compiled all code files and class documents to Git repo
@@ -58,9 +58,9 @@ Changelog:
 
 
 \section{Test Plan}
-\label{sec:org4e5c50e}
+\label{sec:orgac19426}
 \subsection{Unit Testing}
-\label{sec:orge20aa38}
+\label{sec:org0be55ba}
 \emph{Note:} These tests will have to be performed manually, as our app is primarily GUI focused.
 \(\\\\\)
 \textbf{Login:}
@@ -68,6 +68,8 @@ Changelog:
 \item This test verifies the behavior of the login screen.
 \item It checks if the screen redirects the user to the Home screen upon successful login with valid credentials.
 \item Since the app is GUI-focused, this test would involve manually entering valid credentials and observing the redirection to the Home screen.
+\item Input: Correct Username and Password
+\item Expected output: Homescreen Appears
 \end{itemize}
 \(\\\)
 \textbf{Data Entry:}
@@ -75,6 +77,8 @@ Changelog:
 \item This test ensures that the "Add Package" button correctly records data.
 \item It specifically checks if the tracking number is recorded accurately and if the package is associated with the correct cadet.
 \item Manual interaction with the GUI would be required to input data and verify the recorded information.
+\item Input: Tracking number (TrackNum) and Box Number (BoxNum)
+\item Expected output: Entry to database with TrackNum and Cadet Info for cadet associated with BoxNum
 \end{itemize}
 \(\\\)
 \textbf{Search Function:}
@@ -82,17 +86,22 @@ Changelog:
 \item This test validates the search functionality.
 \item It verifies that a search returns all valid results or, alternatively, that it does not return any invalid results.
 \item Again, manual interaction with the GUI is necessary to perform searches and confirm the correctness of the results.
+\item Input: search query, example \texttt{Tracking Number: 123}
+\item Expected Output: All packages with \texttt{123} in the tracking number
 \end{itemize}
 
 
-\subsection{Integration Testing}
-\label{sec:org526235c}
+\subsection{System Testing}
+\label{sec:org8db1bd1}
+\emph{Note:} Testing the integrations between various components of the system
 
 \textbf{Database Integration}
 \begin{itemize}
 \item Verify that the data entered through the GUI is correctly stored in the database.
 \item Test if package information, including tracking numbers and associated cadet details, is accurately saved in the database after clicking the "Add Package" button.
 \item Ensure that the search functionality retrieves the correct data from the database.
+\item Input: text in GUI fields
+\item Expected output: Text is read from fields and stored in Database
 \end{itemize}
 \(\\\)
 \textbf{Email Notification Integration}
@@ -100,6 +109,8 @@ Changelog:
 \item Test if the email notification feature functions as expected.
 \item Verify that when a package is added and associated with a cadet, an email notification is sent to the corresponding cadet's email address.
 \item Check if the content of the email notification contains accurate package information.
+\item Input: User records new package
+\item Expected output: Email is sent to the same cadet to whom the package is addressed.
 \end{itemize}
 \(\\\)
 \textbf{User Authentication Integration}
@@ -107,6 +118,10 @@ Changelog:
 \item Ensure that the login screen interacts correctly with the authentication system.
 \item Test if valid credentials provided on the login screen authenticate the user and grant access to the application's features.
 \item Verify that invalid credentials result in appropriate error messages or prevent access to sensitive functionalities.
+\item Input: Correct Username and Password
+\item Expected output: Authenticates user and displays home screen
+\item Input: Incorrect Username and Password
+\item Expected output: Does not authenticate, displays error message
 \end{itemize}
 \(\\\)
 \textbf{GUI Navigation Integration}
@@ -114,6 +129,8 @@ Changelog:
 \item Test the navigation flow between different screens or tabs of the GUI.
 \item Verify that users can seamlessly switch between tabs/screens without encountering errors or unexpected behavior.
 \item Ensure that data entered in one tab/screen remains consistent and accessible when navigating to another tab/screen.
+\item Input: Clicking on navigation button
+\item Expected Output: Displaying a new screen
 \end{itemize}
 \(\\\)
 \textbf{Report Generation Integration}
@@ -121,33 +138,35 @@ Changelog:
 \item Verify that the report generation feature utilizes the correct data from the database.
 \item Test if generated reports accurately reflect the package tracking data stored in the database.
 \item Check if generated reports can be exported/downloaded in the desired format (e.g., PDF, Excel).
+\item Input: Data from database
+\item Expected output: Graph
 \end{itemize}
 
 \subsection{Defect tracking}
-\label{sec:org9854a24}
+\label{sec:orgea6bdc9}
 We plan to use the "Issues" functionality built in to Github.
 When a team member or test user notices an issue with the application, they can submit an Issue on Github detailing the process for reproducing the issue, as well as potential expected outcomes.
 
 \subsection{Test Schedule}
-\label{sec:org0ed7094}
+\label{sec:orgcab424b}
 Unit testing will be an ongoing process throughout the development lifecycle, ensuring the proper function of each application component as it is completed. Prior to integration testing, another round of unit testing will occur once all major functionalities are implemented. Integration testing will commence once the application reaches a usable state, which we anticipate to be approximately 1-2 weeks from now.
 
 \section{Working Prototype}
-\label{sec:org5231fdf}
+\label{sec:org0073e56}
 
 \href{https://github.com/CSJ7701/Mail-Database-Project/commit/762f2ca7f4a92c6ccd8447d39f276ba7ef0a6cc4}{Github Repo}
 
 \section{Demonstration Video}
-\label{sec:orgc5a6d29}
+\label{sec:org4f4805f}
 
 \href{https://github.com/CSJ7701/Mail-Database-Project/blob/main/Class-Documents/Recording.webm}{Video Link}\(\\\)
 Click "View Raw" on Github to download the video file.
 
 \section{Project Management}
-\label{sec:org8b8bc71}
+\label{sec:orga3650ea}
 
 \subsection{Schedule}
-\label{sec:org12b67fc}
+\label{sec:org8aa542b}
 \textbf{Next Up:}
 \begin{itemize}
 \item Finalize "Manage DB" tab and polish the user interface (Effort - 4)
@@ -165,7 +184,7 @@ Click "View Raw" on Github to download the video file.
 
 
 \subsection{Meeting Summaries}
-\label{sec:orga0e4900}
+\label{sec:org24dcbdb}
 \textbf{Meeting 1}
 \begin{itemize}
 \item Reviewed Previous work and compiled upcoming plan
