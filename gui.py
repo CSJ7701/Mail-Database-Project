@@ -88,9 +88,9 @@ class LoginScreen(GUI):
         elif validate==-2:
             self.show_error("Username not recognized")
         elif validate==1:
-            self.root.destroy()
-            root=ctk.CTk()
-            NavGUI(root, self.database, self.user)
+            for widget in self.root.winfo_children():
+                widget.destroy()
+            NavGUI(self.root, self.database, self.user)
              
 
 class NavGUI(GUI):
@@ -147,12 +147,9 @@ class NavGUI(GUI):
         Settings(self.main_frame, self)
 
     def logout(self):
-        print("Logout")
-        self.root.destroy()
-        root=ctk.CTk()
-        root.geometry("200x400")
-        root.title("Mail Database")
-        login=LoginScreen(root, self.database)
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        LoginScreen(self.root, self.database)
 
     def clear_main_frame(self):
         for widget in self.main_frame.winfo_children():
