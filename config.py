@@ -11,4 +11,4 @@ class Config():
         return self.c.get('Appearance', key) 
         
     def initialize(self):
-        self.c["Appearance"]={'color_mode': 'dark', 'color_scheme': 'themes/CGA.json'}
+        self.c["Appearance"]={'color_mode': 'dark', 'color_scheme': os.path.join("themes", "CGA.json")}
