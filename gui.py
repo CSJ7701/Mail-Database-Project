@@ -299,8 +299,32 @@ class DataScreen(NavGUI):
         self.add_button=ctk.CTkButton(self.input_add_frame, text="Add", command=self.add)
         self.add_button.pack(padx=10, pady=(10,10))
 
+        # Preview the NAME associated with the box number input.
+        # This is an Elwakil Suggestion - Couldn't implement autocomplete, so this is the best I could do
+        self.preview_name_label=ctk.CTkLabel(self.input_add_frame, text="Box Owner: ")
+        self.preview_name_entry=ctk.CTkLabel(self.input_add_frame, text="")
+        self.box_add_input.bind('<KeyRelease>', self.preview_box)
+
         self.track_search_input.get()
         self.search()
+
+
+    def preview_box(self, event):
+        box=self.box_add_input.get()
+        if box:
+            self.preview_name_label.pack(side="top", padx=10, pady=(20,0))
+            self.preview_name_entry.pack(side="top", padx=10, pady=(0,10))
+
+            query=f"SELECT name FROM cadets WHERE box_number IS {box}"
+            self.parent.database.cursor.execute(query)
+            result=self.parent.database.cursor.fetchone()
+            if result:
+                self.preview_name_entry.configure(text=result)
+            else:
+                self.preview_name_entry.configure(text="Not Found")
+        else:
+            self.preview_name_label.pack_forget()
+            self.preview_name_entry.pack_forget()
 
         
     def search(self):
