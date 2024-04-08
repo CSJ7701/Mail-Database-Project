@@ -1,6 +1,5 @@
 from datetime import date, timedelta
-from tkinter import StringVar, Event #Spinbox
-import CTkSpinbox as Spinbox
+from tkinter import Spinbox, StringVar, Event
 
 _PLUS_ONE_DAY = timedelta(days=1)
 _MINUS_ONE_DAY = timedelta(days=-1)
@@ -38,3 +37,5 @@ class DatePicker(Spinbox):
             self.date += _PLUS_ONE_DAY
 
         self.string_var.set(self.date.isoformat())
+
+
