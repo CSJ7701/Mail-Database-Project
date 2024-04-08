@@ -9,6 +9,7 @@ from database import Database
 from login import User
 from datetime import datetime
 from config import Config
+from Datepicker import DatePicker
 from PIL import Image
 
 class GUI:
@@ -786,8 +787,13 @@ class Reports(NavGUI):
         self.report_options_frame.pack(side="top", padx=10, pady=(0,10), fill="both", expand=True)
 
         # Choose Report Frame
+        self.report_choice_label=ctk.CTkLabel(self.choose_report_frame, text="Choose Report")
+        self.report_choice_label.pack(side="top", padx=10, pady=(20,0))
         self.report_choice=ctk.CTkOptionMenu(self.choose_report_frame)
         self.report_choice.pack(side="top", padx=10, pady=10)
+        self.report_start_date=DatePicker(self.choose_report_frame)
+        self.report_start_date.pack(side="top")
+        
 
 
         # Average number of packages per day
