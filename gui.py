@@ -140,7 +140,7 @@ class NavGUI(GUI):
         
     def show_reports(self):
         self.clear_main_frame()
-        print("SHOW REPORTS HERE")
+        Reports(self.main_frame, self)
 
     def show_settings(self):
         self.clear_main_frame()
@@ -163,7 +163,7 @@ class HomeScreen(NavGUI):
         home_label.pack(pady=(50,0))
 
         datestring=datetime.now()
-        datestring=datestring.strftime("%B %dth %Y")
+        datestring=datestring.strftime("%B %d %Y")
         date_label=ctk.CTkLabel(self.main_frame, text=datestring)
         date_label.pack()
         
@@ -218,7 +218,7 @@ class HomeScreen(NavGUI):
         return package_count_string
 
     def retrieved_packages(self):
-        self.parent.database.cursor.execute("SELECT * FROM packages WHERE DATE(picked_up) = DATE('now')")
+        self.parent.database.cursor.execute("SELECT adressee, picked_up FROM packages WHERE DATE(picked_up) = DATE('now')")
         results=self.parent.database.cursor.fetchall()
         return results
     def retrieved_package_count(self):
@@ -273,11 +273,12 @@ class DataScreen(NavGUI):
 
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
         self.tree_frame.pack(side="right", fill="both", expand=True)
-        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked', 'fragile'), show='headings', height=15)
         self.tree.heading("#1", text="Tracking Number")
         self.tree.heading("#2", text="Name")
         self.tree.heading("#3", text="Date Received")
         self.tree.heading("#4", text="Date Picked Up")
+        self.tree.heading("#5", text="Fragile")
         self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
 
@@ -298,6 +299,9 @@ class DataScreen(NavGUI):
         self.track_add_input.pack(side="top", padx=10, pady=10)
         self.add_button=ctk.CTkButton(self.input_add_frame, text="Add", command=self.add)
         self.add_button.pack(padx=10, pady=(10,10))
+        self.is_fragile=tk.IntVar(self.input_add_frame, 0)
+        self.fragile_check=ctk.CTkCheckBox(self.input_add_frame, text="Fragile", variable=self.is_fragile, onvalue=1, offvalue=0)
+        self.fragile_check.pack(padx=(0,10), pady=(10))
 
         # Preview the NAME associated with the box number input.
         # This is an Elwakil Suggestion - Couldn't implement autocomplete, so this is the best I could do
@@ -345,17 +349,18 @@ class DataScreen(NavGUI):
         results=self.parent.database.cursor.execute(query)
         results=self.parent.database.cursor.fetchall()
         for data in results:
-            self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+            self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
 # Fix the search func
     def add(self):
         box=self.box_add_input.get()
         track=self.track_add_input.get()
         name, email=self.get_cadet_info(box)
+        fragile=self.is_fragile.get()
         print(f"Name:{name}")
         print(f"Email:{email}")
-        date=datetime.today().strftime('%Y%b%d')
-        query="INSERT INTO packages(tracking_number, adressee, received) VALUES (?,?,?)"
-        self.parent.database.cursor.execute(query, (track, name, date))
+        date=datetime.today().strftime('%Y-%m-%d')
+        query="INSERT INTO packages(tracking_number, adressee, received, fragile) VALUES (?,?,?,?)"
+        self.parent.database.cursor.execute(query, (track, name, date, fragile))
         # self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) VALUES ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
         self.parent.database.conn.commit()
         self.search()
@@ -379,7 +384,7 @@ class DataScreen(NavGUI):
         for item in selection:
             details=self.tree.item(item).get("values")
             track_num=details[0]
-            date=datetime.now().strftime('%Y%b%d').upper()
+            date=datetime.now().strftime('%Y-%m-%d').upper()
             query='''
                   UPDATE packages
                   SET picked_up = ?
@@ -407,11 +412,12 @@ class Manage(NavGUI):
         self.tree_frame.pack(side="right", fill="both", expand=True)
 
         # Package Tree 
-        self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked'), show='headings', height=15)
+        self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked', 'fragile'), show='headings', height=15)
         self.package_tree.heading("#1", text="Tracking Number")
         self.package_tree.heading("#2", text="Name")
         self.package_tree.heading("#3", text="Date Received")
         self.package_tree.heading("#4", text="Date Picked Up")
+        self.package_tree.heading("#5", text="Fragile")
         self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
 
         # Package View
@@ -469,6 +475,7 @@ class Manage(NavGUI):
         self.pack_rec_label=ctk.CTkLabel(self.edit_package, text="Received Date")
         self.pack_rec=ctk.CTkEntry(self.edit_package)
         self.pack_pick=ctk.CTkEntry(self.edit_package)
+        self.pack_fragile=ctk.CTkCheckBox(self.edit_package, text="Fragile")
 
         self.edit_cadet=ctk.CTkFrame(self.edit_frame)
         self.cadet_label=ctk.CTkLabel(self.edit_cadet, text="Cadet Info")
@@ -500,7 +507,7 @@ class Manage(NavGUI):
         results=self.parent.database.cursor.execute(query)
         results=self.parent.database.cursor.fetchall()
         for data in results:
-            self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+            self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
 
     def search_cadets(self):
         self.cadet_tree.delete(*self.cadet_tree.get_children())
@@ -584,6 +591,12 @@ class Manage(NavGUI):
             self.pack_pick.delete(0,'end')
             self.pack_pick.insert(0,values[3])
 
+            self.pack_fragile.pack(side="top", padx=10, pady=(20,0), fill="x")
+            if values[4] == '0':
+                self.pack_fragile.deselect()
+            else:
+                self.pack_fragile.select()
+
 
 
         elif self.cadet_tree.winfo_ismapped():
@@ -654,6 +667,7 @@ class Manage(NavGUI):
                 new_email=self.cadet_email.get()
                 new_grad=self.cadet_grad.get()
                 new_company=self.cadet_company.get()
+
                 query=f'''
                        UPDATE cadets
                        SET
@@ -683,13 +697,15 @@ class Manage(NavGUI):
                 new_addr=self.pack_addr.get()
                 new_received=self.pack_rec.get()
                 new_picked=self.pack_pick.get()
+                new_fragile=self.pack_fragile.get()
                 query=f'''
                        UPDATE packages
                        SET
                        tracking_number={new_track},
                        adressee='{new_addr}',
                        received='{new_received}',
-                       picked_up='{new_picked}'
+                       picked_up='{new_picked}',
+                       fragile={new_fragile}
                        WHERE
                        tracking_number={track} AND
                        adressee='{addr}' AND
@@ -754,6 +770,39 @@ class Manage(NavGUI):
             self.track_search_input.pack(side="top", padx=10, pady=10)
             self.search_packages_button.pack(padx=10, pady=10)
 
+
+class Reports(NavGUI):
+    def __init__(self, main_frame, ParentGUI):
+        self.parent=ParentGUI
+        self.main_frame=main_frame
+
+        self.options_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
+        self.options_frame.pack(side="left", fill="y", padx=10, pady=10)
+        
+        self.choose_report_frame=ctk.CTkFrame(self.options_frame)
+        self.choose_report_frame.pack(side="top", padx=10, pady=10, fill="both", expand=True)
+        
+        self.report_options_frame=ctk.CTkFrame(self.options_frame)
+        self.report_options_frame.pack(side="top", padx=10, pady=(0,10), fill="both", expand=True)
+
+        # Choose Report Frame
+        self.report_choice=ctk.CTkOptionMenu(self.choose_report_frame)
+        self.report_choice.pack(side="top", padx=10, pady=10)
+
+
+        # Average number of packages per day
+        # # Sort by company, class
+
+        # Average number of packages by hour
+        # # Sort by company, class
+
+        # Average number of packages by company
+        # # Sort by class
+
+        # Average number of packages by class
+        # # Sort by company
+
+        # For all of these, can limit time range. 
 
 
 
