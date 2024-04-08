@@ -9,7 +9,6 @@ from database import Database
 from login import User
 from datetime import datetime
 from config import Config
-from Datepicker import DatePicker
 from PIL import Image
 
 class GUI:
@@ -774,14 +773,15 @@ class Manage(NavGUI):
 
 class Reports(NavGUI):
     def __init__(self, main_frame, ParentGUI):
+
         self.parent=ParentGUI
         self.main_frame=main_frame
-
+        
         self.options_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
         self.options_frame.pack(side="left", fill="y", padx=10, pady=10)
         
         self.choose_report_frame=ctk.CTkFrame(self.options_frame)
-        self.choose_report_frame.pack(side="top", padx=10, pady=10, fill="both", expand=True)
+        self.choose_report_frame.pack(side="top", padx=10, pady=10, ipady=10, fill="both")
         
         self.report_options_frame=ctk.CTkFrame(self.options_frame)
         self.report_options_frame.pack(side="top", padx=10, pady=(0,10), fill="both", expand=True)
@@ -791,10 +791,17 @@ class Reports(NavGUI):
         self.report_choice_label.pack(side="top", padx=10, pady=(20,0))
         self.report_choice=ctk.CTkOptionMenu(self.choose_report_frame)
         self.report_choice.pack(side="top", padx=10, pady=10)
-        self.report_start_date=DatePicker(self.choose_report_frame)
-        self.report_start_date.pack(side="top")
-        
 
+        self.report_start_date_label=ctk.CTkLabel(self.choose_report_frame, text="Start Date")
+        self.report_start_date_entry=ctk.CTkEntry(self.choose_report_frame, placeholder_text="YYYY-MM-DD")
+        self.report_start_date_label.pack(side="top", padx=10, pady=(20,0))
+        self.report_start_date_entry.pack(side="top", padx=10, pady=(5,0))
+        self.report_end_date_label=ctk.CTkLabel(self.choose_report_frame, text="End Date")
+        self.report_end_date_entry=ctk.CTkEntry(self.choose_report_frame, placeholder_text="YYYY-MM-DD")
+        self.report_end_date_label.pack(side="top", padx=10, pady=(5,0))
+        self.report_end_date_entry.pack(side="top", padx=10, pady=5)
+
+        self.report_start_date_entry.bind("<FocusOut>", self.CheckDate)
 
         # Average number of packages per day
         # # Sort by company, class
@@ -809,6 +816,29 @@ class Reports(NavGUI):
         # # Sort by company
 
         # For all of these, can limit time range. 
+   
+        
+    def CheckDate(self, event):
+        start=self.report_start_date_entry.get()
+        end=self.report_end_date_entry.get()
+
+        if start:
+            try:
+                datetime.strptime(start, '%Y-%m-%d')
+                if datetime.strptime(start, '%Y-%m-%d') > datetime.today():
+                    self.show_error("Start date cannot be later than today's date")
+                    return False
+                return True
+            except ValueError:
+                self.show_error("Start date is incorrect.\nPlease format as 'YYYY-MM-DD'")
+        if end:
+            try:
+                datetime.strptime(end, '%Y-%m-%d')
+                return True
+            except ValueError:
+                self.show_error("End date is incorrect.\nPlease format as 'YYYY-MM-DD'")
+
+
 
 
 
