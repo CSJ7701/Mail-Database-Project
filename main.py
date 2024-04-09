@@ -2,9 +2,9 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from gui import NavGUI
-from gui import LoginScreen
+from LoginScreen import LoginScreen
 from database import Database
-from login import User
+from LoginBackend import User
  
 if __name__ == "__main__":
     connection=Database("MailDB.db")
