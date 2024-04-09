@@ -1,10 +1,6 @@
-from os.path import expanduser
-from sre_constants import AT_END
 import tkinter as tk
 import customtkinter as ctk
 from tkinter import ttk, Toplevel
-from customtkinter.windows.widgets import image
-from idlelib.tooltip import Hovertip
 from database import Database
 from LoginBackend import User
 from HomeTab import HomeScreen
