@@ -2,10 +2,10 @@ from datetime import datetime
 import customtkinter as ctk
 # from gui import NavGUI
 from tkinter import ttk
+from Screen import Screen
 
 
-
-class HomeScreen(NavGUI):
+class HomeScreen(Screen):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame

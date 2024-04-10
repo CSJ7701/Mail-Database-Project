@@ -1,7 +1,7 @@
 import customtkinter as ctk
+from Screen import Screen
 
-
-class Settings(NavGUI):
+class Settings(Screen):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame

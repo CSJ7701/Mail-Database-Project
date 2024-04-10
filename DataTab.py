@@ -2,9 +2,9 @@ import customtkinter as ctk
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
-from gui import NavGUI
+from Screen import Screen
 
-class DataScreen(NavGUI):
+class DataScreen(Screen):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame
@@ -131,11 +131,12 @@ class DataScreen(NavGUI):
             details=self.tree.item(item).get("values")
             track_num=details[0]
             date=datetime.now().strftime('%Y-%m-%d').upper()
+            time=datetime.now().strftime('%H:%M:%S')
             query='''
                   UPDATE packages
-                  SET picked_up = ?
+                  SET picked_up = ?, picked_up_time=?
                   WHERE tracking_number = ?
                   '''
-            self.parent.database.cursor.execute(query, (date, track_num))
+            self.parent.database.cursor.execute(query, (date, time, track_num))
         self.parent.database.conn.commit()
         self.search()

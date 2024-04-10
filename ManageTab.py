@@ -1,9 +1,8 @@
 import customtkinter as ctk
 from tkinter import ttk
-from gui import NavGUI
+from Screen import Screen
 
-
-class Manage(NavGUI):
+class Manage(Screen):
     def __init__(self, main_frame, ParentGUI):
         self.parent=ParentGUI
         self.main_frame=main_frame
@@ -20,12 +19,13 @@ class Manage(NavGUI):
         self.tree_frame.pack(side="right", fill="both", expand=True)
 
         # Package Tree 
-        self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked', 'fragile'), show='headings', height=15)
+        self.package_tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked', 'picked_time', 'fragile'), show='headings', height=15)
         self.package_tree.heading("#1", text="Tracking Number")
         self.package_tree.heading("#2", text="Name")
         self.package_tree.heading("#3", text="Date Received")
         self.package_tree.heading("#4", text="Date Picked Up")
-        self.package_tree.heading("#5", text="Fragile")
+        self.package_tree.heading("#5", text="Time Picked Up")
+        self.package_tree.heading("#6", text="Fragile")
         self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
 
         # Package View
@@ -53,6 +53,7 @@ class Manage(NavGUI):
         self.c_grad_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Grad. Date")
         self.c_company_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Company")
         self.search_cadets_button=ctk.CTkButton(self.input_search_frame, text="Search", command=self.search_cadets)
+        self.add_cadet_button=ctk.CTkButton(self.input_search_frame, text="Add", command=self.add_cadet)
 
         
 
@@ -77,12 +78,14 @@ class Manage(NavGUI):
         self.package_label=ctk.CTkLabel(self.edit_package, text="Package Info")
         self.pack_track_label=ctk.CTkLabel(self.edit_package, text="Tracking Number")
         self.pack_track=ctk.CTkEntry(self.edit_package)
-        self.pack_pick_label=ctk.CTkLabel(self.edit_package, text="Retrieved Date")
         self.pack_addr_label=ctk.CTkLabel(self.edit_package, text="Addressee")
         self.pack_addr=ctk.CTkEntry(self.edit_package)
         self.pack_rec_label=ctk.CTkLabel(self.edit_package, text="Received Date")
         self.pack_rec=ctk.CTkEntry(self.edit_package)
+        self.pack_pick_label=ctk.CTkLabel(self.edit_package, text="Retrieved Date")
         self.pack_pick=ctk.CTkEntry(self.edit_package)
+        self.pack_pick_time_label=ctk.CTkLabel(self.edit_package, text="Retrieved Time")
+        self.pack_pick_time=ctk.CTkEntry(self.edit_package)
         self.pack_fragile=ctk.CTkCheckBox(self.edit_package, text="Fragile")
 
         self.edit_cadet=ctk.CTkFrame(self.edit_frame)
@@ -115,7 +118,7 @@ class Manage(NavGUI):
         results=self.parent.database.cursor.execute(query)
         results=self.parent.database.cursor.fetchall()
         for data in results:
-            self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
+            self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5], data[6]))
 
     def search_cadets(self):
         self.cadet_tree.delete(*self.cadet_tree.get_children())
@@ -139,6 +142,35 @@ class Manage(NavGUI):
         results=self.parent.database.cursor.fetchall()
         for data in results:
             self.cadet_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
+
+    def add_cadet(self):
+        name=self.c_name_search_input.get()
+        box=self.c_box_search_input.get()
+        email=self.c_email_search_input.get()
+        grad=self.c_grad_search_input.get()
+        company=self.c_company_search_input.get()
+        if not name:
+            self.show_error("Name not specified")
+            return None
+        if not box:
+            self.show_error("Box not specified")
+            return None
+        if not email:
+            self.show_error("Email not specified")
+            return None
+        if not grad:
+            self.show_error("Graduation Date not specified")
+        if not company:
+            self.show_error("Company not specified")
+        query=f"INSERT INTO cadets (name, box_number, email, graduation_date, company) VALUES ('{name}', {box}, '{email}', {grad}, '{company}');"
+        self.parent.database.cursor.execute(query)
+        self.parent.database.conn.commit()
+        self.c_name_search_input.delete(0,'end')
+        self.c_box_search_input.delete(0,'end')
+        self.c_email_search_input.delete(0,'end')
+        self.c_grad_search_input.delete(0,'end')
+        self.c_company_search_input.delete(0,'end')
+        self.search_cadets()
 
     def delete_item(self):
         selection=self.package_tree.selection()
@@ -199,8 +231,13 @@ class Manage(NavGUI):
             self.pack_pick.delete(0,'end')
             self.pack_pick.insert(0,values[3])
 
+            self.pack_pick_time_label.pack(side="top", padx=10, pady=(10,0), fill="x")
+            self.pack_pick_time.pack(side="top", padx=10, pady=(0,10), fill="x")
+            self.pack_pick_time.delete(0,'end')
+            self.pack_pick_time.insert(0,values[4])
+
             self.pack_fragile.pack(side="top", padx=10, pady=(20,0), fill="x")
-            if values[4] == '0':
+            if values[5] == '0':
                 self.pack_fragile.deselect()
             else:
                 self.pack_fragile.select()
@@ -291,7 +328,9 @@ class Manage(NavGUI):
                        graduation_date={grad} AND
                        company='{company}';
                        '''
+                print(query)
                 self.parent.database.cursor.execute(query)
+                self.parent.database.conn.commit()
                 self.close_edits()
             if self.edit_package.winfo_ismapped():
                 selected_items=self.package_tree.selection()
@@ -305,6 +344,7 @@ class Manage(NavGUI):
                 new_addr=self.pack_addr.get()
                 new_received=self.pack_rec.get()
                 new_picked=self.pack_pick.get()
+                new_picked_time=self.pack_pick_time.get()
                 new_fragile=self.pack_fragile.get()
                 query=f'''
                        UPDATE packages
@@ -313,6 +353,7 @@ class Manage(NavGUI):
                        adressee='{new_addr}',
                        received='{new_received}',
                        picked_up='{new_picked}',
+                       picked_up_time='{new_picked_time}',
                        fragile={new_fragile}
                        WHERE
                        tracking_number={track} AND
@@ -321,6 +362,7 @@ class Manage(NavGUI):
                        '''
                 print(query)
                 self.parent.database.cursor.execute(query)
+                self.parent.database.conn.commit()
                 self.close_edits()
         else:
             print("Not editing")
@@ -359,6 +401,7 @@ class Manage(NavGUI):
             self.c_grad_search_input.pack(side="top", padx=10, pady=10)
             self.c_company_search_input.pack(side="top", padx=10, pady=10)
             self.search_cadets_button.pack(padx=10, pady=10)
+            self.add_cadet_button.pack(padx=10, pady=10)
 
         if self.cadet_tree.winfo_ismapped():
 
@@ -370,6 +413,7 @@ class Manage(NavGUI):
             self.c_grad_search_input.pack_forget()
             self.c_company_search_input.pack_forget()
             self.search_cadets_button.pack_forget()
+            self.add_cadet_button.pack_forget()
 
             # Pack New
             self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)

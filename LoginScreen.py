@@ -1,10 +1,11 @@
 import customtkinter as ctk
-# from gui import GUI, NavGUI
+from gui import NavGUI 
 from LoginBackend import User
+from Screen import Screen
 
-class LoginScreen(GUI):
+class LoginScreen(Screen):
     def __init__(self, root, database):
-        super().__init__(root, database, None)
+        # super().__init__(root, database, None)
         self.root=root
         self.database=database
 

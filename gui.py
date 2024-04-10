@@ -8,7 +8,8 @@ from DataTab import DataScreen
 from ManageTab import Manage
 from ReportsTab import Reports
 from SettingsTab import Settings
-from LoginScreen import LoginScreen
+# from LoginScreen import LoginScreen ## This is called manually in a logout function.
+# Displayed here for posterity, but should not be uncommented.
 from datetime import datetime
 from config import Config
 import CTkListbox
@@ -17,45 +18,49 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 
-class GUI:
-    def __init__(self, root, database, user):
+# class GUI:
+#     def __init__(self, root, database, user):
 
+#         self.root=root
+#         self.database=database
+#         self.user=user
+#         self.config=Config("./config.ini")
+#         ctk.set_default_color_theme("themes/CGA.json")
+#         ctk.set_appearance_mode(self.config.appearance('color_mode'))
+
+
+#         # self.root.resizable(width=0, height=0)
+
+#     def add_package(self):
+#         box=self.package_box.get()
+#         track=self.package_number.get()
+#         self.database.add_package(box, track)
+
+#     def populate_table(self):
+#         name=self.search_name.get()
+#         box=self.search_box.get()
+#         track=self.search_track.get()
+#         results=self.database.populate_table(name=name, box=box, track=track)
+#         self.table.delete(*self.table.get_children())
+#         for data in results:
+#             self.table.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
+
+#     def item_select(self, _):
+#         for i in self.table.selection():
+#             print(self.table.item(i)['values'])
+
+#     def show_error(self, message):
+#         tk.messagebox.showerror("Error", message)
+
+
+
+class NavGUI():
+    def __init__(self, root, database, user):
+        # super().__init__(root, database, user)
         self.root=root
-        self.database=database
+        self.root.protocol("WM_DELETE_WINDOW", root.quit)
         self.user=user
         self.config=Config("./config.ini")
-        ctk.set_default_color_theme("themes/CGA.json")
-        ctk.set_appearance_mode(self.config.appearance('color_mode'))
-
-
-        # self.root.resizable(width=0, height=0)
-
-    def add_package(self):
-        box=self.package_box.get()
-        track=self.package_number.get()
-        self.database.add_package(box, track)
-
-    def populate_table(self):
-        name=self.search_name.get()
-        box=self.search_box.get()
-        track=self.search_track.get()
-        results=self.database.populate_table(name=name, box=box, track=track)
-        self.table.delete(*self.table.get_children())
-        for data in results:
-            self.table.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
-
-    def item_select(self, _):
-        for i in self.table.selection():
-            print(self.table.item(i)['values'])
-
-    def show_error(self, message):
-        tk.messagebox.showerror("Error", message)
-
-
-
-class NavGUI(GUI):
-    def __init__(self, root, database, user):
-        super().__init__(root, database, user)
         self.database=database
         ctk.set_default_color_theme("themes/CGA.json")
         ctk.set_appearance_mode(self.config.appearance('color_mode'))
@@ -82,7 +87,7 @@ class NavGUI(GUI):
         self.logout_button.pack(side="bottom", padx=(30), pady=(20,20))
 
         self.main_frame=ctk.CTkFrame(self.root, width=400, height=300, fg_color=("#d3d3d3","#191919"))
-        self.main_frame.pack(expand=True, fill="both", padx=20, pady=(60,20))
+        self.main_frame.pack(expand=True, fill="both", padx=20, pady=(20,20))
 
         self.show_home()
 
@@ -107,6 +112,7 @@ class NavGUI(GUI):
         Settings(self.main_frame, self)
 
     def logout(self):
+        from LoginScreen import LoginScreen
         for widget in self.root.winfo_children():
             widget.destroy()
         LoginScreen(self.root, self.database)
