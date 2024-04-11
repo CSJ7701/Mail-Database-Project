@@ -7,6 +7,10 @@ class Manage(Screen):
         self.parent=ParentGUI
         self.main_frame=main_frame
 
+        self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS {self.parent.user.username}")
+        self.user_priviledge=self.parent.database.cursor.selectone()[0]
+        print(self.user_priviledge)
+
         self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
         self.input_frame.pack(side="left", fill="y")
 
