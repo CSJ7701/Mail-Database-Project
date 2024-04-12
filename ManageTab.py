@@ -9,7 +9,52 @@ class Manage(Screen):
 
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS '{self.parent.user.username}'")
         self.user_priviledge=self.parent.database.cursor.fetchone()[0]
+
         print(self.user_priviledge)
+        if self.user_priviledge != 1:
+            self.login_frame=ctk.CTkFrame(self.main_frame, fg_color=("#d3d3d3", "#191919"))
+            self.priviledge_notice_label=ctk.CTkLabel(self.login_frame, text=f"Currently logged in as: {self.parent.user.username}\nInsufficient User Priviledge\nPlease log in with administrator credentials.")
+            self.username_entry=ctk.CTkEntry(self.login_frame, placeholder_text="Username")
+            self.password_entry=ctk.CTkEntry(self.login_frame, placeholder_text="Password", show="*")
+            self.login_button=ctk.CTkButton(self.login_frame, text="Login", command=self.Login)
+
+            self.login_frame.pack(fill="both", expand=True)
+            self.priviledge_notice_label.pack(padx=10, pady=(90,40))
+            self.username_entry.pack(padx=10, pady=10)
+            self.username_entry.bind("<Return>", self.EventLogin)
+            self.password_entry.pack(padx=10, pady=10)
+            self.password_entry.bind("<Return>", self.EventLogin)
+            self.login_button.pack(padx=10, pady=20)
+            
+    def EventLogin(self, event):
+        self.Login()
+        
+    def Login(self):
+        username=self.username_entry.get()
+        password=self.password_entry.get()
+        if not username:
+            self.show_error("Please enter a username")
+            return
+        if not password:
+            self.show_error("Please enter a password")
+            return
+        validate=self.parent.user.check_pass(password)
+        query=f"SELECT admin FROM accounts WHERE username LIKE '{username}'"
+        self.parent.database.cursor.execute(query)
+        login_priviledges=self.parent.database.cursor.fetchone()[0]
+        if login_priviledges != 0:
+            self.show_error("User does not have administrator priviledges.")
+            return
+        if validate==-1:
+            self.show_error("Password Incorrect")
+        elif validate==-2:
+            self.show_error("Username not recognized")
+        elif validate==1:
+            for widget in self.main_frame():
+                widget.destroy()
+            self.LoadMainView()
+        
+    def LoadMainView(self):
 
         self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
         self.input_frame.pack(side="left", fill="y")
