@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import ttk
 from Screen import Screen
+from LoginBackend import User
 
 class Manage(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -10,7 +11,6 @@ class Manage(Screen):
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS '{self.parent.user.username}'")
         self.user_priviledge=self.parent.database.cursor.fetchone()[0]
 
-        print(self.user_priviledge)
         if self.user_priviledge != 1:
             self.login_frame=ctk.CTkFrame(self.main_frame, fg_color=("#d3d3d3", "#191919"))
             self.priviledge_notice_label=ctk.CTkLabel(self.login_frame, text=f"Currently logged in as: {self.parent.user.username}\nInsufficient User Priviledge\nPlease log in with administrator credentials.")
@@ -32,17 +32,18 @@ class Manage(Screen):
     def Login(self):
         username=self.username_entry.get()
         password=self.password_entry.get()
+        user=User(username, password, self.parent.database)
         if not username:
             self.show_error("Please enter a username")
             return
         if not password:
             self.show_error("Please enter a password")
             return
-        validate=self.parent.user.check_pass(password)
+        validate=user.check_pass(password)
         query=f"SELECT admin FROM accounts WHERE username LIKE '{username}'"
         self.parent.database.cursor.execute(query)
         login_priviledges=self.parent.database.cursor.fetchone()[0]
-        if login_priviledges != 0:
+        if login_priviledges != 1:
             self.show_error("User does not have administrator priviledges.")
             return
         if validate==-1:
@@ -50,7 +51,7 @@ class Manage(Screen):
         elif validate==-2:
             self.show_error("Username not recognized")
         elif validate==1:
-            for widget in self.main_frame():
+            for widget in self.main_frame.winfo_children():
                 widget.destroy()
             self.LoadMainView()
         

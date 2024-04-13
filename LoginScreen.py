@@ -2,12 +2,17 @@ import customtkinter as ctk
 from gui import NavGUI 
 from LoginBackend import User
 from Screen import Screen
+from config import Config
+import os
 
 class LoginScreen(Screen):
     def __init__(self, root, database):
         # super().__init__(root, database, None)
         self.root=root
         self.database=database
+        self.config=Config("config.ini")
+        ctk.set_default_color_theme(os.path.join("themes", "CGA.json"))
+        ctk.set_appearance_mode(self.config.appearance('color_mode'))
 
         ctk.CTkLabel(self.root, text="USCGA Mailroom", font=("Helvetica",20)).pack(pady=20)
 

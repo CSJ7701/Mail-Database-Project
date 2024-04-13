@@ -1,8 +1,5 @@
 import tkinter as tk
 import customtkinter as ctk
-from tkinter import ttk, Toplevel
-from database import Database
-from LoginBackend import User
 from HomeTab import HomeScreen
 from DataTab import DataScreen
 from ManageTab import Manage
@@ -12,47 +9,7 @@ from SettingsTab import Settings
 # Displayed here for posterity, but should not be uncommented.
 from datetime import datetime
 from config import Config
-import CTkListbox
 from PIL import Image
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-
-
-# class GUI:
-#     def __init__(self, root, database, user):
-
-#         self.root=root
-#         self.database=database
-#         self.user=user
-#         self.config=Config("./config.ini")
-#         ctk.set_default_color_theme("themes/CGA.json")
-#         ctk.set_appearance_mode(self.config.appearance('color_mode'))
-
-
-#         # self.root.resizable(width=0, height=0)
-
-#     def add_package(self):
-#         box=self.package_box.get()
-#         track=self.package_number.get()
-#         self.database.add_package(box, track)
-
-#     def populate_table(self):
-#         name=self.search_name.get()
-#         box=self.search_box.get()
-#         track=self.search_track.get()
-#         results=self.database.populate_table(name=name, box=box, track=track)
-#         self.table.delete(*self.table.get_children())
-#         for data in results:
-#             self.table.insert('', 'end', values=(data[1], data[2], data[3], data[4]))
-
-#     def item_select(self, _):
-#         for i in self.table.selection():
-#             print(self.table.item(i)['values'])
-
-#     def show_error(self, message):
-#         tk.messagebox.showerror("Error", message)
-
-
 
 class NavGUI():
     def __init__(self, root, database, user):
