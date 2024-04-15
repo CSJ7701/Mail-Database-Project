@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from Screen import Screen
-from LoginBackend import User
+
 
 class Settings(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -130,6 +130,13 @@ class Settings(Screen):
         self.password_cancel_button.pack(side="top", padx=10, pady=10)
 
     def SavePassword(self):
+        username=self.parent.user.username
+        old=self.old_password.get()
+        new=self.new_password.get()
+        auth=self.parent.user.check_pass(old)
+        if auth == 1:
+            query=f"UPDATE accounts SET password='{new_hashed_password}' WHERE username='{username}'"
+            print(query)
         self.password_edit_frame.pack_forget()
         self.old_password.pack_forget()
         self.old_password_label.pack_forget()
