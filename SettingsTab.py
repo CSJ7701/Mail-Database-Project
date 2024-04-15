@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from Screen import Screen
+from LoginBackend import User
 
 class Settings(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -7,10 +8,7 @@ class Settings(Screen):
         self.main_frame=main_frame
         self.config=self.parent.config
 
-        if self.config.appearance("color_mode") == "light":
-            self.color_string=" - Light "
-        elif self.config.appearance("color_mode") == "dark":
-            self.color_string=" - Dark"
+        self.UpdateColorLabel()
 
         self.headline_font=ctk.CTkFont(family="Helvetica", size=20, weight="bold", underline=True)
 
@@ -34,16 +32,21 @@ class Settings(Screen):
 
         # Edit Username Frame
         self.username_edit_frame=ctk.CTkFrame(self.user_frame)
+        self.new_username_label=ctk.CTkLabel(self.username_edit_frame, text="New Username")
         self.new_username=ctk.CTkEntry(self.username_edit_frame, placeholder_text="New Username")
-        self.username_save_button=ctk.CTkButton(self.username_edit_frame, text="Save Username")
-        self.username_cancel_button=ctk.CTkButton(self.username_edit_frame, text="Cancel")
+        self.new_username_password_label=ctk.CTkLabel(self.username_edit_frame, text="Password")
+        self.new_username_password=ctk.CTkEntry(self.username_edit_frame, placeholder_text="Password", show="*")
+        self.username_save_button=ctk.CTkButton(self.username_edit_frame, text="Save Username", command=self.SaveUsername)
+        self.username_cancel_button=ctk.CTkButton(self.username_edit_frame, text="Cancel", command=self.CancelUsernameEdit)
 
         # Edit Password Frame
         self.password_edit_frame=ctk.CTkFrame(self.user_frame)
+        self.old_password_label=ctk.CTkLabel(self.password_edit_frame, text="Old Password")
         self.old_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="Old Password")
+        self.new_password_label=ctk.CTkLabel(self.password_edit_frame, text="New Password")
         self.new_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="New Password")
-        self.password_save_button=ctk.CTkButton(self.password_edit_frame, text="Save Password")
-        self.password_cancel_button=ctk.CTkButton(self.password_edit_frame, text="Cancel")
+        self.password_save_button=ctk.CTkButton(self.password_edit_frame, text="Save Password", command=self.SavePassword)
+        self.password_cancel_button=ctk.CTkButton(self.password_edit_frame, text="Cancel", command=self.CancelPasswordEdit)
         
         
         
@@ -59,22 +62,89 @@ class Settings(Screen):
 
 
     def ChangeColorMode(self):
-        raise NotImplementedError("Color Function Not Written")
+        if self.config.appearance('color_mode') == 'dark':
+            self.config.c['Appearance']['color_mode']='light'
+        elif self.config.appearance('color_mode') == 'light':
+            self.config.c['Appearance']['color_mode']='dark'
+        ctk.set_appearance_mode(self.config.appearance('color_mode'))
+        self.UpdateColorLabel()
+        self.color_preference_label.configure(text=self.color_string)
+        with open('config.ini', 'w') as configfile:
+            self.config.c.write(configfile)
+
+    def UpdateColorLabel(self):
+        if self.config.appearance("color_mode") == "light":
+            self.color_string=" - Light "
+        elif self.config.appearance("color_mode") == "dark":
+            self.color_string=" - Dark"
 
     def EditUsername(self):
-        raise NotImplementedError("Edit Function Not written")
+        self.new_username.delete(0,'end')
+        self.new_username_password.delete(0, 'end')
+        
+        self.username_edit_frame.pack(side="bottom", padx=10, pady=30)
+        self.new_username_label.pack(side="top", padx=10, pady=10)
+        self.new_username.pack(side="top", padx=10, pady=10)
+        self.new_username_password_label.pack(side="top", padx=10, pady=10)
+        self.new_username_password.pack(side="top", padx=10, pady=10)
+        self.username_save_button.pack(side="top", padx=10, pady=10)
+        self.username_cancel_button.pack(side="top", padx=10, pady=10)
 
     def SaveUsername(self):
-        raise NotImplementedError("Save Function Not written")
+        username=self.new_username.get()
+        password=self.new_username_password.get()
+        auth=self.parent.user.check_pass(password)
+        if auth == 1:
+            query=f"UPDATE accounts SET username='{username}' WHERE username='{self.parent.user.username}'"
+            self.parent.database.cursor.execute(query)
+            self.parent.database.conn.commit()
+
+        self.username_edit_frame.pack_forget()
+        self.new_username_label.pack_forget()
+        self.new_username.pack_forget()
+        self.new_username_password_label.pack_forget()
+        self.new_username_password.pack_forget()
+        self.username_save_button.pack_forget()
+        self.username_cancel_button.pack_forget()
+        # raise NotImplementedError("Save Function Not written")
+
 
     def CancelUsernameEdit(self):
-        raise NotImplementedError("Cancel not written")
+        self.username_edit_frame.pack_forget()
+        self.new_username.pack_forget()
+        self.new_username_label.pack_forget()
+        self.new_username_password.pack_forget()
+        self.username_save_button.pack_forget()
+        self.new_username_password_label.pack_forget()
+        self.username_cancel_button.pack_forget()
 
     def EditUserPassword(self):
-        raise NotImplementedError("Edit Function Not written")
+        self.new_password.delete(0, 'end')
+        self.old_password.delete(0, 'end')
+        self.password_edit_frame.pack(side="bottom", padx=10, pady=30)
+        self.old_password_label.pack(side="top", padx=10, pady=10)
+        self.old_password.pack(side="top", padx=10, pady=10)
+        self.new_password_label.pack(side="top", padx=10, pady=10)
+        self.new_password.pack(side="top", padx=10, pady=10)
+        self.password_save_button.pack(side="top", padx=10, pady=10)
+        self.password_cancel_button.pack(side="top", padx=10, pady=10)
 
     def SavePassword(self):
+        self.password_edit_frame.pack_forget()
+        self.old_password.pack_forget()
+        self.old_password_label.pack_forget()
+        self.new_password.pack_forget()
+        self.new_password_label.pack_forget()
+        self.password_save_button.pack_forget()
+        self.password_cancel_button.pack_forget()
         raise NotImplementedError("Save Function Not written")
 
     def CancelPasswordEdit(self):
-        raise NotImplementedError("Cance not written")
+        self.password_edit_frame.pack_forget()
+        self.old_password.pack_forget()
+        self.old_password_label.pack_forget()
+        self.new_password.pack_forget()
+        self.new_password_label.pack_forget()
+        self.password_save_button.pack_forget()
+        self.password_cancel_button.pack_forget()
+        

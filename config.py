@@ -12,3 +12,5 @@ class Config():
         
     def initialize(self):
         self.c["Appearance"]={'color_mode': 'dark', 'color_scheme': os.path.join("themes", "CGA.json")}
+        with open('config.ini', 'w') as file:
+            self.c.write(file)
