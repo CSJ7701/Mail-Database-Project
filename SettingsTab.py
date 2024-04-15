@@ -42,9 +42,9 @@ class Settings(Screen):
         # Edit Password Frame
         self.password_edit_frame=ctk.CTkFrame(self.user_frame)
         self.old_password_label=ctk.CTkLabel(self.password_edit_frame, text="Old Password")
-        self.old_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="Old Password")
+        self.old_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="Old Password", show="*")
         self.new_password_label=ctk.CTkLabel(self.password_edit_frame, text="New Password")
-        self.new_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="New Password")
+        self.new_password=ctk.CTkEntry(self.password_edit_frame, placeholder_text="New Password", show="*")
         self.password_save_button=ctk.CTkButton(self.password_edit_frame, text="Save Password", command=self.SavePassword)
         self.password_cancel_button=ctk.CTkButton(self.password_edit_frame, text="Cancel", command=self.CancelPasswordEdit)
         
@@ -98,6 +98,8 @@ class Settings(Screen):
             query=f"UPDATE accounts SET username='{username}' WHERE username='{self.parent.user.username}'"
             self.parent.database.cursor.execute(query)
             self.parent.database.conn.commit()
+        else:
+            self.show_error("Authorization Error.\nCheck your password")
 
         self.username_edit_frame.pack_forget()
         self.new_username_label.pack_forget()
@@ -133,10 +135,14 @@ class Settings(Screen):
         username=self.parent.user.username
         old=self.old_password.get()
         new=self.new_password.get()
+        new_hashed=self.parent.user.encode_pass(new)
         auth=self.parent.user.check_pass(old)
         if auth == 1:
-            query=f"UPDATE accounts SET password='{new_hashed_password}' WHERE username='{username}'"
-            print(query)
+            query="UPDATE accounts SET hashed_password=? WHERE username=?;"
+            self.parent.database.cursor.execute(query, (new_hashed, username))
+            self.parent.database.conn.commit()
+        else:
+            self.show_error("Authorization Error.\nCheck your password")
         self.password_edit_frame.pack_forget()
         self.old_password.pack_forget()
         self.old_password_label.pack_forget()
@@ -144,7 +150,6 @@ class Settings(Screen):
         self.new_password_label.pack_forget()
         self.password_save_button.pack_forget()
         self.password_cancel_button.pack_forget()
-        raise NotImplementedError("Save Function Not written")
 
     def CancelPasswordEdit(self):
         self.password_edit_frame.pack_forget()
