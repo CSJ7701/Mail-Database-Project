@@ -4,6 +4,7 @@ from LoginBackend import User
 from Screen import Screen
 from config import Config
 import os
+import sys
 
 class LoginScreen(Screen):
     def __init__(self, root, database):
@@ -11,7 +12,8 @@ class LoginScreen(Screen):
         self.root=root
         self.database=database
         self.config=Config("config.ini")
-        ctk.set_default_color_theme(os.path.join("themes", "CGA.json"))
+        script_dir=os.path.dirname(os.path.abspath(sys.argv[0]))
+        ctk.set_default_color_theme(os.path.join(script_dir, "themes", "CGA.json"))
         ctk.set_appearance_mode(self.config.appearance('color_mode'))
 
         ctk.CTkLabel(self.root, text="USCGA Mailroom", font=("Helvetica",20)).pack(pady=20)
