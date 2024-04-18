@@ -67,7 +67,7 @@ class Settings(Screen):
 
         self.add_account_button=ctk.CTkButton(self.Admin_frame, text="Add Account", command=self.AddAccountOpen)
         self.add_account_button.pack(side="top", padx=10, pady=10)
-        self.delete_account_button=ctk.CTkButton(self.Admin_frame, text="Delete Account")
+        self.delete_account_button=ctk.CTkButton(self.Admin_frame, text="Delete Account", command=self.DeleteAccountOpen)
         self.delete_account_button.pack(side="top", padx=10, pady=10)
         self.edit_account_username=ctk.CTkButton(self.Admin_frame, text="Edit Account Username")
         self.edit_account_username.pack(side="top", padx=10, pady=10)
@@ -89,18 +89,20 @@ class Settings(Screen):
         self.add_account_admin=ctk.CTkCheckBox(self.add_account_frame, text="Is Admin?")
         self.add_account_add_button=ctk.CTkButton(self.add_account_frame, text="Add Account", command=self.AddAccount)
         self.add_account_cancel=ctk.CTkButton(self.add_account_frame, text="Cancel", command=self.AddAccountClose)
+
         # Delete Account Frame
         self.delete_account_frame=ctk.CTkFrame(self.Admin_frame)
+        self.delete_account_username_label=ctk.CTkLabel(self.delete_account_frame, text="Username")
         self.delete_account_username=ctk.CTkEntry(self.delete_account_frame, placeholder_text="Username")
         self.delete_account_confirm=ctk.CTkCheckBox(self.delete_account_frame, text="Are you sure you want to delete this account?")
-        self.delete_account_delete_button=ctk.CTkButton(self.delete_account_frame, text="Delete")
+        self.delete_account_delete_button=ctk.CTkButton(self.delete_account_frame, text="Delete", command=self.DeleteAccount)
         self.delete_account_cancel_button=ctk.CTkButton(self.delete_account_frame, text="Cancel", command=self.DeleteAccountClose)
 
         # Request Admin Frame
         self.request_admin_frame=ctk.CTkFrame(self.Admin_frame)
         self.request_admin_username_label=ctk.CTkLabel(self.request_admin_frame, text="Username")
-        raise NotImplementedError("Finished request labels")
         self.request_admin_username=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Username")
+        self.request_admin_password_label=ctk.CTkLabel(self.request_admin_frame, text="Password")
         self.request_admin_password=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Password", show="*")
         self.request_admin_button=ctk.CTkButton(self.request_admin_frame, text="Login", command=self.LoginRequestAdmin)
         self.request_admin_cancel=ctk.CTkButton(self.request_admin_frame, text="Cancel", command=self.CloseRequestAdmin)
@@ -219,7 +221,9 @@ class Settings(Screen):
         self.request_admin_username.delete(0,'end')
         self.request_admin_password.delete(0,'end')
         self.request_admin_frame.pack(side="bottom", padx=10, pady=30)
+        self.request_admin_username_label.pack(side="top", padx=10, pady=10)
         self.request_admin_username.pack(side="top", padx=10, pady=10)
+        self.request_admin_password_label.pack(side="top", padx=10, pady=10)
         self.request_admin_password.pack(side="top", padx=10, pady=10)
         self.request_admin_button.pack(side="top", padx=10, pady=10)
         self.request_admin_cancel.pack(side="top", padx=10, pady=10)
@@ -252,6 +256,8 @@ class Settings(Screen):
             self.CloseRequestAdmin()
 
     def AddAccountOpen(self):
+        if self.delete_account_frame.winfo_ismapped():
+            return
         self.add_account_username.delete(0,'end')
         self.add_account_password.delete(0,'end')
         self.add_account_admin.deselect()
@@ -297,9 +303,12 @@ class Settings(Screen):
         self.AddAccountClose()
         
     def DeleteAccountOpen(self):
+        if self.add_account_frame.winfo_ismapped():
+            return
         self.delete_account_username.delete(0,'end')
         self.delete_account_confirm.deselect()
         self.delete_account_frame.pack(side="bottom", padx=10, pady=30)
+        self.delete_account_username_label.pack(side="top", padx=10, pady=10)
         self.delete_account_username.pack(side="top", padx=10, pady=10)
         self.delete_account_confirm.pack(side="top", padx=10, pady=10)
         self.delete_account_delete_button.pack(side="top", padx=10, pady=10)
@@ -307,6 +316,7 @@ class Settings(Screen):
         
     def DeleteAccountClose(self):
         self.delete_account_frame.pack_forget()
+        self.delete_account_username_label.pack_forget()
         self.delete_account_username.pack_forget()
         self.delete_account_confirm.pack_forget()
         self.delete_account_delete_button.pack_forget()
@@ -314,6 +324,20 @@ class Settings(Screen):
 
     def DeleteAccount(self):
         username=self.delete_account_username.get()
-        raise NotImplementedError
+        if not self.delete_account_confirm.get():
+            self.show_error("Check the box if you\nreally want to delete\n the account")
+            return
+        if username.lower() == self.parent.user.username.lower():
+            self.show_error("Cannot delete your own account")
+            return
+        query=f"SELECT EXISTS(SELECT 1 FROM accounts WHERE username LIKE '{username}')"
+        self.parent.database.cursor.execute(query)
+        if not self.parent.database.cursor.fetchone()[0]:
+            self.show_error("Username not recognized")
+            return
+        query=f"DELETE FROM accounts WHERE username LIKE '{username}'"
+        self.parent.database.cursor.execute(query)
+        self.parent.database.conn.commit()
+        self.DeleteAccountClose()
         
         
