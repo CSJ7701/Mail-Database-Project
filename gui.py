@@ -10,6 +10,7 @@ from SettingsTab import Settings
 from datetime import datetime
 from config import Config
 from PIL import Image
+import os
 
 class NavGUI():
     def __init__(self, root, database, user):
@@ -17,9 +18,9 @@ class NavGUI():
         self.root=root
         self.root.protocol("WM_DELETE_WINDOW", root.quit)
         self.user=user
-        self.config=Config("./config.ini")
+        self.config=Config("config.ini")
         self.database=database
-        ctk.set_default_color_theme("themes/CGA.json")
+        ctk.set_default_color_theme(os.path.join("themes", "CGA.json"))
         ctk.set_appearance_mode(self.config.appearance('color_mode'))
 
 
