@@ -1,3 +1,4 @@
+from io import SEEK_SET
 import customtkinter as ctk
 from LoginBackend import User
 from Screen import Screen
@@ -69,9 +70,9 @@ class Settings(Screen):
         self.add_account_button.pack(side="top", padx=10, pady=10)
         self.delete_account_button=ctk.CTkButton(self.Admin_frame, text="Delete Account", command=self.DeleteAccountOpen)
         self.delete_account_button.pack(side="top", padx=10, pady=10)
-        self.edit_account_username=ctk.CTkButton(self.Admin_frame, text="Edit Account Username")
+        self.edit_account_username=ctk.CTkButton(self.Admin_frame, text="Edit Account Username", command=self.EditUsernameOpen)
         self.edit_account_username.pack(side="top", padx=10, pady=10)
-        self.edit_account_password=ctk.CTkButton(self.Admin_frame, text="Edit Account Password")
+        self.edit_account_password=ctk.CTkButton(self.Admin_frame, text="Edit Account Password", command=self.EditPasswordOpen)
         self.edit_account_password.pack(side="top", padx=10, pady=10)
 
         if self.admin == 0:
@@ -79,6 +80,16 @@ class Settings(Screen):
             self.delete_account_button.configure(state="disabled")
             self.edit_account_username.configure(state="disabled")
             self.edit_account_password.configure(state="disabled")
+
+        
+        # Request Admin Frame
+        self.request_admin_frame=ctk.CTkFrame(self.Admin_frame)
+        self.request_admin_username_label=ctk.CTkLabel(self.request_admin_frame, text="Username")
+        self.request_admin_username=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Username")
+        self.request_admin_password_label=ctk.CTkLabel(self.request_admin_frame, text="Password")
+        self.request_admin_password=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Password", show="*")
+        self.request_admin_button=ctk.CTkButton(self.request_admin_frame, text="Login", command=self.LoginRequestAdmin)
+        self.request_admin_cancel=ctk.CTkButton(self.request_admin_frame, text="Cancel", command=self.CloseRequestAdmin)
 
         # Add Account Frame
         self.add_account_frame=ctk.CTkFrame(self.Admin_frame)
@@ -98,16 +109,23 @@ class Settings(Screen):
         self.delete_account_delete_button=ctk.CTkButton(self.delete_account_frame, text="Delete", command=self.DeleteAccount)
         self.delete_account_cancel_button=ctk.CTkButton(self.delete_account_frame, text="Cancel", command=self.DeleteAccountClose)
 
-        # Request Admin Frame
-        self.request_admin_frame=ctk.CTkFrame(self.Admin_frame)
-        self.request_admin_username_label=ctk.CTkLabel(self.request_admin_frame, text="Username")
-        self.request_admin_username=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Username")
-        self.request_admin_password_label=ctk.CTkLabel(self.request_admin_frame, text="Password")
-        self.request_admin_password=ctk.CTkEntry(self.request_admin_frame, placeholder_text="Password", show="*")
-        self.request_admin_button=ctk.CTkButton(self.request_admin_frame, text="Login", command=self.LoginRequestAdmin)
-        self.request_admin_cancel=ctk.CTkButton(self.request_admin_frame, text="Cancel", command=self.CloseRequestAdmin)
+        # Edit Username Frame
+        self.edit_username_frame=ctk.CTkFrame(self.Admin_frame)
+        self.edit_username_old_username_label=ctk.CTkLabel(self.edit_username_frame, text="Old Username")
+        self.edit_username_old_username=ctk.CTkEntry(self.edit_username_frame, placeholder_text="Old Username")
+        self.edit_username_new_username_label=ctk.CTkLabel(self.edit_username_frame, text="New Username")
+        self.edit_username_new_username=ctk.CTkEntry(self.edit_username_frame, placeholder_text="New Username")
+        self.edit_username_edit_button=ctk.CTkButton(self.edit_username_frame, text="Save Username", command=self.EditUsernameEdit)
+        self.edit_username_cancel_button=ctk.CTkButton(self.edit_username_frame, text="Cancel", command=self.EditUsernameClose)
 
-
+        # Edit Password Frame
+        self.edit_password_frame=ctk.CTkFrame(self.Admin_frame)
+        self.edit_password_username_label=ctk.CTkLabel(self.edit_password_frame, text="Username")
+        self.edit_password_username=ctk.CTkEntry(self.edit_password_frame, placeholder_text="Username")
+        self.edit_password_password_label=ctk.CTkLabel(self.edit_password_frame, text="New Password")
+        self.edit_password_password=ctk.CTkEntry(self.edit_password_frame, placeholder_text="New Password")
+        self.edit_password_edit_button=ctk.CTkButton(self.edit_password_frame, text="Save Password", command=self.EditPassword)
+        self.edit_password_cancel=ctk.CTkButton(self.edit_password_frame, text="Cancel", command=self.EditPasswordClose)
         
         
         self.System_frame=ctk.CTkFrame(self.main_frame, width=400)#, fg_colot=("#d3d3d3", "#000000"))
@@ -256,7 +274,7 @@ class Settings(Screen):
             self.CloseRequestAdmin()
 
     def AddAccountOpen(self):
-        if self.delete_account_frame.winfo_ismapped():
+        if self.delete_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
             return
         self.add_account_username.delete(0,'end')
         self.add_account_password.delete(0,'end')
@@ -303,7 +321,7 @@ class Settings(Screen):
         self.AddAccountClose()
         
     def DeleteAccountOpen(self):
-        if self.add_account_frame.winfo_ismapped():
+        if self.add_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
             return
         self.delete_account_username.delete(0,'end')
         self.delete_account_confirm.deselect()
@@ -339,5 +357,79 @@ class Settings(Screen):
         self.parent.database.cursor.execute(query)
         self.parent.database.conn.commit()
         self.DeleteAccountClose()
+
+    def EditUsernameOpen(self):
+        if self.delete_account_frame.winfo_ismapped() or self.add_account_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
+            return
+        self.edit_username_new_username.delete(0,'end')
+        self.edit_username_old_username.delete(0,'end')
+        self.edit_username_frame.pack(side="bottom",padx=10, pady=30)
+        self.edit_username_old_username_label.pack(side="top", padx=10, pady=10)
+        self.edit_username_old_username.pack(side="top", padx=10, pady=10)
+        self.edit_username_new_username_label.pack(side="top", padx=10, pady=10)
+        self.edit_username_new_username.pack(side="top", padx=10, pady=10)
+        self.edit_username_edit_button.pack(side="top", padx=10, pady=10)
+        self.edit_username_cancel_button.pack(side="top", padx=10, pady=10)
+
+    def EditUsernameClose(self):
+        self.edit_username_frame.pack_forget()
+        self.edit_username_old_username.pack_forget()
+        self.edit_username_old_username_label.pack_forget()
+        self.edit_username_new_username.pack_forget()
+        self.edit_username_new_username_label.pack_forget()
+        self.edit_username_edit_button.pack_forget()
+        self.edit_username_cancel_button.pack_forget()
         
-        
+    def EditUsernameEdit(self):
+        new=self.edit_username_new_username.get()
+        old=self.edit_username_old_username.get()
+        if not new or not old:
+            self.show_error("Please enter username information")
+            return
+        query=f"SELECT EXISTS(SELECT 1 FROM accounts WHERE username LIKE '{old}')"
+        self.parent.database.cursor.execute(query)
+        exists_p=self.parent.database.cursor.fetchone()[0]
+        if not exists_p:
+            self.show_error("Username not recognized.")
+            return
+        query=f"UPDATE accounts SET username='{new}' WHERE username='{old}'"
+        self.parent.database.cursor.execute(query)
+        self.parent.database.conn.commit()
+
+    def EditPasswordOpen(self):
+        if self.delete_account_frame.winfo_ismapped() or self.add_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped():
+            return
+        self.edit_password_frame.pack(side="bottom", padx=10, pady=10)
+        self.edit_password_username_label.pack(side="top", padx=10, pady=10)
+        self.edit_password_username.pack(side="top", padx=10, pady=10)
+        self.edit_password_password_label.pack(side="top", padx=10, pady=10)
+        self.edit_password_password.pack(side="top", padx=10, pady=10)
+        self.edit_password_edit_button.pack(side="top", padx=10, pady=10)
+        self.edit_password_cancel.pack(side="top", padx=10, pady=10)
+
+    def EditPasswordClose(self):
+        self.edit_password_frame.pack_forget()
+        self.edit_password_username_label.pack_forget()
+        self.edit_password_username.pack_forget()
+        self.edit_password_password_label.pack_forget()
+        self.edit_password_password.pack_forget()
+        self.edit_password_edit_button.pack_forget()
+        self.edit_password_cancel.pack_forget()
+    
+    def EditPassword(self):
+        username=self.edit_password_username.get()
+        password=self.edit_password_password.get()
+        if not username or not password:
+            self.show_error("Please enter account information")
+            return
+        query=f"SELECT EXISTS(SELECT 1 FROM accounts WHERE username LIKE '{username}')"
+        self.parent.database.cursor.execute(query)
+        exists_p=self.parent.database.cursor.fetchone()[0]
+        if not exists_p:
+            self.show_error("Username not recognized.")
+            return
+        new_hashed=self.parent.user.encode_pass(password)
+        query="UPDATE accounts SET hashed_password=? WHERE username=?"
+        self.parent.database.cursor.execute(query, (new_hashed, username))
+        self.parent.database.conn.commit()
+        self.EditPasswordClose()
