@@ -2,7 +2,10 @@ from io import SEEK_SET
 import customtkinter as ctk
 from LoginBackend import User
 from Screen import Screen
-
+import os
+import sys
+import datetime
+import shutil
 
 class Settings(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -133,6 +136,18 @@ class Settings(Screen):
         self.system_frame_label=ctk.CTkLabel(self.System_frame, text="System Settings", font=self.headline_font)
         self.system_frame_label.pack(side="top", padx=10, pady=30)
 
+        self.system_export_db_button=ctk.CTkButton(self.System_frame, text="Export Database File", command=self.ExportDatabaseFile)
+        self.system_import_db_button=ctk.CTkButton(self.System_frame, text="Import Database File", command=self.ImportDatabaseFile)
+        self.system_backup_db_button=ctk.CTkButton(self.System_frame, text="Backup Database File", command=self.BackupDatabaseFile)
+        self.system_generate_db_button=ctk.CTkButton(self.System_frame, text="Generate Empty Database", command=self.GenerateDBFile)
+        self.system_warning_label=ctk.CTkLabel(self.System_frame, text="WARNING:\nAny imported database file\n must have be formatted with\n the same schema as the original\n database. If in doubt, use the\n provided 'Generate' button.")
+
+        self.system_export_db_button.pack(side="top", padx=10, pady=10)
+        self.system_import_db_button.pack(side="top", padx=10, pady=10)
+        self.system_backup_db_button.pack(side="top", padx=10, pady=10)
+        self.system_generate_db_button.pack(side="top", padx=10, pady=10)
+        self.system_warning_label.pack(side="top", padx=10, pady=(20,10))
+        
 
     def ChangeColorMode(self):
         if self.config.appearance('color_mode') == 'dark':
@@ -397,6 +412,8 @@ class Settings(Screen):
         self.parent.database.conn.commit()
 
     def EditPasswordOpen(self):
+        self.edit_password_username.delete(0,'end')
+        self.edit_password_password.delete(0,'end')
         if self.delete_account_frame.winfo_ismapped() or self.add_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped():
             return
         self.edit_password_frame.pack(side="bottom", padx=10, pady=10)
@@ -433,3 +450,23 @@ class Settings(Screen):
         self.parent.database.cursor.execute(query, (new_hashed, username))
         self.parent.database.conn.commit()
         self.EditPasswordClose()
+
+    def ExportDatabaseFile(self):
+        filename=ctk.filedialog.asksaveasfilename()
+        raise NotImplementedError("Export DB not implemented")
+
+    def ImportDatabaseFile(self):
+        filename=ctk.filedialog.askopenfilename()
+        raise NotImplementedError("Import DB not implemented")
+
+    def BackupDatabaseFile(self):
+        date=datetime.datetime.now()
+        file_basename=str(date) + "-database_backup.bkp"
+        filename=os.path.join(os.path.abspath(sys.argv[0]), 'Backups', file_basename)
+        shutil.copy(os.path.join(os.path.abspath(sys.argv[0]), 'MailDB.db'), filename)
+        self.show_success(f"Database File has been backup up to:\n {filename}")
+        raise NotImplementedError("Backup DB not implemented")
+
+    def GenerateDBFile(self):
+        self.show_success("Database File has been generated")
+        raise NotImplementedError("Generate DB not implemented")
