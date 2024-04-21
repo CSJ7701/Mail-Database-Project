@@ -5,7 +5,8 @@ from Screen import Screen
 import os
 import sys
 import datetime
-import shutil
+import sqlite3
+import subprocess
 
 class Settings(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -136,7 +137,7 @@ class Settings(Screen):
         self.system_frame_label=ctk.CTkLabel(self.System_frame, text="System Settings", font=self.headline_font)
         self.system_frame_label.pack(side="top", padx=10, pady=30)
 
-        self.system_export_db_button=ctk.CTkButton(self.System_frame, text="Export Database File", command=self.ExportDatabaseFile)
+        self.system_export_db_button=ctk.CTkButton(self.System_frame, text="Dump Database File", command=self.ExportDatabaseFile)
         self.system_import_db_button=ctk.CTkButton(self.System_frame, text="Import Database File", command=self.ImportDatabaseFile)
         self.system_backup_db_button=ctk.CTkButton(self.System_frame, text="Backup Database File", command=self.BackupDatabaseFile)
         self.system_generate_db_button=ctk.CTkButton(self.System_frame, text="Generate Empty Database", command=self.GenerateDBFile)
@@ -453,7 +454,9 @@ class Settings(Screen):
 
     def ExportDatabaseFile(self):
         filename=ctk.filedialog.asksaveasfilename()
-        raise NotImplementedError("Export DB not implemented")
+        source='MailDB.db'
+        subprocess.call(['sqlite3', source, '.dump'], stdout=open(filename, 'w'))
+        self.show_success(f"Database Dumped to {filename}")
 
     def ImportDatabaseFile(self):
         filename=ctk.filedialog.askopenfilename()
@@ -462,10 +465,18 @@ class Settings(Screen):
     def BackupDatabaseFile(self):
         date=datetime.datetime.now()
         file_basename=str(date) + "-database_backup.bkp"
-        filename=os.path.join(os.path.abspath(sys.argv[0]), 'Backups', file_basename)
-        shutil.copy(os.path.join(os.path.abspath(sys.argv[0]), 'MailDB.db'), filename)
+        file_dir=os.path.split(os.path.abspath(sys.argv[0]))[0]
+        filename=os.path.join(file_dir, 'Backups', file_basename)
+        con=self.parent.database.conn
+        if not os.path.exists(os.path.join(file_dir, 'Backups')):
+            os.makedirs(os.path.join(file_dir, 'Backups'))
+        f=open(filename, 'a')
+        bkp=sqlite3.connect(filename)
+        with bkp:
+            con.backup(bkp)
+        bkp.close()
+        f.close()
         self.show_success(f"Database File has been backup up to:\n {filename}")
-        raise NotImplementedError("Backup DB not implemented")
 
     def GenerateDBFile(self):
         self.show_success("Database File has been generated")
