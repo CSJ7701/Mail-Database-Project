@@ -5,9 +5,11 @@ from gui import NavGUI
 from LoginScreen import LoginScreen
 from database import Database
 from LoginBackend import User
+from config import Config
  
 if __name__ == "__main__":
-    connection=Database("MailDB.db")
+    config=Config('config.ini')
+    connection=Database(config.system('db'))
     root=ctk.CTk()
     root.geometry=("200x400")
     root.title=("Mail Database")

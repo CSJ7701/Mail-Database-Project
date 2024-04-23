@@ -1,7 +1,8 @@
-from io import SEEK_SET
+from database import Database
 import customtkinter as ctk
 from LoginBackend import User
 from Screen import Screen
+import configparser as cp
 import os
 import sys
 import datetime
@@ -141,12 +142,14 @@ class Settings(Screen):
         self.system_import_db_button=ctk.CTkButton(self.System_frame, text="Import Database File", command=self.ImportDatabaseFile)
         self.system_backup_db_button=ctk.CTkButton(self.System_frame, text="Backup Database File", command=self.BackupDatabaseFile)
         self.system_generate_db_button=ctk.CTkButton(self.System_frame, text="Generate Empty Database", command=self.GenerateDBFile)
+        self.system_change_db_button=ctk.CTkButton(self.System_frame, text="Change DB File", command=self.ChangeDBFile)
         self.system_warning_label=ctk.CTkLabel(self.System_frame, text="WARNING:\nAny imported database file\n must have be formatted with\n the same schema as the original\n database. If in doubt, use the\n provided 'Generate' button.")
 
         self.system_export_db_button.pack(side="top", padx=10, pady=10)
         self.system_import_db_button.pack(side="top", padx=10, pady=10)
         self.system_backup_db_button.pack(side="top", padx=10, pady=10)
         self.system_generate_db_button.pack(side="top", padx=10, pady=10)
+        self.system_change_db_button.pack(side="top", padx=10, pady=10)
         self.system_warning_label.pack(side="top", padx=10, pady=(20,10))
         
 
@@ -166,6 +169,8 @@ class Settings(Screen):
             self.color_string=" - Light "
         elif self.config.appearance("color_mode") == "dark":
             self.color_string=" - Dark"
+        else:
+            self.color_string=self.config.appearance("color_mode")
 
     def EditUsername(self):
         if not  self.password_edit_frame.winfo_ismapped():
@@ -458,8 +463,29 @@ class Settings(Screen):
         subprocess.call(['sqlite3', source, '.dump'], stdout=open(filename, 'w'))
         self.show_success(f"Database Dumped to {filename}")
 
+    def CheckDatabase(self, filename):
+        try:
+            db=Database(filename)
+        except sqlite3.DatabaseError as e:
+            self.show_error(e)
+            return
+        db.cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='accounts'")
+        accounts_exists=db.cursor.fetchall()[0]
+        db.cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='packages'")
+        packages_exists=db.cursor.fetchall()[0]
+        db.cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='cadets'")
+        cadets_exists=db.cursor.fetchall()[0]
+        if not cadets_exists or not packages_exists or not accounts_exists:
+            return False
+        return True
+        
+
     def ImportDatabaseFile(self):
         filename=ctk.filedialog.askopenfilename()
+        if not self.CheckDatabase(filename):
+            return
+        
+        self.show_success(f"Database file: {filename}\n has been imported into the main database")
         raise NotImplementedError("Import DB not implemented")
 
     def BackupDatabaseFile(self):
@@ -479,5 +505,18 @@ class Settings(Screen):
         self.show_success(f"Database File has been backup up to:\n {filename}")
 
     def GenerateDBFile(self):
+        filename=ctk.filedialog.asksaveasfilename()
+        db=Database(filename)
         self.show_success("Database File has been generated")
-        raise NotImplementedError("Generate DB not implemented")
+
+    def ChangeDBFile(self):
+        conf=self.parent.config
+        filename=ctk.filedialog.askopenfilename(title="Select a New Database File")
+        if self.CheckDatabase(filename):
+            conf.c.set('System', 'db', filename)
+            with open(conf.file, 'w') as f:
+                conf.c.write(f)
+            self.show_success(f"Database changed to {filename}") 
+        else:
+            self.show_error("Database does not have the correct schema.")
+            return
