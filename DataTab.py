@@ -59,6 +59,7 @@ class DataScreen(Screen):
 
         self.track_search_input.get()
         self.search()
+        self.Treeview_style()
 
 
     def preview_box(self, event):

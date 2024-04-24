@@ -153,6 +153,8 @@ class Manage(Screen):
         self.cadet_company_label=ctk.CTkLabel(self.edit_cadet, text="Company")
         self.cadet_company=ctk.CTkEntry(self.edit_cadet)
 
+        self.Treeview_style()
+
     def search_packages(self):
         
         self.package_tree.delete(*self.package_tree.get_children())

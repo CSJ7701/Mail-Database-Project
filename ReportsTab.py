@@ -236,7 +236,10 @@ class Reports(Screen):
         y=list(date_counts.values())
         fig, ax=plt.subplots(figsize=(12,12))
         ax.plot(x,y,marker='o', color='blue', linestyle='-')
-        ax.set_title('Packages Sorted by Delivery Date')
+        if self.report_ret_choice == 1:
+            ax.set_title('Packages Sorted by Pickup Date')
+        else:
+            ax.set_title('Packages Sorted by Delivery Date')
         ax.set_xlabel('Date')
         ax.grid(True)
         plt.xticks(rotation=90)

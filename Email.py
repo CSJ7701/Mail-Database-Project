@@ -29,25 +29,44 @@ def send_email(send_to, name, box, fragile=0):
 <title>USCGA Mailroom</title>
 <style>
   body {{
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }}
-    .header {{
-        background-color: #005fae;
-        color: #ffffff;
-        padding: 20px;
-        text-align: center;
-    }}
-    .content {{
-        padding: 20px;
-    }}
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}}
+.header {{
+  background-color: #005fae;
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}}
+.stripe {{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ff8c00 10%, transparent 30%);
+}}
+.reversestripe {{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 70%, #ff8c00 85%);
+}}
+.content {{
+  padding: 20px;
+}}
 </style>
 </head>
 <body>
     <div class="header">
+        <div class="stripe"></div>
         <h1>USCGA Mailroom</h1>
+        <div class="reversestripe"></div>
     </div>
     <div class="content">
         <p>Hello {name},</p>
