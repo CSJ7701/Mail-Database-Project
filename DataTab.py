@@ -1,8 +1,10 @@
+import sqlite3
 import customtkinter as ctk
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk
 from Screen import Screen
+from Email import send_email
 
 class DataScreen(Screen):
     def __init__(self, main_frame, ParentGUI):
@@ -105,11 +107,16 @@ class DataScreen(Screen):
         print(f"Name:{name}")
         print(f"Email:{email}")
         date=datetime.today().strftime('%Y-%m-%d')
-        query="INSERT INTO packages(tracking_number, adressee, received, fragile) VALUES (?,?,?,?)"
-        self.parent.database.cursor.execute(query, (track, name, date, fragile))
-        # self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) VALUES ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
-        self.parent.database.conn.commit()
+        try:
+            query="INSERT INTO packages(tracking_number, adressee, received, fragile) VALUES (?,?,?,?)"
+            self.parent.database.cursor.execute(query, (track, name, date, fragile))
+            # self.parent.database.cursor.execute("INSERT INTO packages(tracking_number,adressee,received) VALUES ({track}, '{name}','{date}')".format(track=track, name=name, date=date))
+            self.parent.database.conn.commit()
+        except sqlite3.IntegrityError as e:
+            self.show_error(e)
+            return
         self.search()
+        send_email(email, name, box, fragile)
 
     def get_cadet_info(self, box):
         name = self.parent.database.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))

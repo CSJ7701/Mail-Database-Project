@@ -139,14 +139,12 @@ class Settings(Screen):
         self.system_frame_label.pack(side="top", padx=10, pady=30)
 
         self.system_export_db_button=ctk.CTkButton(self.System_frame, text="Dump Database File", command=self.ExportDatabaseFile)
-        self.system_import_db_button=ctk.CTkButton(self.System_frame, text="Import Database File", command=self.ImportDatabaseFile)
         self.system_backup_db_button=ctk.CTkButton(self.System_frame, text="Backup Database File", command=self.BackupDatabaseFile)
         self.system_generate_db_button=ctk.CTkButton(self.System_frame, text="Generate Empty Database", command=self.GenerateDBFile)
         self.system_change_db_button=ctk.CTkButton(self.System_frame, text="Change DB File", command=self.ChangeDBFile)
-        self.system_warning_label=ctk.CTkLabel(self.System_frame, text="WARNING:\nAny imported database file\n must have be formatted with\n the same schema as the original\n database. If in doubt, use the\n provided 'Generate' button.")
+        self.system_warning_label=ctk.CTkLabel(self.System_frame, text="WARNING:\nThese buttons provide the ability\nto interact directly with the database\nfiles that store this application's information.\nUse at your own risk.\n\nShould you choose to create an\n empty database file, be aware that\n you will need to add user accounts to that\n database before you use it, or risk locking\n yourself out of the application.\n\nAs a last resort, the application's database file\ncan be edited directly in the 'config.ini' file.")
 
         self.system_export_db_button.pack(side="top", padx=10, pady=10)
-        self.system_import_db_button.pack(side="top", padx=10, pady=10)
         self.system_backup_db_button.pack(side="top", padx=10, pady=10)
         self.system_generate_db_button.pack(side="top", padx=10, pady=10)
         self.system_change_db_button.pack(side="top", padx=10, pady=10)
@@ -459,6 +457,9 @@ class Settings(Screen):
 
     def ExportDatabaseFile(self):
         filename=ctk.filedialog.asksaveasfilename()
+        if not filename:
+            self.show_error("No File Selected")
+            return
         source='MailDB.db'
         subprocess.call(['sqlite3', source, '.dump'], stdout=open(filename, 'w'))
         self.show_success(f"Database Dumped to {filename}")
@@ -478,15 +479,6 @@ class Settings(Screen):
         if not cadets_exists or not packages_exists or not accounts_exists:
             return False
         return True
-        
-
-    def ImportDatabaseFile(self):
-        filename=ctk.filedialog.askopenfilename()
-        if not self.CheckDatabase(filename):
-            return
-        
-        self.show_success(f"Database file: {filename}\n has been imported into the main database")
-        raise NotImplementedError("Import DB not implemented")
 
     def BackupDatabaseFile(self):
         date=datetime.datetime.now()
@@ -506,12 +498,18 @@ class Settings(Screen):
 
     def GenerateDBFile(self):
         filename=ctk.filedialog.asksaveasfilename()
+        if not filename:
+            self.show_error("No File Selected")
+            return
         db=Database(filename)
         self.show_success("Database File has been generated")
 
     def ChangeDBFile(self):
         conf=self.parent.config
         filename=ctk.filedialog.askopenfilename(title="Select a New Database File")
+        if not filename:
+            self.show_error("File Not Selected")
+            return
         if self.CheckDatabase(filename):
             conf.c.set('System', 'db', filename)
             with open(conf.file, 'w') as f:

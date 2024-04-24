@@ -25,6 +25,8 @@ class Manage(Screen):
             self.password_entry.pack(padx=10, pady=10)
             self.password_entry.bind("<Return>", self.EventLogin)
             self.login_button.pack(padx=10, pady=20)
+        else:
+            self.LoadMainView()
             
     def EventLogin(self, event):
         self.Login()
