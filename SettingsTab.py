@@ -149,6 +149,12 @@ class Settings(Screen):
         self.system_generate_db_button.pack(side="top", padx=10, pady=10)
         self.system_change_db_button.pack(side="top", padx=10, pady=10)
         self.system_warning_label.pack(side="top", padx=10, pady=(20,10))
+
+        if self.admin == 0:
+            self.system_export_db_button.configure(state="disabled")
+            self.system_backup_db_button.configure(state="disabled")
+            self.system_generate_db_button.configure(state="disabled")
+            self.system_change_db_button.configure(state="disabled")
         
 
     def ChangeColorMode(self):
@@ -288,6 +294,10 @@ class Settings(Screen):
             self.delete_account_button.configure(state="normal")
             self.edit_account_password.configure(state="normal")
             self.edit_account_username.configure(state="normal")
+            self.system_change_db_button.configure(state="normal")
+            self.system_generate_db_button.configure(state="normal")
+            self.system_backup_db_button.configure(state="normal")
+            self.system_export_db_button.configure(state="normal")
             self.request_admin.pack_forget()
             self.no_admin_label.pack_forget()
             self.CloseRequestAdmin()
