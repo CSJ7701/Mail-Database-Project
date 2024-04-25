@@ -9,9 +9,10 @@ class Manage(Screen):
         self.main_frame=main_frame
 
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS '{self.parent.user.username}'")
-        self.user_priviledge=self.parent.database.cursor.fetchone()[0]
+        self.user_priviledge=self.parent.database.cursor.fetchone()
+        print(f"PRIV: {self.user_priviledge}")
 
-        if self.user_priviledge != 1:
+        if not self.user_priviledge or self.user_priviledge[0] != 1:
             self.login_frame=ctk.CTkFrame(self.main_frame, fg_color=("#d3d3d3", "#191919"))
             self.priviledge_notice_label=ctk.CTkLabel(self.login_frame, text=f"Currently logged in as: {self.parent.user.username}\nInsufficient User Priviledge\nPlease log in with administrator credentials.")
             self.username_entry=ctk.CTkEntry(self.login_frame, placeholder_text="Username")
