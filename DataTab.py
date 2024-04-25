@@ -81,7 +81,6 @@ class DataScreen(Screen):
 
         
     def search(self):
-        print("Search for something")
         self.tree.delete(*self.tree.get_children())
         name=self.name_search_input.get()
         box=self.box_search_input.get()
@@ -105,8 +104,8 @@ class DataScreen(Screen):
         track=self.track_add_input.get()
         name, email=self.get_cadet_info(box)
         fragile=self.is_fragile.get()
-        print(f"Name:{name}")
-        print(f"Email:{email}")
+        # print(f"Name:{name}")
+        # print(f"Email:{email}")
         date=datetime.today().strftime('%Y-%m-%d')
         try:
             query="INSERT INTO packages(tracking_number, adressee, received, fragile) VALUES (?,?,?,?)"

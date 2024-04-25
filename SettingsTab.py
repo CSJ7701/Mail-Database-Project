@@ -66,7 +66,7 @@ class Settings(Screen):
 
         self.no_admin_label=ctk.CTkLabel(self.Admin_frame, text="You do not\nhave Admin\npriviledges", text_color="#ffff45450000")
         self.request_admin=ctk.CTkButton(self.Admin_frame, text="Request Admin", command=self.OpenRequestAdmin)
-        print(self.admin)
+
         if self.admin == 0:
             self.no_admin_label.pack(side="top", padx=10, pady=15)
             self.request_admin.pack(side="top", padx=10, pady=10)
@@ -86,7 +86,6 @@ class Settings(Screen):
             self.edit_account_username.configure(state="disabled")
             self.edit_account_password.configure(state="disabled")
 
-        
         # Request Admin Frame
         self.request_admin_frame=ctk.CTkFrame(self.Admin_frame)
         self.request_admin_username_label=ctk.CTkLabel(self.request_admin_frame, text="Username")
@@ -338,10 +337,8 @@ class Settings(Screen):
             self.show_error("Please enter a Password")
             return
         query=f"SELECT EXISTS(SELECT 1 FROM accounts WHERE username LIKE '{username}')"
-        print(query)
         self.parent.database.cursor.execute(query)
         present_p=self.parent.database.cursor.fetchone()[0]
-        print(present_p)
         if present_p:
             self.show_error("Username already present.\nPlease enter a different Username")
             return
@@ -491,7 +488,7 @@ class Settings(Screen):
         return True
 
     def BackupDatabaseFile(self):
-        date=datetime.datetime.now()
+        date=datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         file_basename=str(date) + "-database_backup.bkp"
         file_dir=os.path.split(os.path.abspath(sys.argv[0]))[0]
         filename=os.path.join(file_dir, 'Backups', file_basename)

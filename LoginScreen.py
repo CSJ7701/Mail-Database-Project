@@ -47,7 +47,6 @@ class LoginScreen(Screen):
             self.show_error("Please enter a password")
             return
         validate=self.user.check_pass(passw)
-        print(validate)
         if validate==-1:
             self.show_error("Password Incorrect")
         elif validate==-2:

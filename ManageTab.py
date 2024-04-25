@@ -10,7 +10,6 @@ class Manage(Screen):
 
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS '{self.parent.user.username}'")
         self.user_priviledge=self.parent.database.cursor.fetchone()
-        print(f"PRIV: {self.user_priviledge}")
 
         if not self.user_priviledge or self.user_priviledge[0] != 1:
             self.login_frame=ctk.CTkFrame(self.main_frame, fg_color=("#d3d3d3", "#191919"))
@@ -383,7 +382,6 @@ class Manage(Screen):
                        graduation_date={grad} AND
                        company='{company}';
                        '''
-                print(query)
                 self.parent.database.cursor.execute(query)
                 self.parent.database.conn.commit()
                 self.close_edits()
@@ -415,7 +413,6 @@ class Manage(Screen):
                        adressee='{addr}' AND
                        received='{received}';
                        '''
-                print(query)
                 self.parent.database.cursor.execute(query)
                 self.parent.database.conn.commit()
                 self.close_edits()
