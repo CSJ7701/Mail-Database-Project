@@ -227,20 +227,32 @@ class Manage(Screen):
         self.search_cadets()
 
     def delete_item(self):
-        selection=self.package_tree.selection()
-        for item in selection:
-            details=self.package_tree.item(item).get("values")
-            track_num=details[0]
-            query='''
-                  DELETE FROM packages
-                  WHERE tracking_number = ?
-                  '''
-            self.parent.database.cursor.execute(query,(track_num,))
+        if self.package_tree.winfo_ismapped():
+            selection=self.package_tree.selection()
+            for item in selection:
+                details=self.package_tree.item(item).get("values")
+                track_num=details[0]
+                query='''
+                    DELETE FROM packages
+                    WHERE tracking_number = ?
+                    '''
+                self.parent.database.cursor.execute(query,(track_num,))
+        elif self.cadet_tree.winfo_ismapped():
+            selection=self.cadet_tree.selection()
+            for item in selection:
+                details=self.cadet_tree.item(item).get("values")
+                name=details[0]
+                query="""
+                      DELETE FROM cadets
+                      WHERE name = ?
+                      """
+                self.parent.database.cursor.execute(query,(name,))
         self.parent.database.conn.commit()
 
         if self.edit_frame.winfo_ismapped():
             self.close_edits()
         self.search_packages()
+        self.search_cadets()
 
     def edit_item(self):
         if self.package_tree.winfo_ismapped():

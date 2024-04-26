@@ -2,7 +2,7 @@ import customtkinter as ctk
 from matplotlib import figure
 import CTkListbox
 from datetime import datetime, timedelta
-from collections import Counter
+from collections import Counter, OrderedDict
 import numpy
 # from gui import NavGUI
 from Screen import Screen
@@ -219,9 +219,12 @@ class Reports(Screen):
         data=self.parent.database.cursor.fetchall()
         data=[datetime.strptime(date[0], '%Y-%m-%d') for date in data]
         date_range=max(data)-min(data)
-        date_counts={}
+        # date_counts={}
+        date_counts=OrderedDict()
         for date in data:
-            date_counts[date] = date_counts.get(date, 0)+1
+            date_str = date.strftime('%Y-%m-%d')
+            date_counts[date_str] = date_counts.get(date_str, 0) + 1
+            # date_counts[date] = date_counts.get(date, 0)+1
 
         if date_range < timedelta(days=7):
             date_freq='day'
@@ -236,7 +239,8 @@ class Reports(Screen):
         y=list(date_counts.values())
         fig, ax=plt.subplots(figsize=(12,12))
         ax.plot(x,y,marker='o', color='blue', linestyle='-')
-        if self.report_ret_choice == 1:
+        print(self.report_ret_choice.get())
+        if self.report_ret_choice.get() == 1:
             ax.set_title('Packages Sorted by Pickup Date')
         else:
             ax.set_title('Packages Sorted by Delivery Date')
