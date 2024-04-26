@@ -7,10 +7,21 @@ from Screen import Screen
 from Email import send_email
 
 class DataScreen(Screen):
+    """Class representing a data management screen"""
     def __init__(self, main_frame, ParentGUI):
+        """
+        Initialize the DataScreen object.
+
+        Args:
+            main_frame (tk.Frame): The frame into which this object will load.
+            ParentGUI: The parent GUI object.
+        """
+        # Declare attributes
         self.parent=ParentGUI
         self.main_frame=main_frame
 
+
+        # Define the datascreen widgets.
         self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
         self.input_frame.pack(side="left", fill="y")
 
@@ -19,6 +30,7 @@ class DataScreen(Screen):
         self.input_search_frame=ctk.CTkFrame(self.input_frame, height=200)
         self.input_search_frame.pack(fill="y", expand=True, padx=10, pady=10)
 
+        # Declare the data tree - displays packages.
         self.tree_frame=ctk.CTkFrame(self.main_frame, width=600, height=400, fg_color=("#d3d3d3", "#191919"))
         self.tree_frame.pack(side="right", fill="both", expand=True)
         self.tree=ttk.Treeview(self.tree_frame, columns=('track', 'name', 'received', 'picked', 'fragile'), show='headings', height=15)
@@ -30,6 +42,7 @@ class DataScreen(Screen):
         self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
 
+        # Initialize search entries
         self.name_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Cadet Name")
         self.name_search_input.pack(side="top", padx=10, pady=10)
         self.box_search_input=ctk.CTkEntry(self.input_search_frame, placeholder_text="Box Number")
@@ -41,6 +54,7 @@ class DataScreen(Screen):
         self.pickup_button=ctk.CTkButton(self.input_search_frame, text="Pickup", command=self.pickup)
         self.pickup_button.pack(padx=10, pady=10, side="bottom")
 
+        # Initialize 'Add' entries
         self.box_add_input=ctk.CTkEntry(self.input_add_frame, placeholder_text="Box Number")
         self.box_add_input.pack(side="top", padx=10, pady=10)
         self.track_add_input=ctk.CTkEntry(self.input_add_frame, placeholder_text="Tracking Number")
@@ -52,17 +66,23 @@ class DataScreen(Screen):
         self.fragile_check.pack(padx=(0,10), pady=(10))
 
         # Preview the NAME associated with the box number input.
-        # This is an Elwakil Suggestion - Couldn't implement autocomplete, so this is the best I could do
         self.preview_name_label=ctk.CTkLabel(self.input_add_frame, text="Box Owner: ")
         self.preview_name_entry=ctk.CTkLabel(self.input_add_frame, text="")
         self.box_add_input.bind('<KeyRelease>', self.preview_box)
 
+        # Perform initial search and apply treeview style
         self.track_search_input.get()
         self.search()
         self.Treeview_style()
 
 
     def preview_box(self, event):
+        """
+        Preview the name associates with the box number input.
+
+        Args:
+            event: The event that triggers the function.
+        """
         box=self.box_add_input.get()
         if box:
             self.preview_name_label.pack(side="top", padx=10, pady=(20,0))
@@ -81,6 +101,7 @@ class DataScreen(Screen):
 
         
     def search(self):
+        """Search for packages based on user input."""
         self.tree.delete(*self.tree.get_children())
         name=self.name_search_input.get()
         box=self.box_search_input.get()
@@ -98,8 +119,9 @@ class DataScreen(Screen):
         results=self.parent.database.cursor.fetchall()
         for data in results:
             self.tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
-# Fix the search func
+
     def add(self):
+        """Add a new package"""
         box=self.box_add_input.get()
         track=self.track_add_input.get()
         name, email=self.get_cadet_info(box)
@@ -119,6 +141,15 @@ class DataScreen(Screen):
         send_email(email, name, box, fragile)
 
     def get_cadet_info(self, box):
+        """
+        Retrieve cadet information associated with a box number.
+
+        Args:
+            box (str): The box number
+
+        Returns:
+            tuple: a tuple containing the cadet's name and email address.
+        """
         name = self.parent.database.cursor.execute("SELECT name FROM cadets WHERE box_number = ?", (box,))
         names=self.parent.database.cursor.fetchone()
         if names:
@@ -133,6 +164,7 @@ class DataScreen(Screen):
         return names, emails
 
     def pickup(self):
+        """Handle package pickup"""
         selection=self.tree.selection()
         for item in selection:
             details=self.tree.item(item).get("values")

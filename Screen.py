@@ -5,13 +5,28 @@ import customtkinter as ctk
 
 class Screen:
     def show_error(self, message):
+        """
+        Display an error message.
+
+        Args:
+            message (str): Error to display.
+        """
         messagebox.showerror("Error", message)
 
     def show_success(self, message):
+        """
+        Display a success message.
+
+        Args:
+            message (str): Success to display.
+        """
         messagebox.showinfo("Success", message)
 
 
     def Treeview_style(self):
+        """
+        Customize the style of a treeview widget.
+        """
         mode=ctk.get_appearance_mode()
         if mode == "Dark":
             bg_color="#1e1e1e"
@@ -23,6 +38,8 @@ class Screen:
             text_color="#000000"
             selected_color="#e04200"
             bg_select="#d3d3d3"
+
+        # Apply the treeview style
         treestyle=ttk.Style()
         treestyle.theme_use('default')
         treestyle.configure("Treeview", background=bg_color, foreground=text_color, fieldbackground=bg_color, borderwidth=1)

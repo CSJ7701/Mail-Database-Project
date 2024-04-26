@@ -6,6 +6,15 @@ from datetime import datetime
 
 
 def send_email(send_to, name, box, fragile=0):
+    """
+    Send an email notification to a recipient.
+
+    Args:
+        send_to (str): Email address for recipient.
+        name (str): Name of the recipient.
+        box (int): Box Number.
+        fragile (int): Flag indicating if the package is fragile or not.
+    """
     config=Config('config.ini')
     sender_email=config.system('SENDER_EMAIL')
     sender_password=config.system('SENDER_PASSWORD')
@@ -82,7 +91,7 @@ def send_email(send_to, name, box, fragile=0):
     message.attach(MIMEText(body, "html"))
 
     server=smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    # server.starttls()
+    # Authenticates the sender using a stored username and password
     server.login(sender_email, sender_password)
     server.send_message(message)
           

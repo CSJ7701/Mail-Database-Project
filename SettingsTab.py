@@ -10,15 +10,28 @@ import sqlite3
 import subprocess
 
 class Settings(Screen):
+    """Class representing the settings screen."""
     def __init__(self, main_frame, ParentGUI):
+        """
+        Initialize the settings screen.
+
+        Args:
+            main_frame (tk.Frame): The frame to place this widget within.
+            ParentGUI (object): The parent GUI object.
+        """
+        # Initialize Parent and frame attributes
         self.parent=ParentGUI
         self.main_frame=main_frame
         self.config=self.parent.config
+
+        # Checks the current users access priviledge
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username LIKE '{self.parent.user.username}'")
         self.admin=self.parent.database.cursor.fetchone()[0]
-        
+
+        # Updates the label displaying 'light' or 'dark' mode.
         self.UpdateColorLabel()
 
+        # Create the settings frame
         self.headline_font=ctk.CTkFont(family="Helvetica", size=20, weight="bold", underline=True)
 
         self.user_frame=ctk.CTkFrame(self.main_frame, width=300)#, fg_color=("#d3d3d3", "#000000"))
@@ -80,6 +93,7 @@ class Settings(Screen):
         self.edit_account_password=ctk.CTkButton(self.Admin_frame, text="Edit Account Password", command=self.EditPasswordOpen)
         self.edit_account_password.pack(side="top", padx=10, pady=10)
 
+        # Disables certain widgets if the user has the wrong priviledge
         if self.admin == 0:
             self.add_account_button.configure(state="disabled")
             self.delete_account_button.configure(state="disabled")
@@ -149,6 +163,7 @@ class Settings(Screen):
         self.system_change_db_button.pack(side="top", padx=10, pady=10)
         self.system_warning_label.pack(side="top", padx=10, pady=(20,10))
 
+        # Disables certain widgets if the user has the wrong priviledge
         if self.admin == 0:
             self.system_export_db_button.configure(state="disabled")
             self.system_backup_db_button.configure(state="disabled")
@@ -157,6 +172,7 @@ class Settings(Screen):
         
 
     def ChangeColorMode(self):
+        """Switches between light and dark mode. Saves preference to settings file."""
         if self.config.appearance('color_mode') == 'dark':
             self.config.c['Appearance']['color_mode']='light'
         elif self.config.appearance('color_mode') == 'light':
@@ -168,6 +184,7 @@ class Settings(Screen):
             self.config.c.write(configfile)
 
     def UpdateColorLabel(self):
+        """Changes the string that displays current color theme."""
         if self.config.appearance("color_mode") == "light":
             self.color_string=" - Light "
         elif self.config.appearance("color_mode") == "dark":
@@ -176,6 +193,7 @@ class Settings(Screen):
             self.color_string=self.config.appearance("color_mode")
 
     def EditUsername(self):
+        """Maps the 'EditUsername' frame, if other frames aren't mapped"""
         if not  self.password_edit_frame.winfo_ismapped():
             self.new_username.delete(0,'end')
             self.new_username_password.delete(0, 'end')
@@ -189,6 +207,9 @@ class Settings(Screen):
             self.username_cancel_button.pack(side="top", padx=10, pady=10)
 
     def SaveUsername(self):
+        """
+        Saves the username info.
+        """
         username=self.new_username.get()
         password=self.new_username_password.get()
         auth=self.parent.user.check_pass(password)
@@ -210,6 +231,9 @@ class Settings(Screen):
 
 
     def CancelUsernameEdit(self):
+        """
+        Unmaps the 'EditUsername' frame.
+        """
         self.username_edit_frame.pack_forget()
         self.new_username.pack_forget()
         self.new_username_label.pack_forget()
@@ -219,6 +243,7 @@ class Settings(Screen):
         self.username_cancel_button.pack_forget()
 
     def EditUserPassword(self):
+        """Maps the 'EditPassword' frame if other frames aren't mapped"""
         if not self.username_edit_frame.winfo_ismapped():
             self.new_password.delete(0, 'end')
             self.old_password.delete(0, 'end')
@@ -231,6 +256,7 @@ class Settings(Screen):
             self.password_cancel_button.pack(side="top", padx=10, pady=10)
 
     def SavePassword(self):
+        """Saves entered password info"""
         username=self.parent.user.username
         old=self.old_password.get()
         new=self.new_password.get()
@@ -251,6 +277,7 @@ class Settings(Screen):
         self.password_cancel_button.pack_forget()
 
     def CancelPasswordEdit(self):
+        """Unmaps the 'PasswordEdit' frame"""
         self.password_edit_frame.pack_forget()
         self.old_password.pack_forget()
         self.old_password_label.pack_forget()
@@ -260,6 +287,7 @@ class Settings(Screen):
         self.password_cancel_button.pack_forget()
 
     def OpenRequestAdmin(self):
+        """Opens the 'RequestAdminAccess' frame"""
         self.request_admin_username.delete(0,'end')
         self.request_admin_password.delete(0,'end')
         self.request_admin_frame.pack(side="bottom", padx=10, pady=30)
@@ -271,6 +299,7 @@ class Settings(Screen):
         self.request_admin_cancel.pack(side="top", padx=10, pady=10)
 
     def CloseRequestAdmin(self):
+        """Closes the 'RequestAdminAccess' frame"""
         self.request_admin_frame.pack_forget()
         self.request_admin_username.pack_forget()
         self.request_admin_password.pack_forget()
@@ -278,6 +307,11 @@ class Settings(Screen):
         self.request_admin_cancel.pack_forget()
 
     def LoginRequestAdmin(self):
+        """
+        Validates the entered username and password in the database.
+        Checks whether user has admin access.
+        Enables admin functions if user has proper access.
+        """
         username=self.request_admin_username.get()
         password=self.request_admin_password.get()
         if not username or not password:
@@ -302,6 +336,7 @@ class Settings(Screen):
             self.CloseRequestAdmin()
 
     def AddAccountOpen(self):
+        """Maps the 'AddAccount' frame"""
         if self.delete_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
             return
         self.add_account_username.delete(0,'end')
@@ -317,6 +352,7 @@ class Settings(Screen):
         self.add_account_cancel.pack(side="top", padx=10, pady=10)
 
     def AddAccountClose(self):
+        """Closes the 'AddAccount' frame."""
         self.add_account_frame.pack_forget()
         self.add_account_username_label.pack_forget()
         self.add_account_username.pack_forget()
@@ -327,6 +363,9 @@ class Settings(Screen):
         self.add_account_cancel.pack_forget()
 
     def AddAccount(self):
+        """
+        Adds an account to the database
+        """
         username=self.add_account_username.get()
         password=self.add_account_password.get()
         admin=self.add_account_admin.get()
@@ -347,6 +386,7 @@ class Settings(Screen):
         self.AddAccountClose()
         
     def DeleteAccountOpen(self):
+        """Opens the 'DeleteAccount' frame"""
         if self.add_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
             return
         self.delete_account_username.delete(0,'end')
@@ -359,6 +399,7 @@ class Settings(Screen):
         self.delete_account_cancel_button.pack(side="top", padx=10, pady=10)
         
     def DeleteAccountClose(self):
+        """Closes the 'DeleteAccount' frame"""
         self.delete_account_frame.pack_forget()
         self.delete_account_username_label.pack_forget()
         self.delete_account_username.pack_forget()
@@ -367,6 +408,7 @@ class Settings(Screen):
         self.delete_account_cancel_button.pack_forget()
 
     def DeleteAccount(self):
+        """Deletes an account from the database"""
         username=self.delete_account_username.get()
         if not self.delete_account_confirm.get():
             self.show_error("Check the box if you\nreally want to delete\n the account")
@@ -385,6 +427,7 @@ class Settings(Screen):
         self.DeleteAccountClose()
 
     def EditUsernameOpen(self):
+        """Opens the 'AdminEditUsername' frame"""
         if self.delete_account_frame.winfo_ismapped() or self.add_account_frame.winfo_ismapped() or self.edit_password_frame.winfo_ismapped():
             return
         self.edit_username_new_username.delete(0,'end')
@@ -398,6 +441,7 @@ class Settings(Screen):
         self.edit_username_cancel_button.pack(side="top", padx=10, pady=10)
 
     def EditUsernameClose(self):
+        """Closes the 'AdminEditUsername' frame"""
         self.edit_username_frame.pack_forget()
         self.edit_username_old_username.pack_forget()
         self.edit_username_old_username_label.pack_forget()
@@ -407,6 +451,7 @@ class Settings(Screen):
         self.edit_username_cancel_button.pack_forget()
         
     def EditUsernameEdit(self):
+        """Edits the specified username info with admin priviledge"""
         new=self.edit_username_new_username.get()
         old=self.edit_username_old_username.get()
         if not new or not old:
@@ -423,6 +468,7 @@ class Settings(Screen):
         self.parent.database.conn.commit()
 
     def EditPasswordOpen(self):
+        """Opens the 'AdminEditPassword' frame"""
         self.edit_password_username.delete(0,'end')
         self.edit_password_password.delete(0,'end')
         if self.delete_account_frame.winfo_ismapped() or self.add_account_frame.winfo_ismapped() or self.edit_username_frame.winfo_ismapped():
@@ -436,6 +482,7 @@ class Settings(Screen):
         self.edit_password_cancel.pack(side="top", padx=10, pady=10)
 
     def EditPasswordClose(self):
+        """Closes the 'AdminEditPassword' frame"""
         self.edit_password_frame.pack_forget()
         self.edit_password_username_label.pack_forget()
         self.edit_password_username.pack_forget()
@@ -445,6 +492,7 @@ class Settings(Screen):
         self.edit_password_cancel.pack_forget()
     
     def EditPassword(self):
+        """Edits the specified password info with admin access."""
         username=self.edit_password_username.get()
         password=self.edit_password_password.get()
         if not username or not password:
@@ -463,6 +511,9 @@ class Settings(Screen):
         self.EditPasswordClose()
 
     def ExportDatabaseFile(self):
+        """
+        Dump database content as text to a file of the user's choice.
+        """
         filename=ctk.filedialog.asksaveasfilename()
         if not filename:
             self.show_error("No File Selected")
@@ -472,6 +523,17 @@ class Settings(Screen):
         self.show_success(f"Database Dumped to {filename}")
 
     def CheckDatabase(self, filename):
+        """
+        Checks whether the specified file is an SQLite database.
+        If it is, checks whether it has the correct schema.
+
+        Args:
+            filename (str): File to check.
+
+        Returns:
+            True: if file is an SQLite database with the correct schema
+            False: otherwise
+        """
         try:
             db=Database(filename)
         except sqlite3.DatabaseError as e:
@@ -488,6 +550,10 @@ class Settings(Screen):
         return True
 
     def BackupDatabaseFile(self):
+        """
+        Uses the built-in SQLite Backup method to save the database to the 'Backups' directory.
+        Files are saved under the current timestamp.
+        """
         date=datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         file_basename=str(date) + "-database_backup.bkp"
         file_dir=os.path.split(os.path.abspath(sys.argv[0]))[0]
@@ -504,6 +570,9 @@ class Settings(Screen):
         self.show_success(f"Database File has been backup up to:\n {filename}")
 
     def GenerateDBFile(self):
+        """
+        Creates an empty database with the correct schema with a filename that the user specifies.
+        """
         filename=ctk.filedialog.asksaveasfilename()
         if not filename:
             self.show_error("No File Selected")
@@ -512,6 +581,9 @@ class Settings(Screen):
         self.show_success("Database File has been generated")
 
     def ChangeDBFile(self):
+        """
+        Changes the default database file in the central settings file.
+        """
         conf=self.parent.config
         filename=ctk.filedialog.askopenfilename(title="Select a New Database File")
         if not filename:
