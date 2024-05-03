@@ -4,10 +4,20 @@ from Screen import Screen
 from LoginBackend import User
 
 class Manage(Screen):
+    """A class for managing package and cadet information"""
     def __init__(self, main_frame, ParentGUI):
+        """Initialize the Manage Screen.
+
+        Args:
+            main_frame (Tkinter.Frame): The main frame of the application.
+            ParentGUI: The parent GUI object.
+        """
+        
         self.parent=ParentGUI
         self.main_frame=main_frame
 
+        
+        # Check user priviledge
         self.parent.database.cursor.execute(f"SELECT admin FROM accounts WHERE username IS '{self.parent.user.username}'")
         self.user_priviledge=self.parent.database.cursor.fetchone()
 
@@ -29,12 +39,16 @@ class Manage(Screen):
             self.LoadMainView()
             
     def EventLogin(self, event):
+        """Event handler for login event."""
         self.Login()
         
     def Login(self):
+        """Validate user login credentials."""
         username=self.username_entry.get()
         password=self.password_entry.get()
         user=User(username, password, self.parent.database)
+
+        # Check if username and password are provided
         if not username:
             self.show_error("Please enter a username")
             return
@@ -45,19 +59,24 @@ class Manage(Screen):
         query=f"SELECT admin FROM accounts WHERE username LIKE '{username}'"
         self.parent.database.cursor.execute(query)
         login_priviledges=self.parent.database.cursor.fetchone()[0]
+
+        # Check if user has admin priviledge
         if login_priviledges != 1:
             self.show_error("User does not have administrator priviledges.")
             return
+        # Validate login
         if validate==-1:
             self.show_error("Password Incorrect")
         elif validate==-2:
             self.show_error("Username not recognized")
         elif validate==1:
+            # Clear current screen and load manage screen
             for widget in self.main_frame.winfo_children():
                 widget.destroy()
             self.LoadMainView()
         
     def LoadMainView(self):
+        """Load the main manage screen"""
 
         self.input_frame=ctk.CTkFrame(self.main_frame, width=300, height=400, fg_color=("#d3d3d3", "#191919"))
         self.input_frame.pack(side="left", fill="y")
@@ -156,12 +175,14 @@ class Manage(Screen):
         self.Treeview_style()
 
     def search_packages(self):
+        """Search for packages based on specific criteria."""
         
         self.package_tree.delete(*self.package_tree.get_children())
         name=self.name_search_input.get()
         box=self.box_search_input.get()
         track=self.track_search_input.get()
         query="SELECT * FROM packages WHERE 1=1"
+        # Adjust SQL query based on the search info
         if name:
             query+=f" AND adressee LIKE '%{name}%'"
         if track:
@@ -175,6 +196,7 @@ class Manage(Screen):
             self.package_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5], data[6]))
 
     def search_cadets(self):
+        """Search for cadets based on specific criteria."""
         self.cadet_tree.delete(*self.cadet_tree.get_children())
         name=self.c_name_search_input.get()
         box=self.c_box_search_input.get()
@@ -182,6 +204,7 @@ class Manage(Screen):
         grad=self.c_grad_search_input.get()
         company=self.c_company_search_input.get()
         query="SELECT * FROM cadets WHERE 1=1"
+        # Adjust SQL Query based on search info.
         if name:
             query+=f" AND name LIKE '%{name}%'"
         if box:
@@ -198,11 +221,13 @@ class Manage(Screen):
             self.cadet_tree.insert('', 'end', values=(data[1], data[2], data[3], data[4], data[5]))
 
     def add_cadet(self):
+        """Add a new cadet to the database."""
         name=self.c_name_search_input.get()
         box=self.c_box_search_input.get()
         email=self.c_email_search_input.get()
         grad=self.c_grad_search_input.get()
         company=self.c_company_search_input.get()
+        # Ensure all the necessary info is provided.
         if not name:
             self.show_error("Name not specified")
             return None
@@ -217,8 +242,10 @@ class Manage(Screen):
         if not company:
             self.show_error("Company not specified")
         query=f"INSERT INTO cadets (name, box_number, email, graduation_date, company) VALUES ('{name}', {box}, '{email}', {grad}, '{company}');"
+        # Insert into the database
         self.parent.database.cursor.execute(query)
         self.parent.database.conn.commit()
+        # Clear the entry fields.
         self.c_name_search_input.delete(0,'end')
         self.c_box_search_input.delete(0,'end')
         self.c_email_search_input.delete(0,'end')
@@ -227,6 +254,8 @@ class Manage(Screen):
         self.search_cadets()
 
     def delete_item(self):
+        """Delete selected item (package or cadet) from database"""
+        # Checks which window is mapped
         if self.package_tree.winfo_ismapped():
             selection=self.package_tree.selection()
             for item in selection:
@@ -255,6 +284,8 @@ class Manage(Screen):
         self.search_cadets()
 
     def edit_item(self):
+        """Edit selected item (package or cadet)."""
+        # Checks what window is mapped - changes the 'edit window' that is shown.
         if self.package_tree.winfo_ismapped():
             self.edit_cadet.pack_forget()
 
@@ -363,6 +394,8 @@ class Manage(Screen):
         
 
     def save_edits(self):
+        """Save the edits to the selected item."""
+        # Changes where data is saved based on which window is mapped.
         if self.edit_frame.winfo_ismapped():
             if self.edit_cadet.winfo_ismapped():
                 selected_items=self.cadet_tree.selection()
@@ -432,6 +465,7 @@ class Manage(Screen):
             print("Not editing")
 
     def close_edits(self):
+        """Close the edit frame."""
         if self.edit_package.winfo_ismapped():
             self.package_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
             self.search_packages()
@@ -446,6 +480,7 @@ class Manage(Screen):
  
 
     def switch_tree(self):
+        """Switch between the package view and cadet view."""
         if self.package_tree.winfo_ismapped():
 
             # Clear old
@@ -454,8 +489,6 @@ class Manage(Screen):
             self.box_search_input.pack_forget()
             self.track_search_input.pack_forget()
             self.search_packages_button.pack_forget()
-
-            
 
             # Pack new
             self.cadet_tree.pack(padx=(0,10), pady=10, fill="both", expand=True)

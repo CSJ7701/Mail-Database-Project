@@ -1,17 +1,23 @@
 from datetime import datetime
 import customtkinter as ctk
-# from gui import NavGUI
 from tkinter import ttk
 from Screen import Screen
 
 
 class HomeScreen(Screen):
     def __init__(self, main_frame, ParentGUI):
+        """Initialize the home screen.
+
+        Args:
+            main_frame: (ctk.CTkFrame): The main frame of the application.
+            ParentGUI: (NavGUI): The parent GUI object.
+        """
         self.parent=ParentGUI
         self.main_frame=main_frame
+
+        # Welcome labels
         home_label=ctk.CTkLabel(self.main_frame, text=f"Welcome {self.parent.user.username}", font=("Helvetica", 18))
         home_label.pack(pady=(50,0))
-
         datestring=datetime.now()
         datestring=datestring.strftime("%B %d %Y")
         date_label=ctk.CTkLabel(self.main_frame, text=datestring)
@@ -34,26 +40,32 @@ class HomeScreen(Screen):
         data_bottom_right_frame=ctk.CTkFrame(data_bottom_frame, width=190, height=10)#, fg_color=("#d3d3d3","#191919"))
         data_bottom_right_frame.pack(side="right", fill="both", padx=5, pady=5, expand=True)
 
+        # Tree view for un-retrieved packages
         unretrieved_tree=ttk.Treeview(data_bottom_left_frame, columns=("addressee", "received"))
         unretrieved_tree.heading("#1", text="Name")
         unretrieved_tree.heading("#2", text="Date Received")
         unretrieved_tree['show']='headings'
         unretrieved_tree.pack(side="left", fill="both", expand=True)
+        # Tree view for retrieved packages
         retrieved_tree=ttk.Treeview(data_bottom_right_frame, columns=("addressee", "picked_up"))
         retrieved_tree.heading("#1", text="Name")
         retrieved_tree.heading("#2", text="Date Retrieved")
         retrieved_tree['show']='headings'
         retrieved_tree.pack(side="right", fill="both", expand=True)
 
+        # Fill tree views
         self.populate_treeview(unretrieved_tree, self.unretrieved_packages())
         self.populate_treeview(retrieved_tree, self.retrieved_packages())
         self.Treeview_style()
 
     def unretrieved_packages(self):
+        """Fetch unretrieved packages from the database."""
         self.parent.database.cursor.execute("SELECT adressee,received FROM packages WHERE picked_up IS NULL")
         results=self.parent.database.cursor.fetchall()
         return results
+    
     def unretrieved_package_count(self):
+        """Fetch number of unretrieved packages from the database."""
         package_count=self.parent.database.cursor.execute("SELECT COUNT(*) FROM packages WHERE picked_up IS NULL")
         package_count=package_count.fetchone()
         if package_count:
@@ -68,10 +80,13 @@ class HomeScreen(Screen):
         return package_count_string
 
     def retrieved_packages(self):
+        """Fetch retrieved packages from the database."""
         self.parent.database.cursor.execute("SELECT adressee, picked_up FROM packages WHERE DATE(picked_up) = DATE('now')")
         results=self.parent.database.cursor.fetchall()
         return results
+    
     def retrieved_package_count(self):
+        """Fetch number of retrieved packages from the database."""
         package_count=self.parent.database.cursor.execute("SELECT COUNT(*) FROM packages WHERE DATE(picked_up) = DATE('now')")
         package_count=package_count.fetchone()
         if package_count:
@@ -86,6 +101,7 @@ class HomeScreen(Screen):
         return package_count_string
 
     def populate_treeview(self, treeview, data):
+        """Fill specified tree with data."""
         treeview.delete(*treeview.get_children())
         for row in data:
             treeview.insert("", "end", values=row)

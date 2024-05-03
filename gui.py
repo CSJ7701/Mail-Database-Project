@@ -1,20 +1,24 @@
-import tkinter as tk
 import customtkinter as ctk
 from HomeTab import HomeScreen
 from DataTab import DataScreen
 from ManageTab import Manage
 from ReportsTab import Reports
 from SettingsTab import Settings
-# from LoginScreen import LoginScreen ## This is called manually in a logout function.
-# Displayed here for posterity, but should not be uncommented.
-from datetime import datetime
 from config import Config
 from PIL import Image
 import os
 import sys
 
 class NavGUI():
+    """A class for creating the root GUI window."""
     def __init__(self, root, database, user):
+        """Initialize the GUI window.
+
+        Args:
+            root: The root Tkinter object
+            database: The database object
+            user: The user object.
+        """
         # super().__init__(root, database, user)
         self.root=root
         self.root.protocol("WM_DELETE_WINDOW", root.quit)
@@ -52,32 +56,39 @@ class NavGUI():
         self.show_home()
 
     def show_home(self):
+        """Display the home screen."""
         self.clear_main_frame()
         HomeScreen(self.main_frame, self)
 
     def show_data(self):
+        """Display the data screen."""
         self.clear_main_frame()
         DataScreen(self.main_frame, self)
 
     def show_manage(self):
+        """Display the manage screen."""
         self.clear_main_frame()
         Manage(self.main_frame, self)
         
     def show_reports(self):
+        """Display the reports screen."""
         self.clear_main_frame()
         Reports(self.main_frame, self)
 
     def show_settings(self):
+        """Display the settings screen."""
         self.clear_main_frame()
         Settings(self.main_frame, self)
 
     def logout(self):
+        """Logout and reload the login screen."""
         from LoginScreen import LoginScreen
         for widget in self.root.winfo_children():
             widget.destroy()
         LoginScreen(self.root, self.database)
 
     def clear_main_frame(self):
+        """Empty the main frame to load a new one."""
         for widget in self.main_frame.winfo_children():
             widget.destroy()
 
