@@ -38,7 +38,7 @@ class DataScreen(Screen):
         self.tree.heading("#2", text="Name")
         self.tree.heading("#3", text="Date Received")
         self.tree.heading("#4", text="Date Picked Up")
-        self.tree.heading("#5", text="Fragile")
+        self.tree.heading("#5", text="Fragile Package")
         self.tree.pack(padx=(0,10), pady=10, fill="both", expand=True)
         
 
