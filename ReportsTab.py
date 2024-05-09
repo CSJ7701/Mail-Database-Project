@@ -305,7 +305,7 @@ class Reports(Screen):
             received_date_obj=datetime.strptime(received_date, '%Y-%m-%d')
             received_weekday=weekdays[received_date_obj.weekday()]
             received_counter[received_weekday] += 1
-            if picked_date is not None:
+            if picked_date is not None and picked_date != 'None':
                 picked_date_obj=datetime.strptime(picked_date, '%Y-%m-%d')
                 picked_weekday=weekdays[picked_date_obj.weekday()]
                 picked_counter[picked_weekday] += 1
@@ -349,7 +349,7 @@ class Reports(Screen):
         pickup_times=[]
         for row in data:
             pickup_time=row[0]
-            if pickup_time:
+            if pickup_time and pickup_time != 'None':
                 pickup_times.append(datetime.strptime(pickup_time, '%H:%M:%S'))
         hours=[time.hour + time.minute / 60 for time in pickup_times]
         fig, ax = plt.subplots()
