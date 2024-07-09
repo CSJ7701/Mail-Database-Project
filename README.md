@@ -1,5 +1,7 @@
 
 # Mail Database Project
+This project is an exploration of Python, Tkinter, and SQL databases. 
+Created as an assignment for a 2024 Software Engineering Class, this project aims to improve the interface for the United States Coast Guard Academy Mailroom, allowing staff to more efficiently manage packages and automatically email recipients when they have a package.
 
 # Installation
 ## Prerequisites
@@ -24,7 +26,7 @@ A window should appear
 
 # Using
 
-When the app first opens, you will arrive at the dashboard.
+When the app first opens from the login screen, you will arrive at the dashboard.
 
 ![Homepage](https://github.com/CSJ7701/Mail-Database-Project/assets/113106427/768e09f9-e575-435a-9d74-36d4a5e80e24)
 
@@ -43,15 +45,15 @@ This tab is not fully functional yet. Currently, users can search, select, and d
 In the future, the system should also allow users to edit cadet data, but this feature has not been implemented yet.
 
 ## Reports
-This screen, when implemented, will allow the user to generate graphical reports in order to visualize the data outlined by the system.
+This screen allows the user to generate graphical reports in order to visualize the data outlined by the system.
 
 ## Settings
-This screen, when implemented, will allow the user to alter various visual and functional settings within the application.
-Certain settings will be restricted to user with administrative priviledges, such as exporting or uploading database files, or adding new users.
+This screen allows the user to alter various visual and functional settings within the application.
+Certain settings are restricted to user with administrative priviledges, such as exporting or uploading database files, or adding new users.
 
 ## Logout
 This button will return the current user to the login screen
 
 ## Login Screen
-Fully implemented and operational, but not shown in this demonstration. 
-Should the user wish to see the login screen, simply uncomment line 14 in `main.py`, then comment lines 15 and 16 before saving and running the command `python main.py`.
+Allows users to log in. 
+User must first be created before they can log in.
